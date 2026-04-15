@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer; //Needed?
 import org.springframework.web.bind.annotation.CrossOrigin;
 
-@SpringBootApplication(exclude = {org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration.class})
+@SpringBootApplication
 @CrossOrigin //Lowers security
 public class DemoApplication extends SpringBootServletInitializer {
 
