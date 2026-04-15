@@ -5,6 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer; //Needed?
 
 @SpringBootApplication
+@CrossOrigin //Lowers security
 public class DemoApplication extends SpringBootServletInitializer {
 
 	public static void main(String[] args) {
