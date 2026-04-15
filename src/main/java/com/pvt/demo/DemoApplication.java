@@ -2,6 +2,7 @@ package com.pvt.demo;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.web.servlet.support.SpringBootServletInitializer; //Needed?
 
 @SpringBootApplication
 public class DemoApplication extends SpringBootServletInitializer {
@@ -11,5 +12,3 @@ public class DemoApplication extends SpringBootServletInitializer {
 	}
 
 }
-
-//Comment only for push test
