@@ -35,33 +35,36 @@ public class MainController {
     }
 
     @GetMapping(value="/Talk/{id}")
-    public @ResponseBody Object entityTalk(@PathVariable Integer id) { //may return string and DatabaseEntity
+    public @ResponseBody String entityTalk(@PathVariable Integer id) {
         try {
             DatabaseEntity entity = entityRepository.findById(id).orElseThrow(IllegalArgumentException::new);
             entity.setLastTalk(java.time.LocalDateTime.now());
-            return entityRepository.save(entity);
+            entityRepository.save(entity);
+            return "Talked to " + entity.getName();
         } catch (IllegalArgumentException e) {
             return "Entity not found";
         }
     }
 
     @GetMapping(value="/Feed/{id}")
-    public @ResponseBody Object entityFeed(@PathVariable Integer id) {
+    public @ResponseBody String entityFeed(@PathVariable Integer id) {
         try {
             DatabaseEntity entity = entityRepository.findById(id).orElseThrow(IllegalArgumentException::new);
             entity.setLastFeed(java.time.LocalDateTime.now());
-            return entityRepository.save(entity);
+            entityRepository.save(entity);
+            return "Fed " + entity.getName();
         } catch (IllegalArgumentException e) {
             return "Entity not found";
         }
     }
 
     @GetMapping(value="/Play/{id}")
-    public @ResponseBody Object entityPlay(@PathVariable Integer id) {
+    public @ResponseBody String entityPlay(@PathVariable Integer id) {
         try {
             DatabaseEntity entity = entityRepository.findById(id).orElseThrow(IllegalArgumentException::new);
             entity.setLastPlay(java.time.LocalDateTime.now());
-            return entityRepository.save(entity);
+            entityRepository.save(entity);
+            return "Played with " + entity.getName();
         } catch (IllegalArgumentException e) {
             return "Entity not found";
         }
