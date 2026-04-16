@@ -1,4 +1,4 @@
-package com.pvt.demoServer2;
+package com.pvt.demo;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
