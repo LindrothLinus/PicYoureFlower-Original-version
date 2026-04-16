@@ -34,4 +34,37 @@ public class MainController {
         return entityRepository.save(entity);
     }
 
+    @GetMapping(value="/Talk/{id}")
+    public @ResponseBody DatabaseEntity entityTalk(@PathVariable Integer id) {
+        try {
+            DatabaseEntity entity = entityRepository.findById(id).orElseThrow(IllegalArgumentException::new);
+            entity.setLastTalk(java.time.LocalDateTime.now());
+            return entityRepository.save(entity);
+        } catch (IllegalArgumentException e) {
+            return "Entity not found";
+        }
+    }
+
+    @GetMapping(value="/Feed/{id}")
+    public @ResponseBody DatabaseEntity entityFeed(@PathVariable Integer id) {
+        try {
+            DatabaseEntity entity = entityRepository.findById(id).orElseThrow(IllegalArgumentException::new);
+            entity.setLastFeed(java.time.LocalDateTime.now());
+            return entityRepository.save(entity);
+        } catch (IllegalArgumentException e) {
+            return "Entity not found";
+        }
+    }
+
+    @GetMapping(value="/Play/{id}")
+    public @ResponseBody DatabaseEntity entityPlay(@PathVariable Integer id) {
+        try {
+            DatabaseEntity entity = entityRepository.findById(id).orElseThrow(IllegalArgumentException::new);
+            entity.setLastPlay(java.time.LocalDateTime.now());
+            return entityRepository.save(entity);
+        } catch (IllegalArgumentException e) {
+            return "Entity not found";
+        }
+    }
+
 }
