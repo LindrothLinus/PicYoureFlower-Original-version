@@ -29,7 +29,21 @@ public class MainController {
     @GetMapping(path="/all")
     public @ResponseBody Iterable<DatabaseEntity> getAllEntities() {
 
-        
+        for(DatabaseEntity entity : entityRepository.findAll()) {
+            int strikes = 0;
+            if (entity.getLastFeed() != null && (entity.getLastFeed().plusHours(entity.getIntervalFeed()).isBefore(java.time.LocalDateTime.now()))) {
+                strikes++;
+            }
+            if (entity.getLastPlay() != null && (entity.getLastPlay().plusHours(entity.getIntervalPlay()).isBefore(java.time.LocalDateTime.now()))) {
+                strikes++;
+            }
+            if (entity.getLastTalk() != null && (entity.getLastTalk().plusHours(entity.getIntervalTalk()).isBefore(java.time.LocalDateTime.now()))) {
+                strikes++;
+            }
+            if (strikes > 2) {
+                entityRepository.delete(entity);
+            }
+        }
 
         return entityRepository.findAll();
     }
