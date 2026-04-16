@@ -21,6 +21,8 @@ public class MainController {
     @Autowired
     private EntityRepository entityRepository;
 
+    private String[] types = {"Human", "Fish", "Alien", "Insect"};
+
     @GetMapping(path="/hello")
     public @ResponseBody String hello() {
         return "Hello World!";
@@ -120,7 +122,5 @@ public class MainController {
             return "Failed to fetch entity data";
         }
     }
-
-    public String[] types = {"Human", "Fish", "Alien", "Insect"};
 
 }
