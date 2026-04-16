@@ -85,7 +85,7 @@ public class MainController {
 
     @GetMapping(path="/roll")
     public @ResponseBody Object rollNewEntity() {
-        WebbClient client = WebbClient.create("https://api.namefake.com");
+        WebClient client = WebClient.create("https://api.namefake.com");
         
         try {
             String result = client.get().uri("/english-sweden").accept(MediaType.APPLICATION_JSON).retrieve().bodyToMono(String.class).block();
