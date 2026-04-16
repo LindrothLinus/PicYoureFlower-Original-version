@@ -35,7 +35,7 @@ public class MainController {
     }
 
     @GetMapping(value="/Talk/{id}")
-    public @ResponseBody DatabaseEntity entityTalk(@PathVariable Integer id) {
+    public @ResponseBody Object entityTalk(@PathVariable Integer id) { //may return string and DatabaseEntity
         try {
             DatabaseEntity entity = entityRepository.findById(id).orElseThrow(IllegalArgumentException::new);
             entity.setLastTalk(java.time.LocalDateTime.now());
@@ -46,7 +46,7 @@ public class MainController {
     }
 
     @GetMapping(value="/Feed/{id}")
-    public @ResponseBody DatabaseEntity entityFeed(@PathVariable Integer id) {
+    public @ResponseBody Object entityFeed(@PathVariable Integer id) {
         try {
             DatabaseEntity entity = entityRepository.findById(id).orElseThrow(IllegalArgumentException::new);
             entity.setLastFeed(java.time.LocalDateTime.now());
@@ -57,7 +57,7 @@ public class MainController {
     }
 
     @GetMapping(value="/Play/{id}")
-    public @ResponseBody DatabaseEntity entityPlay(@PathVariable Integer id) {
+    public @ResponseBody Object entityPlay(@PathVariable Integer id) {
         try {
             DatabaseEntity entity = entityRepository.findById(id).orElseThrow(IllegalArgumentException::new);
             entity.setLastPlay(java.time.LocalDateTime.now());
