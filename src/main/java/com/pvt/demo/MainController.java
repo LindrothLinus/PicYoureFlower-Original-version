@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 
 @Controller
-@RequestMapping(path="/temp")
+@RequestMapping(path="/home")
 @CrossOrigin
 public class MainController {
 
@@ -34,37 +34,34 @@ public class MainController {
         return entityRepository.save(entity);
     }
 
-    @GetMapping(value="/Talk/{id}")
-    public @ResponseBody String entityTalk(@PathVariable Integer id) {
+    @GetMapping(value="/talk/{id}")
+    public @ResponseBody Object entityTalk(@PathVariable Integer id) { //may return string and DatabaseEntity
         try {
             DatabaseEntity entity = entityRepository.findById(id).orElseThrow(IllegalArgumentException::new);
             entity.setLastTalk(java.time.LocalDateTime.now());
-            entityRepository.save(entity);
-            return "Talked to " + entity.getName();
+            return entityRepository.save(entity);
         } catch (IllegalArgumentException e) {
             return "Entity not found";
         }
     }
 
-    @GetMapping(value="/Feed/{id}")
-    public @ResponseBody String entityFeed(@PathVariable Integer id) {
+    @GetMapping(value="/feed/{id}")
+    public @ResponseBody Object entityFeed(@PathVariable Integer id) {
         try {
             DatabaseEntity entity = entityRepository.findById(id).orElseThrow(IllegalArgumentException::new);
             entity.setLastFeed(java.time.LocalDateTime.now());
-            entityRepository.save(entity);
-            return "Fed " + entity.getName();
+            return entityRepository.save(entity);
         } catch (IllegalArgumentException e) {
             return "Entity not found";
         }
     }
 
-    @GetMapping(value="/Play/{id}")
-    public @ResponseBody String entityPlay(@PathVariable Integer id) {
+    @GetMapping(value="/play/{id}")
+    public @ResponseBody Object entityPlay(@PathVariable Integer id) {
         try {
             DatabaseEntity entity = entityRepository.findById(id).orElseThrow(IllegalArgumentException::new);
             entity.setLastPlay(java.time.LocalDateTime.now());
-            entityRepository.save(entity);
-            return "Played with " + entity.getName();
+            return entityRepository.save(entity);
         } catch (IllegalArgumentException e) {
             return "Entity not found";
         }
