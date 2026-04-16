@@ -27,29 +27,37 @@ public class MainController {
     }
 
     @GetMapping(path="/all")
-    public @ResponseBody Iterable<DatabaseEntity> getAllEntities() {
+public @ResponseBody Iterable<DatabaseEntity> getAllEntities() {
+    // 1. Hämta alla först och lägg i en lista
+    List<DatabaseEntity> all = (List<DatabaseEntity>) entityRepository.findAll();
+    List<DatabaseEntity> toDelete = new java.util.ArrayList<>();
 
-        for(DatabaseEntity entity : entityRepository.findAll()) {
-            int strikes = 0;
-            if (entity.getLastFeed() != null && (entity.getLastFeed().plusHours(entity.getIntervalFeed()).isBefore(java.time.LocalDateTime.now()))) {
-                strikes++;
-            }
-            if (entity.getLastPlay() != null && (entity.getLastPlay().plusHours(entity.getIntervalPlay()).isBefore(java.time.LocalDateTime.now()))) {
-                strikes++;
-            }
-            if (entity.getLastTalk() != null && (entity.getLastTalk().plusHours(entity.getIntervalTalk()).isBefore(java.time.LocalDateTime.now()))) {
-                strikes++;
-            }
-            if (strikes > 2) {
-                entityRepository.delete(entity);
-            }
+    // 2. Identifiera vilka som ska bort
+    for(DatabaseEntity entity : all) {
+        int strikes = 0;
+        java.time.LocalDateTime now = java.time.LocalDateTime.now();
+
+        if (entity.getLastFeed() != null && entity.getLastFeed().plusHours(entity.getIntervalFeed()).isBefore(now)) strikes++;
+        if (entity.getLastPlay() != null && entity.getLastPlay().plusHours(entity.getIntervalPlay()).isBefore(now)) strikes++;
+        if (entity.getLastTalk() != null && entity.getLastTalk().plusHours(entity.getIntervalTalk()).isBefore(now)) strikes++;
+
+        if (strikes > 2) {
+            toDelete.add(entity); // Lägg till i listan istället för att radera direkt
         }
-
-        return entityRepository.findAll();
     }
+
+    // 3. Radera alla markerade djur nu när loopen är klar
+    if (!toDelete.isEmpty()) {
+        entityRepository.deleteAll(toDelete);
+        // Uppdatera vår lokala lista så vi inte returnerar döda djur
+        all.removeAll(toDelete);
+    }
+
+    return all;
+}
     
     @GetMapping(path="/add/{name}/{type}")
-    public @ResponseBody Object addEntity(@PathVariable String name, @PathVariable String type) { //may return string and DatabaseEntity
+    public @ResponseBody Object addEntity(@PathVariable String name, @PathVariable String type) {
         DatabaseEntity entity = new DatabaseEntity();
         entity.setName(name);
         entity.setType(type);
@@ -57,7 +65,7 @@ public class MainController {
     }
 
     @GetMapping(path="/talk/{id}")
-    public @ResponseBody Object entityTalk(@PathVariable Integer id) {
+    public @ResponseBody Object entityTalk(@PathVariable Integer id) { //may return string and DatabaseEntity
         try {
             DatabaseEntity entity = entityRepository.findById(id).orElseThrow(IllegalArgumentException::new);
             entity.setLastTalk(java.time.LocalDateTime.now());
