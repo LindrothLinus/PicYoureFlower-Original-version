@@ -1,15 +1,17 @@
 package com.pvt.demo;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.http.MediaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.JsonNode;
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.ArrayList;
+import org.springframework.http.ResponseEntity;
 
 @Controller
 @RequestMapping(path="/home")
@@ -25,34 +27,26 @@ public class MainController {
     }
 
     @GetMapping(path="/all")
-public @ResponseBody Iterable<DatabaseEntity> getAllEntities() {
-    // 1. Hämta alla först och lägg i en lista
-    List<DatabaseEntity> all = (List<DatabaseEntity>) entityRepository.findAll();
-    List<DatabaseEntity> toDelete = new java.util.ArrayList<>();
+    public @ResponseBody Iterable<DatabaseEntity> getAllEntities() {
 
-    // 2. Identifiera vilka som ska bort
-    for(DatabaseEntity entity : all) {
-        int strikes = 0;
-        java.time.LocalDateTime now = java.time.LocalDateTime.now();
-
-        if (entity.getLastFeed() != null && entity.getLastFeed().plusHours(entity.getIntervalFeed()).isBefore(now)) strikes++;
-        if (entity.getLastPlay() != null && entity.getLastPlay().plusHours(entity.getIntervalPlay()).isBefore(now)) strikes++;
-        if (entity.getLastTalk() != null && entity.getLastTalk().plusHours(entity.getIntervalTalk()).isBefore(now)) strikes++;
-
-        if (strikes > 2) {
-            toDelete.add(entity); // Lägg till i listan istället för att radera direkt
+        for(DatabaseEntity entity : entityRepository.findAll()) {
+            int strikes = 0;
+            if (entity.getLastFeed() != null && entity.getIntervalFeed() != null && entity.getLastFeed().plusHours(entity.getIntervalFeed()).isBefore(java.time.LocalDateTime.now())) {
+                strikes++;
+            }
+            if (entity.getLastPlay() != null && entity.getIntervalPlay() != null && entity.getLastPlay().plusHours(entity.getIntervalPlay()).isBefore(java.time.LocalDateTime.now())) {
+                strikes++;
+            }
+            if (entity.getLastTalk() != null && entity.getIntervalTalk() != null && entity.getLastTalk().plusHours(entity.getIntervalTalk()).isBefore(java.time.LocalDateTime.now())) {
+                strikes++;
+            }
+            if (strikes > 2) {
+                entityRepository.delete(entity);
+            }
         }
-    }
 
-    // 3. Radera alla markerade djur nu när loopen är klar
-    if (!toDelete.isEmpty()) {
-        entityRepository.deleteAll(toDelete);
-        // Uppdatera vår lokala lista så vi inte returnerar döda djur
-        all.removeAll(toDelete);
+        return entityRepository.findAll();
     }
-
-    return all;
-}
     
     @GetMapping(path="/add/{name}/{type}")
     public @ResponseBody Object addEntity(@PathVariable String name, @PathVariable String type) {
