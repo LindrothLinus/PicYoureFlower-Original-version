@@ -11,9 +11,25 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @CrossOrigin
 public class MainController {
 
+    @Autowired
+    private EntityRepository entityRepository;
+
     @GetMapping(value="/hello")
     public @ResponseBody String hello() {
         return "Hello!";
+    }
+
+    @GetMapping(value="/all")
+    public @ResponseBody Iterable<DatabaseEntity> getAllEntities() {
+        return entityRepository.findAll();
+    }
+    
+    @GetMapping(value="/add/{name}/{type}")
+    public @ResponseBody DatabaseEntity addEntity(@PathVariable String name, @PathVariable String type) {
+        DatabaseEntity entity = new DatabaseEntity();
+        entity.setName(name);
+        entity.setType(type);
+        return entityRepository.save(entity);
     }
 
 }
