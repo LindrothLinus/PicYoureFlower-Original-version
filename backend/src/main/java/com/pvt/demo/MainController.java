@@ -14,32 +14,35 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Controller
-@RequestMapping(path="/home")
+@RequestMapping(path = "/home")
 @CrossOrigin
 public class MainController {
 
     @Autowired
     private EntityRepository entityRepository;
 
-    private String[] types = {"Human", "Fish", "Alien", "Insect"};
+    private String[] types = { "Human", "Fish", "Alien", "Insect" };
 
-    @GetMapping(path="/hello")
+    @GetMapping(path = "/hello")
     public @ResponseBody String hello() {
         return "Hello Worlds!";
     }
 
-    @GetMapping(path="/all")
+    @GetMapping(path = "/all")
     public @ResponseBody Iterable<DatabaseEntity> getAllEntities() {
 
-        for(DatabaseEntity entity : entityRepository.findAll()) {
+        for (DatabaseEntity entity : entityRepository.findAll()) {
             int strikes = 0;
-            if (entity.getLastFeed() != null && entity.getIntervalFeed() != null && entity.getLastFeed().plusHours(entity.getIntervalFeed()).isBefore(java.time.LocalDateTime.now())) {
+            if (entity.getLastFeed() != null && entity.getIntervalFeed() != null && entity.getLastFeed()
+                    .plusHours(entity.getIntervalFeed()).isBefore(java.time.LocalDateTime.now())) {
                 strikes++;
             }
-            if (entity.getLastPlay() != null && entity.getIntervalPlay() != null && entity.getLastPlay().plusHours(entity.getIntervalPlay()).isBefore(java.time.LocalDateTime.now())) {
+            if (entity.getLastPlay() != null && entity.getIntervalPlay() != null && entity.getLastPlay()
+                    .plusHours(entity.getIntervalPlay()).isBefore(java.time.LocalDateTime.now())) {
                 strikes++;
             }
-            if (entity.getLastTalk() != null && entity.getIntervalTalk() != null && entity.getLastTalk().plusHours(entity.getIntervalTalk()).isBefore(java.time.LocalDateTime.now())) {
+            if (entity.getLastTalk() != null && entity.getIntervalTalk() != null && entity.getLastTalk()
+                    .plusHours(entity.getIntervalTalk()).isBefore(java.time.LocalDateTime.now())) {
                 strikes++;
             }
             if (strikes > 2) {
@@ -49,8 +52,8 @@ public class MainController {
 
         return entityRepository.findAll();
     }
-    
-    @GetMapping(path="/add/{name}/{type}")
+
+    @GetMapping(path = "/add/{name}/{type}")
     public @ResponseBody Object addEntity(@PathVariable String name, @PathVariable String type) {
         DatabaseEntity entity = new DatabaseEntity();
         entity.setName(name);
@@ -58,8 +61,8 @@ public class MainController {
         return entityRepository.save(entity);
     }
 
-    @GetMapping(path="/talk/{id}")
-    public @ResponseBody Object entityTalk(@PathVariable Integer id) { //may return string and DatabaseEntity
+    @GetMapping(path = "/talk/{id}")
+    public @ResponseBody Object entityTalk(@PathVariable Integer id) { // may return string and DatabaseEntity
         try {
             DatabaseEntity entity = entityRepository.findById(id).orElseThrow(IllegalArgumentException::new);
             entity.setLastTalk(java.time.LocalDateTime.now());
@@ -69,7 +72,7 @@ public class MainController {
         }
     }
 
-    @GetMapping(path="/feed/{id}")
+    @GetMapping(path = "/feed/{id}")
     public @ResponseBody Object entityFeed(@PathVariable Integer id) {
         try {
             DatabaseEntity entity = entityRepository.findById(id).orElseThrow(IllegalArgumentException::new);
@@ -80,7 +83,7 @@ public class MainController {
         }
     }
 
-    @GetMapping(path="/play/{id}")
+    @GetMapping(path = "/play/{id}")
     public @ResponseBody Object entityPlay(@PathVariable Integer id) {
         try {
             DatabaseEntity entity = entityRepository.findById(id).orElseThrow(IllegalArgumentException::new);
@@ -91,7 +94,7 @@ public class MainController {
         }
     }
 
-    @GetMapping(path="/rename/{id}/{name}")
+    @GetMapping(path = "/rename/{id}/{name}")
     public @ResponseBody Object entityRename(@PathVariable Integer id, @PathVariable String name) {
         try {
             DatabaseEntity entity = entityRepository.findById(id).orElseThrow(IllegalArgumentException::new);
@@ -102,21 +105,22 @@ public class MainController {
         }
     }
 
-    @GetMapping(path="/roll")
+    @GetMapping(path = "/roll")
     public @ResponseBody Object rollNewEntity() {
         WebClient client = WebClient.create("https://api.namefake.com");
-        
+
         try {
-            String result = client.get().uri("/english-sweden").accept(MediaType.APPLICATION_JSON).retrieve().bodyToMono(String.class).block();
+            String result = client.get().uri("/english-sweden").accept(MediaType.APPLICATION_JSON).retrieve()
+                    .bodyToMono(String.class).block();
             ObjectMapper mapper = new ObjectMapper();
             JsonNode jsonNode = mapper.readTree(result);
             String name = jsonNode.get("name").asText();
             DatabaseEntity entity = new DatabaseEntity();
             entity.setName(name);
-            entity.setType(types[(int)(Math.random() * types.length)]);
-            entity.setIntervalFeed((int)(Math.random() * 24) + 1);
-            entity.setIntervalPlay((int)(Math.random() * 24) + 1);
-            entity.setIntervalTalk((int)(Math.random() * 24) + 1);
+            entity.setType(types[(int) (Math.random() * types.length)]);
+            entity.setIntervalFeed((int) (Math.random() * 24) + 1);
+            entity.setIntervalPlay((int) (Math.random() * 24) + 1);
+            entity.setIntervalTalk((int) (Math.random() * 24) + 1);
             return entityRepository.save(entity);
         } catch (Exception e) {
             return "Failed to fetch entity data";
