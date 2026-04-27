@@ -25,7 +25,7 @@ public class MainController {
 
     @GetMapping(path = "/hello")
     public @ResponseBody String hello() {
-        return "Hello Worlds!";
+        return "Hello!";
     }
 
     @GetMapping(path = "/all")
