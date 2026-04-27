@@ -1,20 +1,24 @@
-### Backend (Spring Boot) ###
-backend/HELP.md
-backend/target/
-backend/.mvn/wrapper/maven-wrapper.jar
-!backend/**/src/main/**/target/
-!backend/**/src/test/**/target/
+# --- Frontend (Flutter) ---
+frontend/.dart_tool/
+frontend/.flutter-plugins
+frontend/.flutter-plugins-dependencies
+frontend/.pub/
+frontend/.packages
+frontend/build/
+frontend/ios/Flutter/.last_build_id
+frontend/android/app/debug/
+frontend/android/app/profile/
+frontend/android/app/release/
 
-### IDEs (IntelliJ & VS Code) ###
+# --- IDEs & System ---
 .idea/
 .vscode/
 *.iml
 *.iws
 *.ipr
+.DS_Store
 
-### Flutter/Frontend (Viktigt att lägga till!) ###
-frontend/.dart_tool/
-frontend/build/
-frontend/.packages
-frontend/.flutter-plugins
-frontend/.flutter-plugins-dependencies
+# --- Backend (Spring Boot) ---
+backend/target/
+backend/bin/
+backend/HELP.md
