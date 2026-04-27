@@ -11,7 +11,7 @@ public class DatabaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id; //long
+    private Integer id; // long
 
     private String name;
     private String type;
