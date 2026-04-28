@@ -9,6 +9,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.reactive.function.client.WebClient;
+import java.awt.Color;
+import java.awt.image.BufferedImage;
+import java.io.File;
+
+import javax.imageio.ImageIO;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -125,6 +130,79 @@ public class MainController {
         } catch (Exception e) {
             return "Failed to fetch entity data";
         }
+    }
+
+    @GetMapping(path = "/color")
+    public @ResponseBody Object getColor() {
+        try {
+            BufferedImage img = ImageIO.read(new File("blomma2.jpg"));
+            int r = 0, g = 0, b = 0;
+            int count = 0;
+
+            int startX = img.getWidth() / 4;
+            int endX = img.getWidth() * 3 / 4;
+
+            int startY = img.getHeight() / 4;
+            int endY = img.getHeight() * 3 / 4;
+
+            for (int x = startX; x < endX; x++) {
+                for (int y = startY; y < endY; y++) {
+                    int pixel = img.getRGB(x, y);
+                    int red = (pixel >> 16) & 0xff;
+                    int green = (pixel >> 8) & 0xff;
+                    int blue = pixel & 0xff;
+
+                    // ignorera grönt (blad/gräs)
+                    if (green > red && green > blue)
+                        continue;
+
+                    r += red;
+                    g += green;
+                    b += blue;
+
+                    count++;
+
+                }
+            }
+            if (count == 0)
+                return "No color found";
+
+            r /= count;
+            g /= count;
+            b /= count;
+            String boostedColor = boostColor(r, g, b);
+
+            return boostedColor;
+
+        } catch (Exception e) {
+            return "fail";
+        }
+
+    }
+
+    private String boostColor(int r, int g, int b) {
+
+        // 1. RGB → HSB
+        float[] hsb = Color.RGBtoHSB(r, g, b, null);
+
+        float hue = hsb[0];
+        float saturation = hsb[1];
+        float brightness = hsb[2];
+
+        // 2. öka saturation
+        saturation = Math.min(1.0f, saturation * 1.5f);
+
+        // (valfritt) öka brightness lite
+        brightness = Math.min(1.0f, brightness * 1.3f);
+
+        // 3. tillbaka till RGB
+        int rgb = Color.HSBtoRGB(hue, saturation, brightness);
+
+        int newR = (rgb >> 16) & 0xff;
+        int newG = (rgb >> 8) & 0xff;
+        int newB = rgb & 0xff;
+
+        return "RGB(" + newR + ", " + newG + ", " + newB + ")";
     }
 
 }
