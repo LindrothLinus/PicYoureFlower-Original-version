@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_demo/navBar.dart';
-import 'resources/constants.dart';
+import 'package:flutter_demo/widgets/nav_bar.dart';
 void main() {
   runApp(const MyApp());
 }
