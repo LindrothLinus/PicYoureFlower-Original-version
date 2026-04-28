@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_demo/navBar.dart';
 import 'resources/constants.dart';
 void main() {
   runApp(const MyApp());
@@ -119,24 +120,8 @@ class _MyHomePageState extends State<MyHomePage> {
         tooltip: 'Increment',
         child: const Icon(Icons.add),
       ),
-
-      bottomNavigationBar: BottomAppBar(
-        color: MAIN_COLOR,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [     
-            IconButton( icon: Image.asset("lib/resources/images/cart_icon.png"), onPressed: (){},),
-            IconButton( icon: Image.asset("lib/resources/images/showel_icon.png"), onPressed: (){},),
-            IconButton( icon: Image.asset("lib/resources/images/camera_icon.png"), onPressed: (){},),
-            IconButton( icon: Image.asset("lib/resources/images/flower_icon.png"), onPressed: (){},),
-            
-            
-        
-          ],
-        ),
-        
-      ),
       
+      bottomNavigationBar: NavBar(),
     );
   }
 }
