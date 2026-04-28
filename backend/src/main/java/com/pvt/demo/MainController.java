@@ -152,7 +152,7 @@ public class MainController {
                     int green = (pixel >> 8) & 0xff;
                     int blue = pixel & 0xff;
 
-                    // ignorera grönt (blad/gräs)
+                    // ignorera grönt
                     if (green > red && green > blue)
                         continue;
 
@@ -182,20 +182,16 @@ public class MainController {
 
     private String boostColor(int r, int g, int b) {
 
-        // 1. RGB → HSB
         float[] hsb = Color.RGBtoHSB(r, g, b, null);
 
         float hue = hsb[0];
         float saturation = hsb[1];
         float brightness = hsb[2];
 
-        // 2. öka saturation
         saturation = Math.min(1.0f, saturation * 1.5f);
 
-        // (valfritt) öka brightness lite
         brightness = Math.min(1.0f, brightness * 1.3f);
 
-        // 3. tillbaka till RGB
         int rgb = Color.HSBtoRGB(hue, saturation, brightness);
 
         int newR = (rgb >> 16) & 0xff;
