@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'resources/constants.dart';
 void main() {
   runApp(const MyApp());
 }
@@ -119,6 +119,24 @@ class _MyHomePageState extends State<MyHomePage> {
         tooltip: 'Increment',
         child: const Icon(Icons.add),
       ),
+
+      bottomNavigationBar: BottomAppBar(
+        color: MAIN_COLOR,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [     
+            IconButton( icon: Icon(Icons.shopping_cart),onPressed: (){},),
+            IconButton( icon: Icon(Icons.shower), onPressed: (){},),
+            IconButton( icon: Icon(Icons.camera), onPressed: (){},),
+            IconButton( icon: Icon(Icons.flood), onPressed: (){},),
+            
+            
+        
+          ],
+        ),
+        
+      ),
+      
     );
   }
 }
