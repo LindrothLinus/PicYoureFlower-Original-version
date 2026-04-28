@@ -125,10 +125,10 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [     
-            IconButton( icon: Icon(Icons.shopping_cart),onPressed: (){},),
-            IconButton( icon: Icon(Icons.shower), onPressed: (){},),
-            IconButton( icon: Icon(Icons.camera), onPressed: (){},),
-            IconButton( icon: Icon(Icons.flood), onPressed: (){},),
+            IconButton( icon: Image.asset("lib/resources/images/cart_icon.png"), onPressed: (){},),
+            IconButton( icon: Image.asset("lib/resources/images/showel_icon.png"), onPressed: (){},),
+            IconButton( icon: Image.asset("lib/resources/images/camera_icon.png"), onPressed: (){},),
+            IconButton( icon: Image.asset("lib/resources/images/flower_icon.png"), onPressed: (){},),
             
             
         
