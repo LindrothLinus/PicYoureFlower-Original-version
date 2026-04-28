@@ -8,6 +8,7 @@ class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   //Isak wanted to see if I can push to repo!
+  //Ida wanted to see if I can push to repo!
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
