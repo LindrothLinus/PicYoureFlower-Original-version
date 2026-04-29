@@ -25,8 +25,6 @@ class NavBar extends StatelessWidget{
             IconButton( icon: Image.asset(buildmodeIconPath), onPressed: (){},),
             IconButton( icon: Image.asset(cameraIconPath), onPressed: (){Navigator.push(context, MaterialPageRoute<void>(builder: (context)=>const Camera()));},),
             IconButton( icon: Image.asset(flowerCollectionIconPath), onPressed: (){Navigator.push(context, MaterialPageRoute<void>(builder: (context)=>const FlowerCollection()));},),
-            
-            
         
           ],
         ),

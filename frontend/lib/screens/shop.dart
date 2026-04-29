@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_demo/widgets/back_btn.dart';
 
 class Shop extends StatelessWidget {
   const Shop({super.key});
@@ -10,6 +11,7 @@ class Shop extends StatelessWidget {
         appBar: AppBar(
           title: const Text('Shop'),
           backgroundColor: Colors.blue[900],
+          leading: CustomBackButton(),
         ),
         backgroundColor: Colors.blue,
       ),
