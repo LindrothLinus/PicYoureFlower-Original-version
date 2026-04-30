@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_demo/widgets/nav_bar.dart';
+import 'package:flutter_demo/widgets/back_btn.dart';
 
 void main() {
   runApp(const MyApp());
@@ -119,6 +121,8 @@ class _MyHomePageState extends State<MyHomePage> {
         tooltip: 'Increment',
         child: const Icon(Icons.add),
       ),
+      
+      bottomNavigationBar: NavBar(),
     );
   }
 }
