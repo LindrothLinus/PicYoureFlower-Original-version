@@ -57,6 +57,7 @@ flutter:
     - lib/resources/images/camera_icon.png
     - lib/resources/images/cart_icon.png
     - lib/resources/images/flower_icon.png
+    - lib/resources/images/coin_icon.png
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
