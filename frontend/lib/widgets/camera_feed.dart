@@ -1,14 +1,14 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 
-class TakePictureScreen extends StatefulWidget {
-  const TakePictureScreen({super.key});
+class CameraFeed extends StatefulWidget {
+  const CameraFeed({super.key});
 
   @override
-  TakePictureScreenState createState() => TakePictureScreenState();
+  CameraFeedState createState() => CameraFeedState();
 }
 
-class TakePictureScreenState extends State<TakePictureScreen> {
+class CameraFeedState extends State<CameraFeed> {
   late CameraController _controller;
   late Future<void> _initializeControllerFuture;
 
@@ -42,5 +42,18 @@ class TakePictureScreenState extends State<TakePictureScreen> {
         }
       },
     );
+  }
+
+  Future<XFile?> takePicture() async{
+    try{
+      await _initializeControllerFuture;
+      final image = await _controller.takePicture();
+      print(image.path);
+      return image;
+    }catch(e){
+      print(e);
+      return null;
+    }
+
   }
 }
