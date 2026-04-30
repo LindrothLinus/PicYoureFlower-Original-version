@@ -6,15 +6,13 @@ class FlowerCollection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
+    return Scaffold(
         appBar: AppBar(
           title: const Text('Flower Collection'),
           backgroundColor: const Color.fromARGB(255, 221, 25, 11),
           leading: CustomBackButton(),
         ),
         backgroundColor: const Color.fromARGB(255, 221, 99, 90),
-      ),
-    );
+      );
   }
 }

@@ -6,15 +6,13 @@ class Camera extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp( //tror eventuellt det här kan bli problem med navigationen, ta bort? tror bara vi vill returnera en ny i main
-      home: Scaffold(
-        appBar: AppBar(
+ return Scaffold(
+  appBar: AppBar(
           title: const Text('Camera'),
           backgroundColor: Colors.green,
           leading: CustomBackButton(),
         ),
         backgroundColor: Colors.greenAccent,
-      ),
-    );
+      );
   }
 }

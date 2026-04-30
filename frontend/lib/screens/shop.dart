@@ -6,15 +6,13 @@ class Shop extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
+    return Scaffold(
         appBar: AppBar(
           title: const Text('Shop'),
           backgroundColor: Colors.blue[900],
           leading: CustomBackButton(),
         ),
         backgroundColor: Colors.blue,
-      ),
-    );
+      );
   }
 }
