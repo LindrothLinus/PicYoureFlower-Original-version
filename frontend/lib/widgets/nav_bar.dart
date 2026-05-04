@@ -15,8 +15,7 @@ class NavBar extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-        child: BottomAppBar(
+    return BottomAppBar(
         color: mainColor,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -29,6 +28,6 @@ class NavBar extends StatelessWidget{
           ],
         ),
         
-      ));
+      );
   }
 }
