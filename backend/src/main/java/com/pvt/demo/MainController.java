@@ -6,8 +6,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.reactive.function.client.WebClient;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
@@ -132,10 +135,10 @@ public class MainController {
         }
     }
 
-    @GetMapping(path = "/color")
-    public @ResponseBody Object getColor() {
+    @PostMapping(path = "/color", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public @ResponseBody String getColor(@RequestParam("image") MultipartFile file) {
         try {
-            BufferedImage img = ImageIO.read(new File("blomma2.jpg"));
+            BufferedImage img = ImageIO.read(file.getInputStream());
             int r = 0, g = 0, b = 0;
             int count = 0;
 
