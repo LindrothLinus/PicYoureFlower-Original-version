@@ -3,6 +3,7 @@ import 'package:flutter_demo/widgets/nav_bar.dart';
 import 'package:flutter_demo/widgets/back_btn.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
@@ -36,7 +37,7 @@ class MyApp extends StatelessWidget {
         //
         // This works for code too, not just values: Most code changes can be
         // tested with just a hot reload.
-        colorScheme: .fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: .fromSeed(seedColor: Colors.amber),
       ),
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
@@ -88,11 +89,19 @@ class _MyHomePageState extends State<MyHomePage> {
         // TRY THIS: Try changing the color here to a specific color (to
         // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
         // change color while the other colors stay the same.
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        backgroundColor: Theme.of(context).colorScheme.tertiary,
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
       ),
+
+    
+
+    body: Center(
+      child: BackGroundSvgWidget()
+    ),
+
+      /*
       body: Center(
         // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.
@@ -120,6 +129,8 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
         ),
       ),
+      */
+  
       floatingActionButton: FloatingActionButton(
         onPressed: _incrementCounter,
         tooltip: 'Increment',
@@ -128,5 +139,33 @@ class _MyHomePageState extends State<MyHomePage> {
       
       bottomNavigationBar: NavBar(),
     );
+  }
+}
+
+
+class BackGroundSvgWidget extends StatelessWidget{
+  @override
+  Widget build(BuildContext context){
+    double screenWidth = MediaQuery.sizeOf(context).width;
+    double screenHeight = MediaQuery.sizeOf(context).height;
+    var padding =   MediaQuery.paddingOf(context);
+    double newHeight = screenHeight - padding.top - padding.bottom;
+    return Scaffold(
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            SvgPicture.asset(
+              "lib/resources/images/BrownPot.svg")
+          ]
+        )
+      )
+    );
+    
+    /*return SvgPicture.asset(
+      "lib/resources/images/Greenhouse.svg", 
+      semanticsLabel: 'background',
+      
+    );*/
   }
 }
