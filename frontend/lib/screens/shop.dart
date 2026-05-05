@@ -11,7 +11,7 @@ const String bluePotPath = "lib/resources/images/BluePot.svg";
 const String pinkPotPath = "lib/resources/images/pinkpot.svg"; 
 const String brownPotPath = "lib/resources/images/BrownPot.svg"; 
 //Alla items 
-final buyableItems = [BuyableItemCreator(cost: 5, image: brownPotPath),];
+final buyableItems = [BuyableItemCreator(cost: 5, image: brownPotPath), BuyableItemCreator(cost: 5, image: brownPotPath), BuyableItemCreator(cost: 5, image: brownPotPath), BuyableItemCreator(cost: 5, image: brownPotPath), BuyableItemCreator(cost: 5, image: brownPotPath), BuyableItemCreator(cost: 5, image: brownPotPath), BuyableItemCreator(cost: 5, image: brownPotPath), BuyableItemCreator(cost: 5, image: brownPotPath),];
 
 class Shop extends StatefulWidget {
   const Shop({super.key});
