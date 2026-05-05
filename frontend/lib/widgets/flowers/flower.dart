@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-class Flower extends StatelessWidget{
+abstract class Flower extends StatelessWidget{
   Flower({super.key, required this.frontImage,required this.backGround,required this.color});
   final String frontImage;
   final String backGround;
-  Color color;
+  final Color color;
 
   
   
