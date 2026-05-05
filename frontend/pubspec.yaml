@@ -60,6 +60,8 @@ flutter:
     - lib/resources/images/camera_icon.png
     - lib/resources/images/cart_icon.png
     - lib/resources/images/flower_icon.png
+    - lib/resources/images/ros_sticker.png
+    - lib/resources/images/ros_sticker_kontur.png
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in

@@ -5,14 +5,14 @@ import 'package:flutter_demo/widgets/back_btn.dart';
 import 'package:flutter_demo/widgets/camera_button.dart';
 import '../widgets/camera_feed.dart';
 
-class Camera extends StatelessWidget {
-  const Camera({super.key});
 
-  Future<CameraDescription> _getCamera() async {
-    WidgetsFlutterBinding.ensureInitialized();
-    final cameras = await availableCameras();
-    return cameras.first;
-  }
+
+class Camera extends StatefulWidget{
+  Camera({super.key});
+  State<Camera> createState() => CameraState();
+}
+
+class CameraState extends State<Camera> {
 
   @override
   Widget build(BuildContext context) {
