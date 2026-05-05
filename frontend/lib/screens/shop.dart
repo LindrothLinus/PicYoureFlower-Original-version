@@ -1,15 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_demo/widgets/back_btn.dart';
 import 'package:flutter_demo/widgets/coins.dart';
 import '../resources/constants.dart';
 import 'package:flutter_demo/items/buyable_item_creator.dart';
+import 'package:flutter_demo/states/coins_state.dart';
 
 const String buildmodeIconPath = "lib/resources/images/showel_icon.png"; //tills vi har riktiga ikoner
+const String bluePotPath = "lib/resources/images/BluePot.svg"; 
+const String pinkPotPath = "lib/resources/images/pinkpot.svg"; 
+const String brownPotPath = "lib/resources/images/BrownPot.svg"; 
 //Alla items 
-final buyableItems = [BuyableItemCreator(cost: 50, image: buildmodeIconPath), BuyableItemCreator(cost: 200, image: buildmodeIconPath), BuyableItemCreator(cost: 700, image: buildmodeIconPath), BuyableItemCreator(cost: 60, image: buildmodeIconPath), BuyableItemCreator(cost: 40, image: buildmodeIconPath), BuyableItemCreator(cost: 30, image: buildmodeIconPath), BuyableItemCreator(cost: 20, image: buildmodeIconPath)];
+final buyableItems = [BuyableItemCreator(cost: 5, image: brownPotPath),];
 
-class Shop extends StatelessWidget {
+class Shop extends StatefulWidget {
   const Shop({super.key});
+  
+  @override
+  State<Shop> createState() => _ShopState(); 
+  // Shop(this.coinsState);
+
+} 
+
+class _ShopState extends State<Shop>{
+  final CoinsState coinsState = CoinsState(); 
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +33,7 @@ class Shop extends StatelessWidget {
           backgroundColor: mainColor,
           leading: CustomBackButton(),
           actions: [
-            Coins(),
+            Coins(coinsState: coinsState),
           ]
         ),
         backgroundColor: mainColor,
@@ -37,13 +51,27 @@ class Shop extends StatelessWidget {
             Card(
               elevation: 5,
               color: blockColor,
-              child: Column(
-                children: [
-                  Expanded(
-                    child: Image.asset(item.image, fit: BoxFit.contain,),
-                  ),
-                  Text(item.cost.toString() + " kr"), //Ska ändras sedan så det är kopplat till coin
-                ],
+              child: Padding(
+                padding: const EdgeInsets.all(12), 
+                child: Column(
+                  children: [
+                    AspectRatio(
+                      aspectRatio: 1.4,
+                      child: SvgPicture.asset(item.image, width: 48, height: 48),
+                    ),
+                    Text(item.cost.toString() + " coins"), 
+                    ElevatedButton(
+                      onPressed: () {
+                        if(item.cost <= coinsState.getCoinValue()){
+                          setState((){ 
+                            coinsState.decreaseCoinValue(item.cost); 
+                        });
+                      }
+                      },
+                      child: Text("Buy item"),
+                    ),
+                  ],
+              ),
               ),
             );
         },
@@ -51,3 +79,4 @@ class Shop extends StatelessWidget {
     );
   }
 }
+

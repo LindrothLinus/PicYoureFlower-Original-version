@@ -1,0 +1,70 @@
+Flutter crash report.
+Please report a bug at https://github.com/flutter/flutter/issues.
+
+## command
+
+flutter run -d chrome
+
+## exception
+
+RPCError: ext.flutter.inspector.show: (-32603) Unexpected DWDS error for callServiceExtension: WipError -32000 Promise was collected
+
+```
+#0      new _OutstandingRequest (package:vm_service/src/vm_service.dart:268:34)
+#1      VmService._call.<anonymous closure> (package:vm_service/src/vm_service.dart:1950:25)
+#2      VmService._call (package:vm_service/src/vm_service.dart:1962:8)
+#3      VmService.callServiceExtension (package:vm_service/src/vm_service.dart:1901:14)
+#4      FlutterVmService._checkedCallServiceExtension (package:flutter_tools/src/vmservice.dart:771:28)
+#5      FlutterVmService.invokeFlutterExtensionRpcRaw (package:flutter_tools/src/vmservice.dart:790:49)
+#6      FlutterVmService._flutterToggle (package:flutter_tools/src/vmservice.dart:636:21)
+<asynchronous suspension>
+#7      ResidentHandlers.debugToggleWidgetInspector (package:flutter_tools/src/resident_runner.dart:860:9)
+<asynchronous suspension>
+#8      TerminalHandler.processTerminalInput (package:flutter_tools/src/resident_runner.dart:1906:7)
+<asynchronous suspension>
+```
+
+## flutter doctor
+
+```
+[32m[✓][39m Flutter (Channel stable, 3.41.8, on macOS 26.4.1 25E253 darwin-arm64, locale sv-SE)
+    [1 285ms]
+    [32m•[39m Flutter version 3.41.8 on channel stable at /opt/homebrew/share/flutter
+    [32m•[39m Upstream repository https://github.com/flutter/flutter.git
+    [32m•[39m Framework revision 02085feb3f (11 days ago), 2026-04-24 13:54:45 -0700
+    [32m•[39m Engine revision 59aa584fdf
+    [32m•[39m Dart version 3.11.5
+    [32m•[39m DevTools version 2.54.2
+    [32m•[39m Feature flags: enable-web, enable-linux-desktop, enable-macos-desktop,
+      enable-windows-desktop, enable-android, enable-ios, cli-animations,
+      enable-native-assets, omit-legacy-version-file, enable-lldb-debugging,
+      enable-uiscene-migration
+
+[32m[✓][39m Android toolchain - develop for Android devices (Android SDK version 36.1.0) [2,4s]
+    [32m•[39m Android SDK at /Users/idagustafsson/Library/Android/sdk
+    [32m•[39m Emulator version 36.5.11.0 (build_id 15261927) (CL:N/A)
+    [32m•[39m Platform android-36.1, build-tools 36.1.0
+    [32m•[39m Java binary at: /Applications/Android Studio.app/Contents/jbr/Contents/Home/bin/java
+      This is the JDK bundled with the latest Android Studio installation on this machine.
+      To manually set the JDK path, use: `flutter config --jdk-dir="path/to/jdk"`.
+    [32m•[39m Java version OpenJDK Runtime Environment (build 21.0.10+-117844308-b1163.108)
+    [32m•[39m All Android licenses accepted.
+
+[33m[!][39m Xcode - develop for iOS and macOS (Xcode 26.4.1) [2,4s]
+    [32m•[39m Xcode at /Applications/Xcode.app/Contents/Developer
+    [32m•[39m Build 17E202
+    [31m✗[39m Unable to get list of installed Simulator runtimes.
+    [32m•[39m CocoaPods version 1.16.2
+
+[32m[✓][39m Chrome - develop for the web [3ms]
+    [32m•[39m Chrome at /Applications/Google Chrome.app/Contents/MacOS/Google Chrome
+
+[32m[✓][39m Connected device (2 available) [6,0s]
+    [32m•[39m macOS (desktop) • macos  • darwin-arm64   • macOS 26.4.1 25E253 darwin-arm64
+    [32m•[39m Chrome (web)    • chrome • web-javascript • Google Chrome 147.0.7727.138
+
+[32m[✓][39m Network resources [581ms]
+    [32m•[39m All expected network resources are available.
+
+[33m![39m Doctor found issues in 1 category.
+```

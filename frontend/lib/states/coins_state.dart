@@ -1,18 +1,18 @@
 //Den här klassen håller bara status för hur mycket pengar som finns, kan öka och minska det värdet 
 
 class CoinsState {
-    int _counter = 0;
+    int _coinValue = 0;
 
-    void increaseCounter(int value) {
-        _counter = _counter + value;
+    void increaseCoinValue(int addedValue) {
+        _coinValue = _coinValue + addedValue;
     } 
 
-    void decreaseCounter(int value) {
-         _counter = _counter - value;
+    void decreaseCoinValue(int deletedValue) {
+         _coinValue = _coinValue - deletedValue;
     } 
  
-    int getCounterValue(){
-        return _counter; 
+    int getCoinValue(){
+        return _coinValue; 
     }
 
 }

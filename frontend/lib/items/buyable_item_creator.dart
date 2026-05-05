@@ -1,7 +1,7 @@
 class BuyableItemCreator {
-  int cost = 0;
-  String image = "hej";
-
+  final int cost;
+  final String image;
+ 
   BuyableItemCreator({required this.cost, required this.image}); 
 
 }

@@ -30,6 +30,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_svg: ^2.0.10
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -58,6 +59,9 @@ flutter:
     - lib/resources/images/cart_icon.png
     - lib/resources/images/flower_icon.png
     - lib/resources/images/coin_icon.png
+    - lib/resources/images/BluePot.svg 
+    - lib/resources/images/pinkpot.svg
+    - lib/resources/images/BrownPot.svg
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
