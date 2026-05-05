@@ -22,7 +22,7 @@ class NavBar extends StatelessWidget{
           children: [     
             IconButton( icon: Image.asset(shopIconPath), onPressed: (){Navigator.push(context, MaterialPageRoute<void>(builder: (context)=>const Shop()));},),
             IconButton( icon: Image.asset(buildmodeIconPath), onPressed: (){},),
-            IconButton( icon: Image.asset(cameraIconPath), onPressed: (){Navigator.push(context, MaterialPageRoute<void>(builder: (context)=>const Camera()));},),
+            IconButton( icon: Image.asset(cameraIconPath), onPressed: (){Navigator.push(context, MaterialPageRoute<void>(builder: (context)=>Camera()));},),
             IconButton( icon: Image.asset(flowerCollectionIconPath), onPressed: (){Navigator.push(context, MaterialPageRoute<void>(builder: (context)=>FlowerCollection()));},),
         
           ],
