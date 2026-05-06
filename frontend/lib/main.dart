@@ -8,8 +8,62 @@ import 'package:flutter_svg/flutter_svg.dart';
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-  runApp(const MyApp());
+  //runApp(const MyApp());
+  runApp(
+    const MaterialApp(
+      home: SvgBackgroundScreen(),
+    ),
+  );
 }
+
+// All new code removed from the demo version
+
+class SvgBackgroundScreen extends StatefulWidget {
+  const SvgBackgroundScreen({super.key});
+
+  @override
+  State<SvgBackgroundScreen> createState() => _SvgBackgroundScreenState();
+}
+
+class _SvgBackgroundScreenState extends State<SvgBackgroundScreen> {
+  
+  final TransformationController controller = TransformationController();
+
+  @override
+  void initState(){
+    super.initState();
+
+    controller.value = Matrix4.translationValues(-200, -200, 0)
+    ..multiply(Matrix4.diagonal3Values(2.0, 2.0, 1.0));
+
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: InteractiveViewer(
+        constrained: true,
+        boundaryMargin: EdgeInsets.zero,
+        clipBehavior: Clip.hardEdge,
+        minScale: 2,
+        maxScale: 2,
+        transformationController: controller,
+        child: SizedBox(
+          width: 4000,
+          height: 4000,
+          child: SvgPicture.asset(
+            "lib/resources/images/Greenhouse.svg",
+          )
+        ),
+      ),
+
+      bottomNavigationBar: NavBar()
+    );
+  }
+
+}
+
+// End of all new code
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -95,11 +149,21 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),
 
-    
+      
 
-    body: Center(
-      child: BackGroundSvgWidget()
-    ),
+      body: Center(
+        child: InteractiveViewer(
+          panEnabled: true,
+          scaleEnabled: true,
+          minScale: 0.5,
+          maxScale: 5.0,
+          child: SvgPicture.asset(
+            "lib/resources/images/Greenhouse.svg",
+            width: 2000,
+            height: 2000,
+          )
+        )
+      ),
 
       /*
       body: Center(
@@ -142,6 +206,19 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
+class MySvgWidget extends StatelessWidget {
+
+  @override
+  Widget build(BuildContext context) {
+    return SvgPicture.asset(
+      "lib/resources/images/Greenhouse.svg",
+      semanticsLabel: 'background',
+      //width: 200,
+      //height:200,
+    );
+  }
+}
+
 
 class BackGroundSvgWidget extends StatelessWidget{
   @override
@@ -156,7 +233,7 @@ class BackGroundSvgWidget extends StatelessWidget{
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             SvgPicture.asset(
-              "lib/resources/images/BrownPot.svg")
+              "lib/resources/images/Greenhouse.svg")
           ]
         )
       )
