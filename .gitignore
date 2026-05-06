@@ -16,6 +16,7 @@ frontend/android/app/release/
 *.iml
 *.iws
 *.ipr
+.dart_tool/
 .DS_Store
 
 # --- Backend (Spring Boot) ---
