@@ -5,8 +5,10 @@ import 'package:flutter_demo/widgets/coins.dart';
 import '../resources/constants.dart';
 import 'package:flutter_demo/items/buyable_item_creator.dart';
 import 'package:flutter_demo/states/coins_state.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 const String brownPotPath = "lib/resources/images/BrownPot.svg"; 
+const String coinsPath = "lib/resources/images/coin_icon.png";
 //Alla items 
 final buyableItems = [BuyableItemCreator(cost: 5, image: brownPotPath), BuyableItemCreator(cost: 5, image: brownPotPath), BuyableItemCreator(cost: 5, image: brownPotPath), BuyableItemCreator(cost: 5, image: brownPotPath), BuyableItemCreator(cost: 5, image: brownPotPath), BuyableItemCreator(cost: 5, image: brownPotPath), BuyableItemCreator(cost: 5, image: brownPotPath), BuyableItemCreator(cost: 5, image: brownPotPath),];
 
@@ -25,7 +27,7 @@ class _ShopState extends State<Shop>{
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Shop'),
+          title: Text('Shop', style: TextStyles.header),
           backgroundColor: backgroundColor,
           leading: CustomBackButton(),
           actions: [
@@ -46,7 +48,6 @@ class _ShopState extends State<Shop>{
           return 
             Card(
               elevation: 5,
-              color: blockColor,
               child: Padding(
                 padding: const EdgeInsets.all(12), 
                 child: Column(
@@ -54,7 +55,14 @@ class _ShopState extends State<Shop>{
                     Expanded(
                         child: SvgPicture.asset(item.image, fit: BoxFit.contain),
                     ),
-                    Text(item.cost.toString() + " coins"), 
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center, 
+                      children: [
+                        Text(item.cost.toString(), style: const TextStyle(fontSize: 16)), 
+                        const SizedBox(width: 4), 
+                        Image.asset(coinsPath, height: 16, width: 16, fit: BoxFit.contain,), 
+                      ]
+                    ),
                     ElevatedButton(
                       onPressed: () {
                         if(item.cost <= coinsState.getCoinValue()){
@@ -63,7 +71,7 @@ class _ShopState extends State<Shop>{
                         });
                       }
                       },
-                      child: Text("Buy item"),
+                      child: Text("Buy item", style: TextStyles.body),
                     ),
                   ],
               ),
