@@ -6,9 +6,6 @@ import '../resources/constants.dart';
 import 'package:flutter_demo/items/buyable_item_creator.dart';
 import 'package:flutter_demo/states/coins_state.dart';
 
-const String buildmodeIconPath = "lib/resources/images/showel_icon.png"; //tills vi har riktiga ikoner
-const String bluePotPath = "lib/resources/images/BluePot.svg"; 
-const String pinkPotPath = "lib/resources/images/pinkpot.svg"; 
 const String brownPotPath = "lib/resources/images/BrownPot.svg"; 
 //Alla items 
 final buyableItems = [BuyableItemCreator(cost: 5, image: brownPotPath), BuyableItemCreator(cost: 5, image: brownPotPath), BuyableItemCreator(cost: 5, image: brownPotPath), BuyableItemCreator(cost: 5, image: brownPotPath), BuyableItemCreator(cost: 5, image: brownPotPath), BuyableItemCreator(cost: 5, image: brownPotPath), BuyableItemCreator(cost: 5, image: brownPotPath), BuyableItemCreator(cost: 5, image: brownPotPath),];
@@ -18,7 +15,6 @@ class Shop extends StatefulWidget {
   
   @override
   State<Shop> createState() => _ShopState(); 
-  // Shop(this.coinsState);
 
 } 
 
@@ -30,17 +26,17 @@ class _ShopState extends State<Shop>{
     return Scaffold(
         appBar: AppBar(
           title: const Text('Shop'),
-          backgroundColor: mainColor,
+          backgroundColor: backgroundColor,
           leading: CustomBackButton(),
           actions: [
             Coins(coinsState: coinsState),
           ]
         ),
-        backgroundColor: mainColor,
+        backgroundColor: backgroundColor,
         body: GridView.builder(
         padding: const EdgeInsets.all(20),
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
+          crossAxisCount: 3,
           crossAxisSpacing: 10,
           mainAxisSpacing: 10,
         ),
@@ -55,9 +51,8 @@ class _ShopState extends State<Shop>{
                 padding: const EdgeInsets.all(12), 
                 child: Column(
                   children: [
-                    AspectRatio(
-                      aspectRatio: 1.4,
-                      child: SvgPicture.asset(item.image, width: 48, height: 48),
+                    Expanded(
+                        child: SvgPicture.asset(item.image, fit: BoxFit.contain),
                     ),
                     Text(item.cost.toString() + " coins"), 
                     ElevatedButton(
