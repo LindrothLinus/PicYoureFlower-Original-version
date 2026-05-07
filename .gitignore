@@ -23,3 +23,6 @@ frontend/android/app/release/
 backend/target/
 backend/bin/
 backend/HELP.md
+
+#---IOS-----
+macos/
