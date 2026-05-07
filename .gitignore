@@ -24,5 +24,7 @@ backend/target/
 backend/bin/
 backend/HELP.md
 
-#---IOS-----
+#---Extras-----
 macos/
+android/
+.dart_tool/
