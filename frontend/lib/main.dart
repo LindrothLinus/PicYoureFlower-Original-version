@@ -128,5 +128,7 @@ class _MyHomePageState extends State<MyHomePage> {
       
       bottomNavigationBar: NavBar(),
     );
+
+    //test du kan ta bort denna komentar
   }
 }
