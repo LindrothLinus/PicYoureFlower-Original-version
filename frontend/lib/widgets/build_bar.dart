@@ -15,23 +15,29 @@ class BuildBar extends StatefulWidget {
 class BuildBarState extends State<BuildBar> {
   @override
   Widget build(BuildContext context) {
-    const String flowerText = "Youre Flowers:";
-    const String potText = "Youre Pots";
-    return FractionallySizedBox(
-      widthFactor: 1,
-      heightFactor: 0.5,
+    const String flowerText = "  Youre Flowers:";
+    const String potText = "  Youre Pots:";
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(15),
+          topRight: Radius.circular(15),
+        ),
+        color: Colors.blue,
+      ),
+      child: FractionallySizedBox(
+        widthFactor: 1,
+        heightFactor: 0.5,
 
-      child: Column(
-        
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Text(flowerText),
-          Carousel(),
-          Text(potText),
-          Carousel()
-
-
-        ],
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text(flowerText),
+            Carousel(),
+            Text(potText),
+            Carousel(),
+          ],
+        ),
       ),
     );
   }
