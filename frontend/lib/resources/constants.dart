@@ -22,6 +22,7 @@ class TextStyles {
   );
 
   static final TextStyle body = GoogleFonts.nunito(
-    fontSize: 14,
+    fontSize: 30,
+    fontWeight: FontWeight.w500,
   );
 }

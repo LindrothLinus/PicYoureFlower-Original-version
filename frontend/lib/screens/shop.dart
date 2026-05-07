@@ -10,7 +10,7 @@ import 'package:google_fonts/google_fonts.dart';
 const String brownPotPath = "lib/resources/images/BrownPot.svg"; 
 const String coinsPath = "lib/resources/images/coin_icon.png";
 //Alla items 
-final buyableItems = [BuyableItemCreator(cost: 5, image: brownPotPath), BuyableItemCreator(cost: 5, image: brownPotPath), BuyableItemCreator(cost: 5, image: brownPotPath), BuyableItemCreator(cost: 5, image: brownPotPath), BuyableItemCreator(cost: 5, image: brownPotPath), BuyableItemCreator(cost: 5, image: brownPotPath), BuyableItemCreator(cost: 5, image: brownPotPath), BuyableItemCreator(cost: 5, image: brownPotPath),];
+final buyableItems = [BuyableItemCreator(cost: 5, image: coinsPath), ];
 
 class Shop extends StatefulWidget {
   const Shop({super.key});
@@ -45,41 +45,61 @@ class _ShopState extends State<Shop>{
         itemCount: buyableItems.length, 
         itemBuilder: (BuildContext context, int index){
           final item = buyableItems[index]; 
-          return 
-            Card(
+          return Card(
               elevation: 5,
-              child: Padding(
-                padding: const EdgeInsets.all(12), 
-                child: Column(
-                  children: [
-                    Expanded(
-                        child: SvgPicture.asset(item.image, fit: BoxFit.contain),
+              child: Stack(
+                children: [
+                  Center(
+                    child: Padding(
+                      padding: const EdgeInsets.only(bottom: 25),
+                      child: SizedBox(
+                      height: 75, 
+                      child: Image.asset(item.image, fit: BoxFit.contain),
+                    )
+                    )
+                ),
+
+                Align(
+                  alignment: Alignment.bottomCenter, 
+                  child: Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(1),
+                      decoration: BoxDecoration(
+                      color: mainColor,
+                      borderRadius: const BorderRadius.only(bottomLeft: Radius.circular(12), bottomRight: Radius.circular(12),),
+                      ),
+                      child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly, 
+                          children: [
+                            Row(
+                              children: [
+                                  Text(item.cost.toString(), style: TextStyles.body), 
+                                  const SizedBox(width: 4), 
+                                  Image.asset(coinsPath, height: 30, width: 30, fit: BoxFit.contain,), 
+                              ]
+                            ),
+                            
+                            Image.asset(coinsPath, height: 30, width: 30, fit: BoxFit.contain,), //Det här ska vara plusset, och en knapp också som anropar decreaseValue
+                              
+                            
+                          ]
+                      ),
+                  )
+
+                )
+                ]
+                            
+                          )
+                        );
+        }, 
+                        
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center, 
-                      children: [
-                        Text(item.cost.toString(), style: const TextStyle(fontSize: 16)), 
-                        const SizedBox(width: 4), 
-                        Image.asset(coinsPath, height: 16, width: 16, fit: BoxFit.contain,), 
-                      ]
-                    ),
-                    ElevatedButton(
-                      onPressed: () {
-                        if(item.cost <= coinsState.getCoinValue()){
-                          setState((){ 
-                            coinsState.decreaseCoinValue(item.cost); 
-                        });
-                      }
-                      },
-                      child: Text("Buy item", style: TextStyles.body),
-                    ),
-                  ],
-              ),
-              ),
-            );
-        },
-      ),
-    );
+                  
+              );
+              
   }
-}
+        }
+
+    
+
 
