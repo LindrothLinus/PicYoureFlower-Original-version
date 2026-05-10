@@ -5,7 +5,9 @@ import 'package:flutter_demo/widgets/flowers/rose_flower.dart';
 import 'package:flutter_demo/widgets/flowers/flower.dart';
 
 class Carousel extends StatefulWidget {
-  const Carousel({super.key});
+  const Carousel({super.key, required this.onItemSelected});
+
+  final Function(Widget) onItemSelected;
 
   @override
   CarouselState createState() => CarouselState();
@@ -20,7 +22,7 @@ class CarouselState extends State<Carousel> {
       RoseFlower(color: Colors.pink),
       RoseFlower(color: Colors.orange),
       RoseFlower(color: Colors.green),
-      RoseFlower(color: Colors.deepPurpleAccent)
+      RoseFlower(color: Colors.deepPurpleAccent),
     ];
     return Expanded(
       child: ScrollConfiguration(
@@ -33,20 +35,25 @@ class CarouselState extends State<Carousel> {
             for (final Widget item in flowers)
               AspectRatio(
                 aspectRatio: 1,
-                child: Container(
-                  margin: EdgeInsets.all(4.0),
-                  padding: EdgeInsets.all(4.0),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(15),
-                    boxShadow: [BoxShadow(
-                      color: Colors.grey.withValues(alpha: 1),
-                      
-                      blurRadius: 1,
-                      offset: Offset(1, 3),
-                    )]
+                child: GestureDetector(
+                  onTap:()=>widget.onItemSelected(item),
+                  child: Container(
+                    margin: EdgeInsets.all(4.0),
+                    padding: EdgeInsets.all(4.0),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(15),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withValues(alpha: 1),
+
+                          blurRadius: 1,
+                          offset: Offset(1, 3),
+                        ),
+                      ],
+                    ),
+                    child: Center(child: item),
                   ),
-                  child: Center(child: item),
                 ),
               ),
           ],

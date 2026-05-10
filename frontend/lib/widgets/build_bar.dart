@@ -6,7 +6,10 @@ import 'package:flutter_demo/resources/constants.dart';
 import 'package:flutter_demo/widgets/carousel.dart';
 
 class BuildBar extends StatefulWidget {
-  const BuildBar({super.key});
+  const BuildBar({super.key, required this.onFloweSelected, required this.onPotSelected});
+
+  final Function(Widget) onFloweSelected;
+  final Function(Widget) onPotSelected;
 
   @override
   BuildBarState createState() => BuildBarState();
@@ -33,9 +36,9 @@ class BuildBarState extends State<BuildBar> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Text(flowerText),
-            Carousel(),
+            Carousel(onItemSelected: widget.onFloweSelected,),
             Text(potText),
-            Carousel(),
+            Carousel(onItemSelected: widget.onPotSelected,),
           ],
         ),
       ),
