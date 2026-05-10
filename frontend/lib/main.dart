@@ -64,6 +64,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
       Widget? selectedItem;
+      bool buildModeActive=false;
 
   
   @override
@@ -81,19 +82,23 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body:Scaffold(
         body: Container(
-          child: selectedItem!=null ? selectedItem!:Text("tryck"),
+          child: selectedItem ?? Text("tryck"),
         ),
-        bottomSheet: BuildBar(
+        bottomSheet: buildModeActive == true ? BuildBar(
           onFloweSelected: (flower){setState(() {
             selectedItem = flower;
           });},
           onPotSelected: (pot){setState(() {
             selectedItem = pot;
-          });},),
+          });},):null,
         ),
 
       
-      bottomNavigationBar: NavBar(),
+      bottomNavigationBar: NavBar(onBuildModeButtonPressed: () {
+        setState(() {
+          buildModeActive=!buildModeActive;
+        });
+      },),
     );
 
     //test du kan ta bort denna komentar
