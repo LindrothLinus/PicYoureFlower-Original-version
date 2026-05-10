@@ -1,8 +1,11 @@
 package com.pvt.demo;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -10,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.client.RestClient;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.reactive.function.client.WebClient;
 import java.awt.Color;
@@ -147,5 +151,28 @@ public class MainController {
         int newB = rgb & 0xff;
 
         return "RGB(" + newR + ", " + newG + ", " + newB + ")";
+    }
+
+    @PostMapping(value="/identifyflower", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public @ResponseBody String getNameFromPic(@RequestParam("image") MultipartFile image) throws Exception{
+        final RestClient restClient = RestClient.create();
+        final String PLANTNET_API_KEY = "2b10bQPZR3ms3av4jXItPft5H";
+        MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
+        body.add("organs", "flower");
+        body.add("images", new ByteArrayResource(image.getBytes()) {
+            @Override
+            public String getFilename() {
+                return image.getOriginalFilename();
+            }
+        });
+
+        String url = "https://my-api.plantnet.org/v2/identify/all?api-key=" + PLANTNET_API_KEY;
+        String response = restClient.post().uri(url).contentType(MediaType.MULTIPART_FORM_DATA).body(body).retrieve().body(String.class);
+
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode json = mapper.readTree(response);
+        String bestMatch = json.path("bestMatch").asText();
+        String commonName = json.path("results").get(0).path("species").path("commonNames").get(0).asText();
+        return commonName + " , " + bestMatch; //Change this for other info
     }
 }
