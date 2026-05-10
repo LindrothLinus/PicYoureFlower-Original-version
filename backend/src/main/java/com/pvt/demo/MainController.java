@@ -44,22 +44,6 @@ public class MainController {
         return entityRepository.findAll();
     }
 
-    @GetMapping(path = "/add/{commonName}/{latinName}/{color}")
-    public @ResponseBody Object addEntity(@PathVariable String commonName, @PathVariable String latinName,
-            @PathVariable String color) {
-        try {
-            DatabaseEntity entity = new DatabaseEntity();
-            entity.setCommonName(commonName);
-            entity.setLatinName(latinName);
-            entity.setColor(color);
-            entity.setPicTaken(java.time.LocalDateTime.now());
-            return entityRepository.save(entity);
-        } catch (Exception e) {
-            return "Entity not found when trying to add flower";
-        }
-
-    }
-
     @GetMapping(path = "/rename/{id}/{commonName}/{latinName}")
     public @ResponseBody Object entityRename(@PathVariable Integer id, @PathVariable String commonName,
             @PathVariable String latinName) {
@@ -82,6 +66,30 @@ public class MainController {
         } catch (IllegalArgumentException e) {
             return "Entity not found";
         }
+    }
+
+    @PostMapping(path = "/add", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public @ResponseBody Object addEntity(@RequestParam("image") MultipartFile file) {
+        try {
+            DatabaseEntity entity = new DatabaseEntity();
+            String commonName = "";
+            String latinName = "";
+            String color = getColor(file);
+
+            String names = getNameFromPic(file);
+            String[] namesplit = names.split(" , ");
+            commonName = namesplit[0];
+            latinName = namesplit[1];
+
+            entity.setCommonName(commonName);
+            entity.setLatinName(latinName);
+            entity.setColor(color);
+            entity.setPicTaken(java.time.LocalDateTime.now());
+            return entityRepository.save(entity);
+        } catch (Exception e) {
+            return "Entity not found when trying to add flower";
+        }
+
     }
 
     @PostMapping(path = "/color", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -153,8 +161,8 @@ public class MainController {
         return "RGB(" + newR + ", " + newG + ", " + newB + ")";
     }
 
-    @PostMapping(value="/identifyflower", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public @ResponseBody String getNameFromPic(@RequestParam("image") MultipartFile image) throws Exception{
+    @PostMapping(value = "/identifyflower", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public @ResponseBody String getNameFromPic(@RequestParam("image") MultipartFile image) throws Exception {
         final RestClient restClient = RestClient.create();
         final String PLANTNET_API_KEY = "2b10bQPZR3ms3av4jXItPft5H";
         MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
@@ -167,12 +175,13 @@ public class MainController {
         });
 
         String url = "https://my-api.plantnet.org/v2/identify/all?api-key=" + PLANTNET_API_KEY;
-        String response = restClient.post().uri(url).contentType(MediaType.MULTIPART_FORM_DATA).body(body).retrieve().body(String.class);
+        String response = restClient.post().uri(url).contentType(MediaType.MULTIPART_FORM_DATA).body(body).retrieve()
+                .body(String.class);
 
         ObjectMapper mapper = new ObjectMapper();
         JsonNode json = mapper.readTree(response);
         String bestMatch = json.path("bestMatch").asText();
         String commonName = json.path("results").get(0).path("species").path("commonNames").get(0).asText();
-        return commonName + " , " + bestMatch; //Change this for other info
+        return commonName + " , " + bestMatch; // Change this for other info
     }
 }
