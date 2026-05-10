@@ -15,7 +15,8 @@ class CameraButtonBar extends StatelessWidget {
 
   Future<void> identifyFlower(XFile image) async {
     try {
-      final uri = Uri.parse('http://192.168.0.10:8080/home/identifyflower');
+      //final uri = Uri.parse('http://192.168.0.10:8080/home/identifyflower'); //for testing locally
+      final uri = Uri.parse('https://group-1-75.pvt.dsv.su.se/home/identifyflower');
       final request = http.MultipartRequest('POST', uri);
       request.files.add(await http.MultipartFile.fromPath('image', image.path));
       print('Sending request'); //For debugging
