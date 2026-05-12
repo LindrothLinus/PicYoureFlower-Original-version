@@ -64,8 +64,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  Widget? selectedItem;
-  bool buildModeActive = false;
   final buildModeActiveNotifier = ValueNotifier<bool>(false);
   late BuildBar buildBar;
 
@@ -74,8 +72,8 @@ class _MyHomePageState extends State<MyHomePage> {
     super.initState();
     buildBar = BuildBar(
       visibilityNotifier: buildModeActiveNotifier,
-      onFloweSelected: (flower) => setState(() => selectedItem = flower),
-      onPotSelected: (pot) => setState(() => selectedItem = pot),
+      onFloweSelected: (flower){print(flower);},
+      onPotSelected: (pot){print(pot);},
     );
   }
 
@@ -91,11 +89,14 @@ class _MyHomePageState extends State<MyHomePage> {
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
       ),
-      body: Scaffold(bottomSheet: buildBar),
+      body: Scaffold(
+        body: AddButton(builModeActiveNotifier: buildModeActiveNotifier),
+        bottomSheet: buildBar
+        ),
 
       bottomNavigationBar: NavBar(
         onBuildModeButtonPressed: () {
-          buildModeActiveNotifier.value = true;
+          buildModeActiveNotifier.value = !buildModeActiveNotifier.value;
         },
       ),
     );

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 class AddButton extends StatefulWidget {
-  AddButton({super.key, required this.isVisible});
+  AddButton({super.key, required this.builModeActiveNotifier});
   final String imagePath = "lib/resources/images/add_button.png";
 
-  bool isVisible;
+  final ValueNotifier<bool> builModeActiveNotifier;
   bool isTaken=false;
 
   @override
@@ -14,17 +14,16 @@ class AddButton extends StatefulWidget {
 class AddButtonState extends State<AddButton> {
   @override
   Widget build(BuildContext context) {
-    return FractionallySizedBox(
+    return ValueListenableBuilder(valueListenable: widget.builModeActiveNotifier, builder: (context,buildModeIsActviated,child){
+      return FractionallySizedBox(
       widthFactor: 0.1,
       child: Stack(
         children: [
           Visibility(
-            visible: (widget.isVisible && !widget.isTaken),
+            visible: (buildModeIsActviated && !widget.isTaken),
             child: IconButton(
               onPressed: () {setState(() {
                 widget.isTaken=true;
-                print(widget.isTaken);
-                print(widget.isVisible);
               });},
               icon: Image.asset(widget.imagePath),
             ),
@@ -34,5 +33,8 @@ class AddButtonState extends State<AddButton> {
         ],
       ),
     );
+    });
+    
+    
   }
 }
