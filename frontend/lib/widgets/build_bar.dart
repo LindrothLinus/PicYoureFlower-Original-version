@@ -6,10 +6,10 @@ import 'package:flutter_demo/resources/constants.dart';
 import 'package:flutter_demo/widgets/carousel.dart';
 
 class BuildBar extends StatefulWidget {
-  const BuildBar({super.key, required this.onFloweSelected, required this.onPotSelected,required this.visibilityNotifier});
+  const BuildBar({super.key, required this.onFlowerSelected, required this.onPotSelected,required this.visibilityNotifier});
 
   final ValueNotifier<bool> visibilityNotifier;
-  final Function(Widget) onFloweSelected;
+  final Function(Widget) onFlowerSelected;
   final Function(Widget) onPotSelected;
 
   @override
@@ -42,7 +42,7 @@ class BuildBarState extends State<BuildBar> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Text(flowerText),
-            Carousel(onItemSelected: widget.onFloweSelected,),
+            Carousel(onItemSelected: widget.onFlowerSelected,),
             Text(potText),
             Carousel(onItemSelected: widget.onPotSelected,),
           ],

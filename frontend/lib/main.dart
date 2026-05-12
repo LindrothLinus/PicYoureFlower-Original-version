@@ -72,7 +72,7 @@ class _MyHomePageState extends State<MyHomePage> {
     super.initState();
     buildBar = BuildBar(
       visibilityNotifier: buildModeActiveNotifier,
-      onFloweSelected: (flower){print(flower);},
+      onFlowerSelected: (flower){print(flower);},
       onPotSelected: (pot){print(pot);},
     );
   }
