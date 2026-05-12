@@ -65,6 +65,8 @@ flutter:
     - lib/resources/images/ros_sticker_kontur.png
     - lib/resources/images/Greenhouse.svg
     - lib/resources/images/BrownPot.svg
+    - lib/resources/images/add_button.png
+
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in

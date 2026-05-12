@@ -10,7 +10,9 @@ const String cameraIconPath = "lib/resources/images/camera_icon.png";
 const String flowerCollectionIconPath = "lib/resources/images/flower_icon.png";
 
 class NavBar extends StatefulWidget{
-  const NavBar({super.key});
+  const NavBar({super.key, required this.onBuildModeButtonPressed});
+
+  final Function() onBuildModeButtonPressed;
 
   @override
   NavBarState createState()=>NavBarState();
@@ -36,6 +38,7 @@ class NavBarState extends State<NavBar>{
               setState(() {
                 visible=false;
               });
+              widget.onBuildModeButtonPressed();
               },),
             IconButton( icon: Image.asset(cameraIconPath), onPressed: (){Navigator.push(context, MaterialPageRoute<void>(builder: (context)=>Camera()));},),
             IconButton( icon: Image.asset(flowerCollectionIconPath), onPressed: (){Navigator.push(context, MaterialPageRoute<void>(builder: (context)=>FlowerCollection()));},),
