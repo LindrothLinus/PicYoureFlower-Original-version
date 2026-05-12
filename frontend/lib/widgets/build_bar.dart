@@ -6,8 +6,9 @@ import 'package:flutter_demo/resources/constants.dart';
 import 'package:flutter_demo/widgets/carousel.dart';
 
 class BuildBar extends StatefulWidget {
-  const BuildBar({super.key, required this.onFloweSelected, required this.onPotSelected});
+  const BuildBar({super.key, required this.onFloweSelected, required this.onPotSelected,required this.visibilityNotifier});
 
+  final ValueNotifier<bool> visibilityNotifier;
   final Function(Widget) onFloweSelected;
   final Function(Widget) onPotSelected;
 
@@ -20,7 +21,12 @@ class BuildBarState extends State<BuildBar> {
   Widget build(BuildContext context) {
     const String flowerText = "  Youre Flowers:";
     const String potText = "  Youre Pots:";
-    return Container(
+    return ValueListenableBuilder<bool>(
+      valueListenable: widget.visibilityNotifier, 
+      builder: (context,isVisible,child){
+        return Visibility(
+      visible: isVisible,
+      child: Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(15),
@@ -42,6 +48,11 @@ class BuildBarState extends State<BuildBar> {
           ],
         ),
       ),
-    );
+    ));
+
+      });
+    
+    
   }
+
 }

@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_demo/widgets/add_button.dart';
 import 'package:flutter_demo/widgets/build_bar.dart';
 import 'package:flutter_demo/widgets/nav_bar.dart';
 import 'package:flutter_demo/widgets/back_btn.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-void main() async{
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   runApp(const MyApp());
@@ -63,13 +64,23 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-      Widget? selectedItem;
-      bool buildModeActive=false;
+  Widget? selectedItem;
+  bool buildModeActive = false;
+  final buildModeActiveNotifier = ValueNotifier<bool>(false);
+  late BuildBar buildBar;
 
-  
+  @override
+  void initState() {
+    super.initState();
+    buildBar = BuildBar(
+      visibilityNotifier: buildModeActiveNotifier,
+      onFloweSelected: (flower) => setState(() => selectedItem = flower),
+      onPotSelected: (pot) => setState(() => selectedItem = pot),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
         // TRY THIS: Try changing the color here to a specific color (to
@@ -80,25 +91,13 @@ class _MyHomePageState extends State<MyHomePage> {
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
       ),
-      body:Scaffold(
-        body: Container(
-          child: selectedItem ?? Text("tryck"),
-        ),
-        bottomSheet: buildModeActive == true ? BuildBar(
-          onFloweSelected: (flower){setState(() {
-            selectedItem = flower;
-          });},
-          onPotSelected: (pot){setState(() {
-            selectedItem = pot;
-          });},):null,
-        ),
+      body: Scaffold(bottomSheet: buildBar),
 
-      
-      bottomNavigationBar: NavBar(onBuildModeButtonPressed: () {
-        setState(() {
-          buildModeActive=!buildModeActive;
-        });
-      },),
+      bottomNavigationBar: NavBar(
+        onBuildModeButtonPressed: () {
+          buildModeActiveNotifier.value = true;
+        },
+      ),
     );
 
     //test du kan ta bort denna komentar
