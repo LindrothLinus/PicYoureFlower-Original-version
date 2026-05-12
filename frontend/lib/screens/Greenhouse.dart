@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class MainScreen extends StatefulWidget {
-  const MainScreen({super.key});
+class Greenhouse extends StatefulWidget {
+  const Greenhouse({super.key});
 
   @override
-  State<MainScreen> createState() => _MainScreen();
+  State<Greenhouse> createState() => _Greenhouse();
 }
 
-class _MainScreen extends State<MainScreen>{
+class _Greenhouse extends State<Greenhouse>{
 
   final TransformationController controller = TransformationController();
   final double imageWidth = 5906;

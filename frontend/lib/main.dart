@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_demo/screens/main_screen.dart';
+import 'package:flutter_demo/screens/Greenhouse.dart';
 import 'package:flutter_demo/widgets/nav_bar.dart';
 import 'package:flutter/services.dart';
 
@@ -26,7 +26,7 @@ class _MyApp extends State<MyApp> {
   @override
   Widget build(BuildContext context){
     return Scaffold(
-      body: MainScreen(),
+      body: Greenhouse(),
       bottomNavigationBar: NavBar()
     );
 
