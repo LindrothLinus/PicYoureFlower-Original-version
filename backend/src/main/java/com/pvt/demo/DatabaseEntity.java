@@ -13,16 +13,11 @@ public class DatabaseEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id; // long
 
-    private String name;
-    private String type;
+    private String commonName;
+    private String latinName;
+    private String color;
 
-    private LocalDateTime lastFeed;
-    private LocalDateTime lastTalk;
-    private LocalDateTime lastPlay;
-
-    private Integer intervalFeed;
-    private Integer intervalTalk;
-    private Integer intervalPlay;
+    private LocalDateTime picTaken;
 
     public Integer getId() {
         return this.id;
@@ -32,67 +27,36 @@ public class DatabaseEntity {
         this.id = id;
     }
 
-    public String getName() {
-        return this.name;
+    public String getCommonName() {
+        return this.commonName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setCommonName(String commonName) {
+        this.commonName = commonName;
     }
 
-    public String getType() {
-        return this.type;
+    public String getLatinName() {
+        return this.latinName;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setLatinName(String latinName) {
+        this.latinName = latinName;
     }
 
-    public LocalDateTime getLastFeed() {
-        return this.lastFeed;
+    public String getColor() {
+        return this.color;
     }
 
-    public void setLastFeed(LocalDateTime lastFeed) {
-        this.lastFeed = lastFeed;
+    public void setColor(String color) {
+        this.color = color;
     }
 
-    public LocalDateTime getLastTalk() {
-        return this.lastTalk;
+    public LocalDateTime getPicTaken() {
+        return this.picTaken;
     }
 
-    public void setLastTalk(LocalDateTime lastTalk) {
-        this.lastTalk = lastTalk;
+    public void setPicTaken(LocalDateTime picTaken) {
+        this.picTaken = picTaken;
     }
 
-    public LocalDateTime getLastPlay() {
-        return this.lastPlay;
-    }
-
-    public void setLastPlay(LocalDateTime lastPlay) {
-        this.lastPlay = lastPlay;
-    }
-
-    public Integer getIntervalFeed() {
-        return this.intervalFeed;
-    }
-
-    public void setIntervalFeed(Integer intervalFeed) {
-        this.intervalFeed = intervalFeed;
-    }
-
-    public Integer getIntervalTalk() {
-        return this.intervalTalk;
-    }
-
-    public void setIntervalTalk(Integer intervalTalk) {
-        this.intervalTalk = intervalTalk;
-    }
-
-    public Integer getIntervalPlay() {
-        return this.intervalPlay;
-    }
-
-    public void setIntervalPlay(Integer intervalPlay) {
-        this.intervalPlay = intervalPlay;
-    }
 }

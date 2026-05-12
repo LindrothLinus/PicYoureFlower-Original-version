@@ -26,3 +26,5 @@ class TextStyles {
     fontWeight: FontWeight.w500,
   );
 }
+const Color blueColor = Color(0xFFB8E9FF);
+const Color buildBarColor = Color(0xFFFFF4F4);
