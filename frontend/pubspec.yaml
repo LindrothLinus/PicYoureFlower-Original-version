@@ -70,6 +70,7 @@ flutter:
     - lib/resources/images/pinkPot.png
     - lib/resources/images/purplePot.png
     - lib/resources/images/yellowPot.png
+    - lib/resources/images/Add.png
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in

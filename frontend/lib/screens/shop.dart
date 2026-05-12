@@ -13,6 +13,7 @@ const String mintPotPath = "lib/resources/images/mintPot.png";
 const String pinkPotPath = "lib/resources/images/pinkPot.png";
 const String purplePotPath = "lib/resources/images/purplePot.png";
 const String yellowPotPath = "lib/resources/images/yellowPot.png";
+const String addPath = "lib/resources/images/Add.png";
 
 const String coinsPath = "lib/resources/images/coin_icon.png";
 //Alla items
@@ -102,13 +103,25 @@ class _ShopState extends State<Shop> {
                             ),
                           ],
                         ),
-
-                        Image.asset(
-                          coinsPath,
-                          height: 30,
-                          width: 30,
-                          fit: BoxFit.contain,
-                        ), //Det här ska vara plusset, och en knapp också som anropar decreaseValue
+                        Row(
+                          children: [
+                            IconButton(
+                              onPressed: () {
+                                if (coinsState.getCoinValue() >= item.cost) {
+                                  setState(() {
+                                    coinsState.decreaseCoinValue(item.cost);
+                                  });
+                                }
+                              },
+                              icon: Image.asset(
+                                addPath,
+                                height: 30,
+                                width: 30,
+                                fit: BoxFit.contain,
+                              ),
+                            ),
+                          ],
+                        ),
                       ],
                     ),
                   ),
