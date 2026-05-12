@@ -131,7 +131,7 @@ class _ShopState extends State<Shop> {
           );
         },
       ),
-      bottomNavigationBar: const NavBar(),
+      //bottomNavigationBar: const NavBar(),
     );
   }
 }
