@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_demo/screens/Greenhouse.dart';
+import 'package:flutter_demo/widgets/login_popup.dart';
 import 'package:flutter_demo/widgets/nav_bar.dart';
 import 'package:flutter/services.dart';
 
@@ -24,10 +25,22 @@ class MyApp extends StatefulWidget {
 class _MyApp extends State<MyApp> {
 
   @override
+  void initState(){
+    super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      login_popup(context);
+    });
+  }
+
+  @override
   Widget build(BuildContext context){
+    
     return Scaffold(
+
       body: Greenhouse(),
       bottomNavigationBar: NavBar()
+
     );
 
   }
