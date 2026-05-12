@@ -1,16 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_demo/widgets/back_btn.dart';
 import 'package:flutter_demo/widgets/coins.dart';
 import '../resources/constants.dart';
 import 'package:flutter_demo/items/buyable_item_creator.dart';
 import 'package:flutter_demo/states/coins_state.dart';
-import 'package:google_fonts/google_fonts.dart';
+//import 'package:flutter_demo/widgets/nav_bar.dart';
 
-const String brownPotPath = "lib/resources/images/BrownPot.svg"; 
+const String brownPotPath = "lib/resources/images/brownPot.png"; 
+const String bluePotPath = "lib/resources/images/bluePot.png"; 
+const String greenPotPath = "lib/resources/images/greenPot.png"; 
+const String mintPotPath = "lib/resources/images/mintPot.png"; 
+const String pinkPotPath = "lib/resources/images/pinkPot.png"; 
+const String purplePotPath = "lib/resources/images/purplePot.png"; 
+const String yellowPotPath = "lib/resources/images/yellowPot.png"; 
+
 const String coinsPath = "lib/resources/images/coin_icon.png";
 //Alla items 
-final buyableItems = [BuyableItemCreator(cost: 5, image: coinsPath), ];
+final buyableItems = [BuyableItemCreator(cost: 5, image: brownPotPath), BuyableItemCreator(cost: 5, image: bluePotPath), BuyableItemCreator(cost: 5, image: greenPotPath), BuyableItemCreator(cost: 5, image: mintPotPath), BuyableItemCreator(cost: 5, image: pinkPotPath), BuyableItemCreator(cost: 5, image: purplePotPath), BuyableItemCreator(cost: 5, image: yellowPotPath), ];
 
 class Shop extends StatefulWidget {
   const Shop({super.key});
@@ -54,7 +60,7 @@ class _ShopState extends State<Shop>{
                       padding: const EdgeInsets.only(bottom: 25),
                       child: SizedBox(
                       height: 75, 
-                      child: Image.asset(item.image, fit: BoxFit.contain),
+                      child: Image.asset(item.image, height: 65, width: 65, fit: BoxFit.contain),
                     )
                     )
                 ),
@@ -94,7 +100,7 @@ class _ShopState extends State<Shop>{
         }, 
                         
                     ),
-                  
+                  //bottomNavigationBar: const NavBar(),
               );
               
   }
