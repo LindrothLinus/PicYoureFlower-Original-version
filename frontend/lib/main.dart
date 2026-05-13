@@ -23,22 +23,40 @@ class MyAppState extends State<MyApp> {
   final buildModeActiveNotifier = ValueNotifier<bool>(false);
   late BuildBar buildBar;
 
+  final itemSelected = ValueNotifier<Widget?>(null);
+
   @override
   void initState() {
     super.initState();
     buildBar = BuildBar(
       visibilityNotifier: buildModeActiveNotifier,
-      onFlowerSelected: (flower) {
-        print(flower);
+      onFlowerSelected: (flower){
+        if(flower != itemSelected.value){
+          itemSelected.value=flower;
+        }
+        else{
+          itemSelected.value=null;
+        }
+        print(itemSelected.value);
+
       },
-      onPotSelected: (pot) {
-        print(pot);
+      onPotSelected: (pot){
+        if(itemSelected.value!=pot){
+          itemSelected.value = pot;
+        }
+        else{
+          itemSelected.value = null;
+        }
+        print(itemSelected.value);
       },
     );
+
   }
 
   @override
   Widget build(BuildContext context) {
+    List<AddButton> addButtons = [AddButton(builModeActiveNotifier: buildModeActiveNotifier, x: 3000, y: 1550,item: itemSelected,), AddButton(builModeActiveNotifier: buildModeActiveNotifier, x: 2500, y: 1550, item: itemSelected)];
+
     return Scaffold(
       appBar: AppBar(
         // TRY THIS: Try changing the color here to a specific color (to
@@ -49,7 +67,10 @@ class MyAppState extends State<MyApp> {
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
       ),
-      body: Scaffold(body: Greenhouse(), bottomSheet: buildBar),
+      body: Scaffold(
+        body: Greenhouse(addButtons: addButtons,),
+        bottomSheet: buildBar
+        ),
 
       bottomNavigationBar: NavBar(
         onBuildModeButtonPressed: () {

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_demo/widgets/add_button.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class Greenhouse extends StatefulWidget {
-  const Greenhouse({super.key});
+  const Greenhouse({super.key, required this.addButtons});
+  final List <AddButton> addButtons;
 
   @override
   State<Greenhouse> createState() => _Greenhouse();
@@ -46,9 +48,10 @@ class _Greenhouse extends State<Greenhouse>{
               Positioned.fill(
                 child: SvgPicture.asset(
                   "lib/resources/images/Greenhouse.svg",
-                ),
+                ),                
               ),
-            ],
+             ...widget.addButtons, 
+            ]
             )
         ),
       ),
