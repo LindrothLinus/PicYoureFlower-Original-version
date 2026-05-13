@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_demo/resources/constants.dart';
 
 class AddButton extends StatefulWidget {
-  AddButton({super.key, required this.builModeActiveNotifier, required this.x, required this.y});
+  AddButton({super.key, required this.builModeActiveNotifier, required this.x, required this.y, required this.item});
   final String imagePath = "lib/resources/images/add_button.png";
   final double x;
   final double y;
   final ValueNotifier<bool> builModeActiveNotifier;
+  final ValueNotifier<Widget?> item;
   bool isTaken=false;
 
   @override
@@ -28,15 +29,23 @@ class AddButtonState extends State<AddButton> {
         children: [
           Visibility(
             visible: (buildModeIsActviated && !widget.isTaken),
-            child: GestureDetector(
-              onTap: () {setState(() {
+            child:ValueListenableBuilder(valueListenable: widget.item, builder: (context,item,child){
+              return GestureDetector(
+              onTap: () {
+                print(item);
+                if(item != null){
+                setState(() {
                 widget.isTaken=true;
-              });},
+              });
+                }
+                },
               child: Image.asset(widget.imagePath,width: addButtonSize,height: addButtonSize,),
                           
-            ),
+            );
+            }) 
+            
           ),
-
+          widget.item.value??Container()
 
         ],
       ),

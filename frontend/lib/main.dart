@@ -27,20 +27,39 @@ class MyAppState extends State<MyApp> {
   final buildModeActiveNotifier = ValueNotifier<bool>(false);
   late BuildBar buildBar;
 
+  final itemSelected = ValueNotifier<Widget?>(null);
+
   @override
   void initState() {
     super.initState();
     buildBar = BuildBar(
       visibilityNotifier: buildModeActiveNotifier,
-      onFlowerSelected: (flower){print(flower);},
-      onPotSelected: (pot){print(pot);},
+      onFlowerSelected: (flower){
+        if(flower != itemSelected.value){
+          itemSelected.value=flower;
+        }
+        else{
+          itemSelected.value=null;
+        }
+        print(itemSelected.value);
+
+      },
+      onPotSelected: (pot){
+        if(itemSelected.value!=pot){
+          itemSelected.value = pot;
+        }
+        else{
+          itemSelected.value = null;
+        }
+        print(itemSelected.value);
+      },
     );
 
   }
 
   @override
   Widget build(BuildContext context) {
-    List<AddButton> addButtons = [AddButton(builModeActiveNotifier: buildModeActiveNotifier, x: 3000, y: 1550)];
+    List<AddButton> addButtons = [AddButton(builModeActiveNotifier: buildModeActiveNotifier, x: 3000, y: 1550,item: itemSelected,), AddButton(builModeActiveNotifier: buildModeActiveNotifier, x: 2500, y: 1550, item: itemSelected)];
 
     return Scaffold(
       appBar: AppBar(
