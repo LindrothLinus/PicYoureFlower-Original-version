@@ -45,25 +45,27 @@ class FlowerCollection extends StatelessWidget {
                   child: Padding(
                     padding: const EdgeInsets.only(bottom: 25),
                     child: SizedBox(
-                      height: 75,
+                      height: 90,
                       child: Image.asset(
-                        item.frontImage,
-                        height: 65,
-                        width: 65,
+                        item.backGround,
+                        color: flowerColor,
+                        height: 90,
+                        width: 90,
                         fit: BoxFit.contain,
                       ),
                     ),
                   ),
                 ),
+
                 Center(
                   child: Padding(
                     padding: const EdgeInsets.only(bottom: 25),
                     child: SizedBox(
-                      height: 75,
+                      height: 90,
                       child: Image.asset(
-                        item.backGround,
-                        height: 65,
-                        width: 65,
+                        item.frontImage,
+                        height: 90,
+                        width: 90,
                         fit: BoxFit.contain,
                       ),
                     ),
@@ -74,14 +76,21 @@ class FlowerCollection extends StatelessWidget {
                   alignment: Alignment.bottomCenter,
                   child: Container(
                     width: double.infinity,
+                    height: 30,
                     padding: const EdgeInsets.all(1),
-                    /* decoration: BoxDecoration(
-                      color: mainColor,
+                    decoration: BoxDecoration(
+                      color: purpleColor,
                       borderRadius: const BorderRadius.only(
                         bottomLeft: Radius.circular(12),
                         bottomRight: Radius.circular(12),
                       ),
-                    ), */
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text("Blommans namn", style: TextStyles.infoText),
+                      ],
+                    ),
                   ),
                 ),
               ],

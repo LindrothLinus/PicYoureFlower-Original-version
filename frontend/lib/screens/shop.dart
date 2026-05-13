@@ -5,7 +5,6 @@ import 'package:flutter_demo/widgets/coins.dart';
 import '../resources/constants.dart';
 import 'package:flutter_demo/items/buyable_item_creator.dart';
 import 'package:flutter_demo/states/coins_state.dart';
-import 'package:flutter_demo/states/check_button_overlay.dart';
 import 'package:flutter_demo/widgets/nav_bar.dart';
 
 const String brownPotPath = "lib/resources/images/brown.webp";
@@ -79,7 +78,7 @@ class Shop extends StatelessWidget {
                     width: double.infinity,
                     padding: const EdgeInsets.all(1),
                     decoration: BoxDecoration(
-                      color: mainColor,
+                      color: purpleColor,
                       borderRadius: const BorderRadius.only(
                         bottomLeft: Radius.circular(12),
                         bottomRight: Radius.circular(12),
