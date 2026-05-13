@@ -127,7 +127,7 @@ class Shop extends StatelessWidget {
           );
         },
       ),
-      //bottomNavigationBar: const NavBar(),
+      bottomNavigationBar: NavBar(onBuildModeButtonPressed: () {}),
     );
   }
 }
