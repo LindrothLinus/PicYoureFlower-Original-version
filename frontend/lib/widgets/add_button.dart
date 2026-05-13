@@ -17,6 +17,7 @@ class AddButton extends StatefulWidget {
 class AddButtonState extends State<AddButton> {
   @override
   Widget build(BuildContext context) {
+    Widget? newItem = widget.item.value;
     return ValueListenableBuilder(valueListenable: widget.builModeActiveNotifier, builder: (context,buildModeIsActviated,child){
       return Positioned(
 
@@ -45,7 +46,7 @@ class AddButtonState extends State<AddButton> {
             }) 
             
           ),
-          widget.item.value??Container()
+          newItem??Container()
 
         ],
       ),
