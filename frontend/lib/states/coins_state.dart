@@ -1,18 +1,18 @@
-//Den här klassen håller bara status för hur mycket pengar som finns, kan öka och minska det värdet 
+//Den här klassen håller bara status för hur mycket pengar som finns, kan öka och minska det värdet
+import 'package:flutter/material.dart';
 
 class CoinsState {
-    int _coinValue = 0;
+  final ValueNotifier<int> coinValue = ValueNotifier<int>(0);
 
-    void increaseCoinValue(int addedValue) {
-        _coinValue = _coinValue + addedValue;
-    } 
+  void increaseCoinValue(int addedValue) {
+    coinValue.value = coinValue.value + addedValue;
+  }
 
-    void decreaseCoinValue(int deletedValue) {
-         _coinValue = _coinValue - deletedValue;
-    } 
- 
-    int getCoinValue(){
-        return _coinValue; 
-    }
+  void decreaseCoinValue(int deletedValue) {
+    coinValue.value = coinValue.value - deletedValue;
+  }
 
+  int getCoinValue() {
+    return coinValue.value;
+  }
 }

@@ -6,13 +6,13 @@ import 'package:flutter_demo/items/buyable_item_creator.dart';
 import 'package:flutter_demo/states/coins_state.dart';
 import 'package:flutter_demo/widgets/nav_bar.dart';
 
-const String brownPotPath = "lib/resources/images/brownPot.png";
-const String bluePotPath = "lib/resources/images/bluePot.png";
-const String greenPotPath = "lib/resources/images/greenPot.png";
-const String mintPotPath = "lib/resources/images/mintPot.png";
-const String pinkPotPath = "lib/resources/images/pinkPot.png";
-const String purplePotPath = "lib/resources/images/purplePot.png";
-const String yellowPotPath = "lib/resources/images/yellowPot.png";
+const String brownPotPath = "lib/resources/images/brown.webp";
+const String bluePotPath = "lib/resources/images/blue.webp";
+const String greenPotPath = "lib/resources/images/green.webp";
+const String mintPotPath = "lib/resources/images/mint.webp";
+const String pinkPotPath = "lib/resources/images/pink.webp";
+const String purplePotPath = "lib/resources/images/purple.webp";
+const String yellowPotPath = "lib/resources/images/yellow.webp";
 const String addPath = "lib/resources/images/Add.png";
 
 const String coinsPath = "lib/resources/images/coin_icon.png";
@@ -27,14 +27,9 @@ final buyableItems = [
   BuyableItemCreator(cost: 5, image: yellowPotPath),
 ];
 
-class Shop extends StatefulWidget {
-  const Shop({super.key});
+class Shop extends StatelessWidget {
+  Shop({super.key});
 
-  @override
-  State<Shop> createState() => _ShopState();
-}
-
-class _ShopState extends State<Shop> {
   final CoinsState coinsState = CoinsState();
 
   @override
@@ -108,9 +103,7 @@ class _ShopState extends State<Shop> {
                             IconButton(
                               onPressed: () {
                                 if (coinsState.getCoinValue() >= item.cost) {
-                                  setState(() {
-                                    coinsState.decreaseCoinValue(item.cost);
-                                  });
+                                  coinsState.decreaseCoinValue(item.cost);
                                 }
                               },
                               icon: Image.asset(

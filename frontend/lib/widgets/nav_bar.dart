@@ -36,7 +36,7 @@ class NavBarState extends State<NavBar> {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute<void>(builder: (context) => const Shop()),
+                  MaterialPageRoute<void>(builder: (context) => Shop()),
                 );
               },
             ),

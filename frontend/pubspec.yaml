@@ -66,13 +66,13 @@ flutter:
     - lib/resources/images/BluePot.svg 
     - lib/resources/images/pinkpot.svg
     - lib/resources/images/BrownPot.svg
-    - lib/resources/images/brownPot.png
-    - lib/resources/images/bluePot.png
-    - lib/resources/images/greenPot.png
-    - lib/resources/images/mintPot.png
-    - lib/resources/images/pinkPot.png
-    - lib/resources/images/purplePot.png
-    - lib/resources/images/yellowPot.png
+    - lib/resources/images/brown.webp
+    - lib/resources/images/blue.webp
+    - lib/resources/images/green.webp
+    - lib/resources/images/mint.webp
+    - lib/resources/images/pink.webp
+    - lib/resources/images/purple.webp
+    - lib/resources/images/yellow.webp
     - lib/resources/images/Add.png
     - lib/resources/images/ros_sticker.png
     - lib/resources/images/ros_sticker_kontur.png
