@@ -40,6 +40,7 @@ dependencies:
   camera: ^0.12.0+1
   path_provider: ^2.1.5
   path: ^1.9.1
+  overlay_pop_up: ^1.0.6+6
 
 dev_dependencies:
   flutter_test:
@@ -62,10 +63,7 @@ flutter:
     - lib/resources/images/camera_icon.png
     - lib/resources/images/cart_icon.png
     - lib/resources/images/flower_icon.png
-    - lib/resources/images/coin_icon.png
-    - lib/resources/images/BluePot.svg 
-    - lib/resources/images/pinkpot.svg
-    - lib/resources/images/BrownPot.svg
+    - lib/resources/images/coin.webp
     - lib/resources/images/brown.webp
     - lib/resources/images/blue.webp
     - lib/resources/images/green.webp
@@ -73,12 +71,11 @@ flutter:
     - lib/resources/images/pink.webp
     - lib/resources/images/purple.webp
     - lib/resources/images/yellow.webp
-    - lib/resources/images/Add.png
+    - lib/resources/images/Add.webp
     - lib/resources/images/ros_sticker.png
     - lib/resources/images/ros_sticker_kontur.png
     - lib/resources/images/Greenhouse.svg
-    - lib/resources/images/BrownPot.svg
-    - lib/resources/images/add_button.png
+    - lib/resources/images/Check.webp
 
 
   # The following line ensures that the Material Icons font is

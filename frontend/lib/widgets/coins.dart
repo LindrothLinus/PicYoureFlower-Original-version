@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_demo/states/coins_state.dart';
 import '../resources/constants.dart';
 
-const String coinsPath = "lib/resources/images/coin_icon.png";
+const String coinsPath = "lib/resources/images/coin.webp";
 
 class Coins extends StatelessWidget {
   final CoinsState coinsState;

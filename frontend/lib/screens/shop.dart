@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_demo/states/check_button_overlay.dart';
 import 'package:flutter_demo/widgets/back_btn.dart';
 import 'package:flutter_demo/widgets/coins.dart';
 import '../resources/constants.dart';
 import 'package:flutter_demo/items/buyable_item_creator.dart';
 import 'package:flutter_demo/states/coins_state.dart';
+import 'package:flutter_demo/states/check_button_overlay.dart';
 import 'package:flutter_demo/widgets/nav_bar.dart';
 
 const String brownPotPath = "lib/resources/images/brown.webp";
@@ -13,9 +15,9 @@ const String mintPotPath = "lib/resources/images/mint.webp";
 const String pinkPotPath = "lib/resources/images/pink.webp";
 const String purplePotPath = "lib/resources/images/purple.webp";
 const String yellowPotPath = "lib/resources/images/yellow.webp";
-const String addPath = "lib/resources/images/Add.png";
+const String addPath = "lib/resources/images/Add.webp";
 
-const String coinsPath = "lib/resources/images/coin_icon.png";
+const String coinsPath = "lib/resources/images/coin.webp";
 //Alla items
 final buyableItems = [
   BuyableItemCreator(cost: 5, image: brownPotPath),
@@ -104,6 +106,7 @@ class Shop extends StatelessWidget {
                               onPressed: () {
                                 if (coinsState.getCoinValue() >= item.cost) {
                                   coinsState.decreaseCoinValue(item.cost);
+                                  CheckButtonPopUp.showCheckButton(context);
                                 }
                               },
                               icon: Image.asset(
