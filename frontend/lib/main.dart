@@ -26,6 +26,7 @@ class MyApp extends StatefulWidget {
 class MyAppState extends State<MyApp> {
   final buildModeActiveNotifier = ValueNotifier<bool>(false);
   late BuildBar buildBar;
+  late AddButton addButton;
 
   @override
   void initState() {
@@ -35,6 +36,8 @@ class MyAppState extends State<MyApp> {
       onFlowerSelected: (flower){print(flower);},
       onPotSelected: (pot){print(pot);},
     );
+
+    addButton = AddButton(builModeActiveNotifier: buildModeActiveNotifier);
   }
 
   @override
@@ -50,7 +53,7 @@ class MyAppState extends State<MyApp> {
         title: Text(widget.title),
       ),
       body: Scaffold(
-        body: Greenhouse(),
+        body: Greenhouse(buildModeNotifier: buildModeActiveNotifier,),
         bottomSheet: buildBar
         ),
 
