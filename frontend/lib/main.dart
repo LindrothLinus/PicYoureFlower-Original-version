@@ -26,7 +26,6 @@ class MyApp extends StatefulWidget {
 class MyAppState extends State<MyApp> {
   final buildModeActiveNotifier = ValueNotifier<bool>(false);
   late BuildBar buildBar;
-  late AddButton addButton;
 
   @override
   void initState() {
@@ -37,11 +36,12 @@ class MyAppState extends State<MyApp> {
       onPotSelected: (pot){print(pot);},
     );
 
-    addButton = AddButton(builModeActiveNotifier: buildModeActiveNotifier);
   }
 
   @override
   Widget build(BuildContext context) {
+    List<AddButton> addButtons = [AddButton(builModeActiveNotifier: buildModeActiveNotifier, x: 3000, y: 1550)];
+
     return Scaffold(
       appBar: AppBar(
         // TRY THIS: Try changing the color here to a specific color (to
@@ -53,7 +53,7 @@ class MyAppState extends State<MyApp> {
         title: Text(widget.title),
       ),
       body: Scaffold(
-        body: Greenhouse(buildModeNotifier: buildModeActiveNotifier,),
+        body: Greenhouse(addButtons: addButtons,),
         bottomSheet: buildBar
         ),
 
