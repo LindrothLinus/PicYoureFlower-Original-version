@@ -6,6 +6,7 @@ import 'package:flutter_demo/widgets/camera_feed.dart';
 import '../resources/constants.dart';
 import '../screens/shop.dart';
 import 'package:http/http.dart' as http;
+import '../screens/flower_info.dart';
 
 class CameraButtonBar extends StatelessWidget {
   CameraButtonBar({super.key, required this.cameraFeed,required this.cameraKey});
@@ -38,7 +39,21 @@ class CameraButtonBar extends StatelessWidget {
           onPressed: () async {
             final image = await cameraKey.currentState?.takePicture();
             if (image != null) {
+              // 1. Skicka bilden till servern 
               await identifyFlower(image);
+
+              // 2. Hoppa till informationsskärm
+              if (!context.mounted) return; // Säkerhetskoll
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => FlowerInfoScreen(
+                    flowerName: "Identifierad blomma", 
+                    imagePath: image.path,
+                    description: "Här visas information om blomman du precis fotograferade!",
+                  ),
+                ),
+              );
             }
           },
           style: ElevatedButton.styleFrom(
