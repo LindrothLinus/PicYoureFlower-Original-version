@@ -4,6 +4,7 @@ import 'package:flutter_demo/widgets/build_bar.dart';
 import 'package:flutter_demo/screens/Greenhouse.dart';
 import 'package:flutter_demo/widgets/nav_bar.dart';
 import 'package:flutter/services.dart';
+import '../resources/constants.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -13,7 +14,7 @@ void main() async {
 
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
-  final String title = "pic youre flower";
+  final String title = "PicYourFlower";
 
   @override
   State<MyApp> createState() => MyAppState();
@@ -30,32 +31,41 @@ class MyAppState extends State<MyApp> {
     super.initState();
     buildBar = BuildBar(
       visibilityNotifier: buildModeActiveNotifier,
-      onFlowerSelected: (flower){
-        if(flower != itemSelected.value){
-          itemSelected.value=flower;
-        }
-        else{
-          itemSelected.value=null;
+      onFlowerSelected: (flower) {
+        if (flower != itemSelected.value) {
+          itemSelected.value = flower;
+        } else {
+          itemSelected.value = null;
         }
         print(itemSelected.value);
-
       },
-      onPotSelected: (pot){
-        if(itemSelected.value!=pot){
+      onPotSelected: (pot) {
+        if (itemSelected.value != pot) {
           itemSelected.value = pot;
-        }
-        else{
+        } else {
           itemSelected.value = null;
         }
         print(itemSelected.value);
       },
     );
-
   }
 
   @override
   Widget build(BuildContext context) {
-    List<AddButton> addButtons = [AddButton(builModeActiveNotifier: buildModeActiveNotifier, x: 3000, y: 1550,item: itemSelected,), AddButton(builModeActiveNotifier: buildModeActiveNotifier, x: 2500, y: 1550, item: itemSelected)];
+    List<AddButton> addButtons = [
+      AddButton(
+        builModeActiveNotifier: buildModeActiveNotifier,
+        x: 3000,
+        y: 1550,
+        item: itemSelected,
+      ),
+      AddButton(
+        builModeActiveNotifier: buildModeActiveNotifier,
+        x: 2500,
+        y: 1550,
+        item: itemSelected,
+      ),
+    ];
 
     return Scaffold(
       appBar: AppBar(
@@ -65,12 +75,12 @@ class MyAppState extends State<MyApp> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
+        title: Text(widget.title, style: TextStyles.header),
       ),
       body: Scaffold(
-        body: Greenhouse(addButtons: addButtons,),
-        bottomSheet: buildBar
-        ),
+        body: Greenhouse(addButtons: addButtons),
+        bottomSheet: buildBar,
+      ),
 
       bottomNavigationBar: NavBar(
         onBuildModeButtonPressed: () {
