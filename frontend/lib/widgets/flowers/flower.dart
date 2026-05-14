@@ -6,10 +6,12 @@ abstract class Flower extends StatelessWidget {
     required this.frontImage,
     required this.backGround,
     required this.color,
+    required this.name,
   });
   final String frontImage;
   final String backGround;
   final Color color;
+  final String name;
 
   @override
   Widget build(BuildContext context) {

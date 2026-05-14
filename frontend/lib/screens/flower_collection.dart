@@ -1,18 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_demo/widgets/back_btn.dart';
+import 'package:flutter_demo/widgets/flowers/genericflower.dart';
 import 'package:flutter_demo/widgets/flowers/rose_flower.dart';
+import 'package:flutter_demo/widgets/flowers/sunflower.dart';
+import 'package:flutter_demo/widgets/flowers/tulip.dart';
+import 'package:flutter_demo/widgets/flowers/woodanemone.dart';
 import 'package:flutter_demo/widgets/nav_bar.dart';
 import '../resources/constants.dart';
 
-Color flowerColor = Colors.orange;
-//Blommorna och dess färg måste hämtas från databasen
+//Blommorna, dess färg och namn måste hämtas från databasen
 final flowerCollection = [
-  RoseFlower(color: flowerColor),
-  RoseFlower(color: flowerColor),
-  RoseFlower(color: flowerColor),
-  RoseFlower(color: flowerColor),
-  RoseFlower(color: flowerColor),
-  RoseFlower(color: flowerColor),
+  RoseFlower(color: Colors.red, name: "Rose"),
+  SunFlower(color: Colors.yellow, name: "Sunflower"),
+  GenericFlower(color: Colors.blueAccent, name: "Flower"),
+  TulipFlower(color: Colors.pinkAccent, name: "Tulip"),
+  WoodanemoneFlower(color: Colors.white, name: "Wood anemone"),
+  RoseFlower(color: Colors.redAccent, name: "Rose"),
 ];
 
 class FlowerCollection extends StatelessWidget {
@@ -48,7 +51,7 @@ class FlowerCollection extends StatelessWidget {
                       height: 90,
                       child: Image.asset(
                         item.backGround,
-                        color: flowerColor,
+                        color: item.color,
                         height: 90,
                         width: 90,
                         fit: BoxFit.contain,
@@ -87,9 +90,7 @@ class FlowerCollection extends StatelessWidget {
                     ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text("Blommans namn", style: TextStyles.infoText),
-                      ],
+                      children: [Text(item.name, style: TextStyles.infoText)],
                     ),
                   ),
                 ),
@@ -102,49 +103,3 @@ class FlowerCollection extends StatelessWidget {
     );
   }
 }
-
-
-//GAMLA koden
-/* class FlowerCollection extends StatefulWidget {
-  const FlowerCollection({super.key});
-
-  @override
-  State<FlowerCollection> createState() => FlowerCollectionState();
-}
-
-class FlowerCollectionState extends State<FlowerCollection> {
-  //!Alt detta är debug kod som går att ta bort
-  Color flowerColor = Colors.orange;
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Flower Collection'),
-        backgroundColor: const Color.fromARGB(255, 221, 25, 11),
-        leading: CustomBackButton(),
-      ),
-
-      body: RoseFlower(color: flowerColor),
-
-      bottomNavigationBar: IconButton(
-        onPressed: () {
-          setState(() {
-            changeColor();
-          });
-        },
-        icon: Icon(Icons.abc),
-      ),
-
-      backgroundColor: const Color.fromARGB(255, 221, 99, 90),
-    );
-  }
-
-  void changeColor() {
-    if (flowerColor == Colors.green) {
-      flowerColor = Colors.blue;
-    } else {
-      flowerColor = Colors.green;
-    }
-  }
-}
- */
