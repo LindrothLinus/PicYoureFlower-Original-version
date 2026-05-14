@@ -17,12 +17,12 @@ class CarouselState extends State<Carousel> {
   @override
   Widget build(BuildContext context) {
     final List<Flower> flowers = [
-      RoseFlower(color: Colors.red),
-      RoseFlower(color: Colors.blue),
-      RoseFlower(color: Colors.pink),
-      RoseFlower(color: Colors.orange),
-      RoseFlower(color: Colors.green),
-      RoseFlower(color: Colors.deepPurpleAccent),
+      RoseFlower(color: Colors.red, name: "Rose"),
+      RoseFlower(color: Colors.blue, name: "Rose"),
+      RoseFlower(color: Colors.pink, name: "Rose"),
+      RoseFlower(color: Colors.orange, name: "Rose"),
+      RoseFlower(color: Colors.green, name: "Rose"),
+      RoseFlower(color: Colors.deepPurpleAccent, name: "Rose"),
     ];
     return Expanded(
       child: ScrollConfiguration(
@@ -36,7 +36,7 @@ class CarouselState extends State<Carousel> {
               AspectRatio(
                 aspectRatio: 1,
                 child: GestureDetector(
-                  onTap:()=>widget.onItemSelected(item),
+                  onTap: () => widget.onItemSelected(item),
                   child: Container(
                     margin: EdgeInsets.all(4.0),
                     padding: EdgeInsets.all(4.0),

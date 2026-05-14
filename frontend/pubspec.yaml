@@ -76,6 +76,14 @@ flutter:
     - lib/resources/images/ros_sticker_kontur.png
     - lib/resources/images/Greenhouse.svg
     - lib/resources/images/Check.webp
+    - lib/resources/images/Vitblommamedgulmitten.png
+    - lib/resources/images/VBVitblommamedgulmitten.png
+    - lib/resources/images/Solros.png
+    - lib/resources/images/VBSolros.png
+    - lib/resources/images/Tulpan.png
+    - lib/resources/images/VBTulpan.png
+    - lib/resources/images/Vitsippa.png
+    - lib/resources/images/VBVitsippa.png
 
 
   # The following line ensures that the Material Icons font is
