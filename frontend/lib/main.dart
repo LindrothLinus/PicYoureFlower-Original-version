@@ -1,34 +1,100 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_demo/widgets/add_button.dart';
+import 'package:flutter_demo/widgets/build_bar.dart';
 import 'package:flutter_demo/screens/Greenhouse.dart';
+import 'package:flutter_demo/widgets/login_popup.dart';
 import 'package:flutter_demo/widgets/nav_bar.dart';
 import 'package:flutter/services.dart';
+import '../resources/constants.dart';
 
-void main() async{
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-  runApp(
-    const MaterialApp(
-      home: MyApp(),
-    ),
-  );
+  runApp(const MaterialApp(home: MyApp()));
 }
 
 class MyApp extends StatefulWidget {
-  
   const MyApp({super.key});
+  final String title = "PicYourFlower";
 
   @override
-  State<MyApp> createState() => _MyApp();
+  State<MyApp> createState() => MyAppState();
 }
 
-class _MyApp extends State<MyApp> {
+class MyAppState extends State<MyApp> {
+  final buildModeActiveNotifier = ValueNotifier<bool>(false);
+  late BuildBar buildBar;
+
+  final itemSelected = ValueNotifier<Widget?>(null);
 
   @override
-  Widget build(BuildContext context){
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      login_popup(context);
+    });
+
+    buildBar = BuildBar(
+      visibilityNotifier: buildModeActiveNotifier,
+      onFlowerSelected: (flower) {
+        if (flower != itemSelected.value) {
+          itemSelected.value = flower;
+        } else {
+          itemSelected.value = null;
+        }
+        print(itemSelected.value);
+      },
+      onPotSelected: (pot) {
+        if (itemSelected.value != pot) {
+          itemSelected.value = pot;
+        } else {
+          itemSelected.value = null;
+        }
+        print(itemSelected.value);
+      },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    List<AddButton> addButtons = [
+      AddButton(
+        builModeActiveNotifier: buildModeActiveNotifier,
+        x: 3000,
+        y: 1550,
+        item: itemSelected,
+      ),
+      AddButton(
+        builModeActiveNotifier: buildModeActiveNotifier,
+        x: 2500,
+        y: 1550,
+        item: itemSelected,
+      ),
+    ];
+
     return Scaffold(
-      body: Greenhouse(),
-      bottomNavigationBar: NavBar()
+      appBar: AppBar(
+        // TRY THIS: Try changing the color here to a specific color (to
+        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
+        // change color while the other colors stay the same.
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        // Here we take the value from the MyHomePage object that was created by
+        // the App.build method, and use it to set our appbar title.
+        title: Text(widget.title, style: TextStyles.header),
+      ),
+      body: Scaffold(
+        body: Greenhouse(addButtons: addButtons),
+        bottomSheet: buildBar,
+      ),
+
+      bottomNavigationBar: NavBar(
+        onBuildModeButtonPressed: () {
+          buildModeActiveNotifier.value = !buildModeActiveNotifier.value;
+        },
+      ),
     );
 
+    //test du kan ta bort denna komentar
   }
 }

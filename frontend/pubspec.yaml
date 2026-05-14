@@ -30,6 +30,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  google_fonts: ^6.2.1
   flutter_svg: ^2.0.5
 
   # The following adds the Cupertino Icons font to your application.
@@ -39,6 +40,7 @@ dependencies:
   camera: ^0.12.0+1
   path_provider: ^2.1.5
   path: ^1.9.1
+  overlay_pop_up: ^1.0.6+6
 
 dev_dependencies:
   flutter_test:
@@ -61,10 +63,28 @@ flutter:
     - lib/resources/images/camera_icon.png
     - lib/resources/images/cart_icon.png
     - lib/resources/images/flower_icon.png
+    - lib/resources/images/coin.webp
+    - lib/resources/images/brown.webp
+    - lib/resources/images/blue.webp
+    - lib/resources/images/green.webp
+    - lib/resources/images/mint.webp
+    - lib/resources/images/pink.webp
+    - lib/resources/images/purple.webp
+    - lib/resources/images/yellow.webp
+    - lib/resources/images/Add.webp
     - lib/resources/images/ros_sticker.png
     - lib/resources/images/ros_sticker_kontur.png
     - lib/resources/images/Greenhouse.svg
-    - lib/resources/images/BrownPot.svg
+    - lib/resources/images/Check.webp
+    - lib/resources/images/Vitblommamedgulmitten.png
+    - lib/resources/images/VBVitblommamedgulmitten.png
+    - lib/resources/images/Solros.png
+    - lib/resources/images/VBSolros.png
+    - lib/resources/images/Tulpan.png
+    - lib/resources/images/VBTulpan.png
+    - lib/resources/images/Vitsippa.png
+    - lib/resources/images/VBVitsippa.png
+
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
