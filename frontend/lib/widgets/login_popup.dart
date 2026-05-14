@@ -1,4 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+
+final TextStyle headerText = GoogleFonts.nunito(
+  fontSize: 25,
+  fontWeight: FontWeight.w500,
+);
+
+final TextStyle infoText = GoogleFonts.nunito(
+  fontSize: 17,
+  fontWeight: FontWeight.w500,
+);
+
+final TextStyle loginText = GoogleFonts.nunito(
+  fontSize: 25,
+  fontWeight: FontWeight.w500,
+  color: Colors.black,
+);
 
 void login_popup(BuildContext context) {
   showDialog(
@@ -15,10 +32,10 @@ void login_popup(BuildContext context) {
           )
         ),
 
-        title: const Row(
+        title: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text('Login!'),
+            Text('Login!', style: headerText),
             SizedBox(width: 10),
             Icon(Icons.lock),
           ],
@@ -27,16 +44,14 @@ void login_popup(BuildContext context) {
         content: SizedBox(
           width: 200,
           height: 100,
-          child: const Padding(
+          child: Padding(
             padding: EdgeInsets.only(top: 30),
             child: Column(
               mainAxisSize: MainAxisSize.min,
-              children: const [
+              children: [
                 Text(
                   'In order to play and share your greenhouse please log in!',
-                  style: TextStyle(
-                    fontSize: 18
-                  ),
+                  style: infoText,
                 ),
               ],
             ),
@@ -61,16 +76,31 @@ void login_popup(BuildContext context) {
 
                   backgroundColor: Color(0xFFAEF7A1),
                 ),
-                onPressed: () {
+                onPressed: () async {
                   //open the login microservice instead of just poping the screen
+                  showDialog(
+                    context: context,
+                    barrierDismissible: false,
+                    builder: (context) {
+                      return Center(
+                        child: SizedBox(
+                          width: 100,
+                          height: 100,
+                          child: Image.asset(
+                            'lib/resources/images/Check.webp',
+                            fit: BoxFit.contain,
+                          ),
+                        )
+                      );
+                    }
+                  );
+                  await Future.delayed(const Duration(seconds: 1));
+                  Navigator.of(context).pop();
                   Navigator.of(context).pop();
                 },
-                child: const Text(
+                child: Text(
                   'Log in!',
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 25,
-                  )
+                  style: loginText
                 ),
               ) 
             )

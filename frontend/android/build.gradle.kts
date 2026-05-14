@@ -22,4 +22,4 @@ subprojects {
 tasks.register<Delete>("clean") {
     delete(rootProject.layout.buildDirectory)
 }
-flutter run -v
+//flutter run -v
