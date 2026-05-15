@@ -6,6 +6,7 @@ const Color blockColor = Color(0xFFFFE6F6);
 const Color backgroundColor = Color(0xFFB8E9FF); //Enligt Figma
 const Color yellowColor = Color(0xFFFFEF89);
 const Color purpleColor = Color(0xFFE9C6FF);
+const Color greenColor = Color(0xFFAEF7A1);
 
 //Typsnitt för appen
 class TextStyles {
