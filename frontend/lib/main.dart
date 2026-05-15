@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_demo/widgets/add_button.dart';
 import 'package:flutter_demo/widgets/build_bar.dart';
 import 'package:flutter_demo/screens/Greenhouse.dart';
+import 'package:flutter_demo/widgets/friend_menu.dart';
 import 'package:flutter_demo/widgets/login_popup.dart';
 import 'package:flutter_demo/widgets/nav_bar.dart';
 import 'package:flutter/services.dart';
@@ -75,16 +76,17 @@ class MyAppState extends State<MyApp> {
 
     return Scaffold(
       appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
         title: Text(widget.title, style: TextStyles.header),
       ),
       body: Scaffold(
-        body: Greenhouse(addButtons: addButtons),
+        body: Stack(
+          children: [
+            Greenhouse(addButtons: addButtons),
+            SafeArea(child: FriendMenu())
+          ],
+        ),
+        
         bottomSheet: buildBar,
       ),
 

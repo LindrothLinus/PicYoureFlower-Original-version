@@ -84,6 +84,10 @@ flutter:
     - lib/resources/images/VBTulpan.png
     - lib/resources/images/Vitsippa.png
     - lib/resources/images/VBVitsippa.png
+    - lib/resources/images/Calendar_v2.png
+    - lib/resources/images/Expand.png
+    - lib/resources/images/Identity.png
+    - lib/resources/images/Social.png
 
 
   # The following line ensures that the Material Icons font is

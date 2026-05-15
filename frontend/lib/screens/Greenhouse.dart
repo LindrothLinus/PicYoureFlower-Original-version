@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_demo/widgets/add_button.dart';
+import 'package:flutter_demo/widgets/friend_menu.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class Greenhouse extends StatefulWidget {
@@ -51,8 +52,9 @@ class _Greenhouse extends State<Greenhouse>{
                 ),                
               ),
              ...widget.addButtons, 
+              //FriendMenu(),
             ]
-            )
+          )
         ),
       ),
     );
