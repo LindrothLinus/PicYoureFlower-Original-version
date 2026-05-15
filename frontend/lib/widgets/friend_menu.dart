@@ -20,8 +20,9 @@ class FriendMenuState extends State<FriendMenu>{
   bool isExpanded = false;
   Color? activePanelColor;
   double smallHeigth = 150;
+  double mediumHeight = 300;
   double largeHeigth = 540;
-  double panelHeigth = 0; //150 for small
+  double panelHeigth = 0; 
 
   Padding heartButton(){
     return Padding(
@@ -102,7 +103,7 @@ class FriendMenuState extends State<FriendMenu>{
             backgroundColor: greenColor,
           ),
           onPressed: (){
-            panelHeigth = largeHeigth;
+            panelHeigth = mediumHeight;
             openPanel(greenColor);
           }, 
           child: Text(
@@ -145,6 +146,56 @@ class FriendMenuState extends State<FriendMenu>{
     );
   }
 
+  Container searchConfirmButton(){
+    return Container(
+      margin: EdgeInsets.zero,
+      padding: EdgeInsets.all(8),
+      decoration: BoxDecoration(
+        color: greenColor,
+        border: Border.all(
+          color: Colors.black,
+          width: 1,
+        ),
+        borderRadius: BorderRadius.circular(6)
+      ),
+      child: Image.asset(
+        'lib/resources/images/Search.png',
+      ),
+    );
+  }
+
+  TextField searchTextField(){
+    return TextField(
+      decoration: InputDecoration(
+        hintText: "Username...",
+        filled: true,
+        fillColor: Colors.white,
+        enabledBorder: OutlineInputBorder(
+          borderSide: BorderSide(
+            color: Colors.black,
+            width: 1,
+          ),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderSide: BorderSide(
+            color: Colors.black,
+            width: 1,
+          ),
+        ),
+        suffixIcon: GestureDetector(
+          onTap: (){
+            //do something
+          },
+          child: SizedBox(
+            width: 60,
+            height: 60,
+            child: searchConfirmButton(),
+          ),
+        )
+      ),
+    );
+  }
+
   Container menuBox(){
     return Container(
       width: 80,
@@ -172,6 +223,46 @@ class FriendMenuState extends State<FriendMenu>{
             menuBox(),
             Text('Name', style: menuText),
           ],
+        )
+      ),
+    );
+  }
+
+  Container profileBoxPic(Color c, double w, double h, String image){
+    return Container(
+      width: w,
+      height: h,
+      decoration: BoxDecoration(
+        color: c,
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(
+          color: Colors.black,
+          width: 1,
+        )
+      ),
+      child: Image.asset(
+        image,
+      ),
+    );
+  }
+
+  Container profileBoxText(Color c, double w, double h, String text){
+    return Container(
+      width: w,
+      height: h,
+      decoration: BoxDecoration(
+        color: c,
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(
+          color: Colors.black,
+          width: 1,
+        )
+      ),
+      child: Padding(
+        padding: EdgeInsets.only(left: 10),
+        child: Align(
+          alignment: Alignment.centerLeft,
+          child: Text(text, style: menuText,),
         )
       ),
     );
@@ -258,11 +349,67 @@ class FriendMenuState extends State<FriendMenu>{
                       ]
                     ]
                   )
-                ]
-                //if(activePanelColor == mainColor)
-                //if(activePanelColor == greenColor)
+                ],
+                if(activePanelColor == mainColor)...[
+                  Center(
+                    child:SizedBox(
+                      width: 350,
+                      child: searchTextField(),
+                    ),
+                  ),
+                ],
+                if(activePanelColor == greenColor)...[
+                  Column(
+                    children: [
+                      SizedBox(height: 30),
+                      Row(
+                        children: [
+                          SizedBox(width: 30),
+                          //profile pic
+                          profileBoxPic(Colors.white, 150, 150, 'lib/resources/images/showel_icon.png'),
+
+                          SizedBox(width: 20),
+                          //other column
+                          Column(
+                            children: [
+                              //calender
+                              Row(
+                                children: [
+                                  profileBoxPic(purpleColor, 40, 40, 'lib/resources/images/Calendar_v2.png'),
+                                  profileBoxText(Colors.white, 155, 40, '26-05-15'),
+                                ],
+                              ),
+
+                              SizedBox(height: 15),
+                              //name
+                              Row(
+                                children: [
+                                  profileBoxPic(purpleColor, 40, 40, 'lib/resources/images/Identity.png'),
+                                  profileBoxText(Colors.white, 155, 40, 'FlowerManiac'),
+                                ],
+                              ),
+
+                              SizedBox(height: 15),
+                              //flower status
+                              Row(
+                                children: [
+                                  profileBoxPic(purpleColor, 40, 40, 'lib/resources/images/flower_icon.png'),
+                                  profileBoxText(Colors.white, 155, 40, 'PowPowGood'),
+                                ],
+                              ),
+                            ],
+                          )
+                        ],
+                      ),
+                      
+                      SizedBox(height: 30),
+                      
+                      //second column slot, manage friends
+                      profileBoxText(purpleColor, 370, 50, 'Manage Friends'),
+                    ],
+                  ),
+                ],
               ],
-              
             ),
           ),
       ],
