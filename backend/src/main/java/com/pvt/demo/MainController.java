@@ -91,7 +91,7 @@ public class MainController {
             // lägg till i databasen
             addEntity(entity);
 
-            return file;
+            return entity;
 
         } catch (Exception e) {
             return "Entity not found";
@@ -149,9 +149,9 @@ public class MainController {
             r /= count;
             g /= count;
             b /= count;
-            String boostedColor = boostColor(r, g, b);
+            String boostedColorAsHex = boostColor(r, g, b);
 
-            return boostedColor;
+            return boostedColorAsHex;
 
         } catch (Exception e) {
             return "fail";
@@ -176,8 +176,9 @@ public class MainController {
         int newR = (rgb >> 16) & 0xff;
         int newG = (rgb >> 8) & 0xff;
         int newB = rgb & 0xff;
+        String hex = String.format("#%02x%02x%02x", newR, newG, newB);
 
-        return "RGB(" + newR + ", " + newG + ", " + newB + ")";
+        return hex;
     }
 
     @PostMapping(value = "/identifyflower", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
