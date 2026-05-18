@@ -81,14 +81,13 @@ public class MainController {
             // få ut namnet
             String names = getNameFromPic(file);
             String[] namesplit = names.split(" , ");
-            String commonName = namesplit[0];
-            String latinName = namesplit[1];
-
+            FlowerTemplate template[] = FlowerTemplate.values();
             // sätta info
-            entity.setCommonName(commonName);
-            entity.setLatinName(latinName);
+            entity.setCommonName(namesplit[0]);
+            entity.setLatinName(namesplit[1]);
             entity.setColor(getColor(file));
             entity.setPicTaken(java.time.LocalDateTime.now());
+            entity.setTemplate(template[(int) (Math.random() * template.length)]);
             // lägg till i databasen
             addEntity(entity);
 

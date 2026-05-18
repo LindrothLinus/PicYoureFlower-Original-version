@@ -24,8 +24,15 @@ public class DatabaseEntity {
     private String latinName;
     private String color;
     private LocalDateTime picTaken;
+    private FlowerTemplate template;
 
-    private String template;
+    public FlowerTemplate getTemplate() {
+        return this.template;
+    }
+
+    public void setTemplate(FlowerTemplate template) {
+        this.template = template;
+    }
 
     public Integer getId() {
         return this.id;
