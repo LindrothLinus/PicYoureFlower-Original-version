@@ -27,12 +27,12 @@ class MyApp extends StatefulWidget {
 
 class MyAppState extends State<MyApp> {
   final List<Flower> flowers = [
-      RoseFlower(color: Colors.red),
-      RoseFlower(color: Colors.blue),
-      RoseFlower(color: Colors.pink),
-      RoseFlower(color: Colors.orange),
-      RoseFlower(color: Colors.green),
-      RoseFlower(color: Colors.deepPurpleAccent),
+      RoseFlower(color: Colors.red, name: "k",),
+      RoseFlower(color: Colors.blue,name: "k"),
+      RoseFlower(color: Colors.pink,name: "k"),
+      RoseFlower(color: Colors.orange,name: "k"),
+      RoseFlower(color: Colors.green,name: "k"),
+      RoseFlower(color: Colors.deepPurpleAccent,name: "k"),
     ];
 
 
