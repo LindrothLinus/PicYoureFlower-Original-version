@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_demo/screens/Greenhouse.dart';
 import 'package:flutter_demo/widgets/add_button.dart';
 import 'package:flutter_demo/widgets/build_bar.dart';
-import 'package:flutter_demo/screens/Greenhouse.dart';
 import 'package:flutter_demo/widgets/flowers/flower.dart';
 import 'package:flutter_demo/widgets/flowers/genericflower.dart';
 import 'package:flutter_demo/widgets/flowers/rose_flower.dart';
@@ -11,8 +12,8 @@ import 'package:flutter_demo/widgets/flowers/woodanemone.dart';
 import 'package:flutter_demo/widgets/friend_menu.dart';
 import 'package:flutter_demo/widgets/login_popup.dart';
 import 'package:flutter_demo/widgets/nav_bar.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_demo/widgets/pots/blue_pot.dart';
+
 import '../resources/constants.dart';
 
 void main() async {
@@ -170,3 +171,4 @@ class MyAppState extends State<MyApp> {
     //test du kan ta bort denna komentar
   }
 }
+//test
