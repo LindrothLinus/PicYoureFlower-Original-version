@@ -9,6 +9,13 @@ import java.time.LocalDateTime;
 @Entity
 public class DatabaseEntity {
 
+    // template också.
+    // almänn info
+    // användare
+    // x,y värde
+    // utplacerad eller Inte
+    // mall bara namn
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id; // long
@@ -16,8 +23,16 @@ public class DatabaseEntity {
     private String commonName;
     private String latinName;
     private String color;
-
     private LocalDateTime picTaken;
+    private FlowerTemplate template;
+
+    public FlowerTemplate getTemplate() {
+        return this.template;
+    }
+
+    public void setTemplate(FlowerTemplate template) {
+        this.template = template;
+    }
 
     public Integer getId() {
         return this.id;

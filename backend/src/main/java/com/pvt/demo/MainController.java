@@ -3,6 +3,7 @@ package com.pvt.demo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.MediaType;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -15,23 +16,27 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.reactive.function.client.WebClient;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
-import java.io.File;
 
 import javax.imageio.ImageIO;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @Controller
 @RequestMapping(path = "/home")
 @CrossOrigin
 public class MainController {
 
+    private final DemoApplication demoApplication;
     @Autowired
     private EntityRepository entityRepository;
+
+    MainController(DemoApplication demoApplication) {
+        this.demoApplication = demoApplication;
+    }
 
     @GetMapping(path = "/hello")
     public @ResponseBody String hello() {
@@ -45,7 +50,7 @@ public class MainController {
     }
 
     @GetMapping(path = "/rename/{id}/{commonName}/{latinName}")
-    public @ResponseBody Object entityRename(@PathVariable Integer id, @PathVariable String commonName,
+    public @ResponseBody Object entityRename(@PathVariable @NonNull Integer id, @PathVariable String commonName,
             @PathVariable String latinName) {
         try {
             DatabaseEntity entity = entityRepository.findById(id).orElseThrow(IllegalArgumentException::new);
@@ -58,7 +63,7 @@ public class MainController {
     }
 
     @GetMapping(path = "/recolor/{id}/{color}")
-    public @ResponseBody Object entityRename(@PathVariable Integer id, @PathVariable String color) {
+    public @ResponseBody Object entityRename(@PathVariable @NonNull Integer id, @PathVariable String color) {
         try {
             DatabaseEntity entity = entityRepository.findById(id).orElseThrow(IllegalArgumentException::new);
             entity.setColor(color);
@@ -68,24 +73,38 @@ public class MainController {
         }
     }
 
-    @PostMapping(path = "/add", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public @ResponseBody Object addEntity(@RequestParam("image") MultipartFile file) {
+    @PostMapping(path = "/identify", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public @ResponseBody Object identifyFlower(@RequestParam("image") MultipartFile file) {
         try {
             DatabaseEntity entity = new DatabaseEntity();
-            String commonName = "";
-            String latinName = "";
-            String color = getColor(file);
 
+            // få ut namnet
             String names = getNameFromPic(file);
             String[] namesplit = names.split(" , ");
-            commonName = namesplit[0];
-            latinName = namesplit[1];
-
-            entity.setCommonName(commonName);
-            entity.setLatinName(latinName);
-            entity.setColor(color);
+            FlowerTemplate template[] = FlowerTemplate.values();
+            // sätta info
+            entity.setCommonName(namesplit[0]);
+            entity.setLatinName(namesplit[1]);
+            entity.setColor(getColor(file));
             entity.setPicTaken(java.time.LocalDateTime.now());
+            entity.setTemplate(template[(int) (Math.random() * template.length)]);
+            // lägg till i databasen
+            addEntity(entity);
+
+            return entity;
+
+        } catch (Exception e) {
+            return "Entity not found";
+        }
+
+    }
+
+    @PostMapping(path = "/add")
+    public @ResponseBody Object addEntity(@RequestBody @NonNull DatabaseEntity entity) {
+        try {
+
             return entityRepository.save(entity);
+
         } catch (Exception e) {
             return "Entity not found when trying to add flower";
         }
@@ -130,9 +149,9 @@ public class MainController {
             r /= count;
             g /= count;
             b /= count;
-            String boostedColor = boostColor(r, g, b);
+            String boostedColorAsHex = boostColor(r, g, b);
 
-            return boostedColor;
+            return boostedColorAsHex;
 
         } catch (Exception e) {
             return "fail";
@@ -157,8 +176,9 @@ public class MainController {
         int newR = (rgb >> 16) & 0xff;
         int newG = (rgb >> 8) & 0xff;
         int newB = rgb & 0xff;
+        String hex = String.format("#%02x%02x%02x", newR, newG, newB);
 
-        return "RGB(" + newR + ", " + newG + ", " + newB + ")";
+        return hex;
     }
 
     @PostMapping(value = "/identifyflower", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -183,5 +203,26 @@ public class MainController {
         String bestMatch = json.path("bestMatch").asText();
         String commonName = json.path("results").get(0).path("species").path("commonNames").get(0).asText();
         return commonName + " , " + bestMatch; // Change this for other info
+    }
+
+    @GetMapping(path = "wikiinfo/{commonName}")
+    public @ResponseBody Object getWikiInfo(@PathVariable String commonName){
+        try {
+            final RestClient restClient = RestClient.create();
+            String nameToSend = commonName; //add formatting here, remove spaces?
+            String response = restClient.get()
+            .uri("https://en.wikipedia.org/api/rest_v1/page/summary/" + nameToSend)
+            .header("Accept", "application/json")
+            .retrieve()
+            .body(String.class);
+
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode json = mapper.readTree(response);
+            return json.path("extract").asText();
+
+        }
+        catch (Exception e) {
+            return "Could not find information";
+        }
     }
 }

@@ -5,30 +5,29 @@ import 'package:flutter_demo/widgets/back_btn.dart';
 import 'package:flutter_demo/widgets/camera_button.dart';
 import '../widgets/camera_feed.dart';
 
-
-
-class Camera extends StatefulWidget{
+class Camera extends StatefulWidget {
   Camera({super.key});
   State<Camera> createState() => CameraState();
 }
 
 class CameraState extends State<Camera> {
-
   @override
   Widget build(BuildContext context) {
     final GlobalKey<CameraFeedState> cameraKey = GlobalKey<CameraFeedState>();
-    CameraFeed cameraFeed = CameraFeed(key:cameraKey);
+    CameraFeed cameraFeed = CameraFeed(key: cameraKey);
 
     return Scaffold(
-      body: Stack(children: [cameraFeed,CustomBackButton()],),
-      
-      backgroundColor: mainColor,
-      bottomNavigationBar:CameraButtonBar(cameraFeed: cameraFeed,cameraKey: cameraKey,) ,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        leading: CustomBackButton(),
+      ),
+      body: Stack(children: [cameraFeed]),
 
-      
+      backgroundColor: mainColor,
+      bottomNavigationBar: CameraButtonBar(
+        cameraFeed: cameraFeed,
+        cameraKey: cameraKey,
+      ),
     );
   }
-
-
-
 }
