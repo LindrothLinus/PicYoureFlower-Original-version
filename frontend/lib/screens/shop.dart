@@ -49,6 +49,7 @@ class Shop extends StatelessWidget {
           crossAxisCount: 3,
           crossAxisSpacing: 10,
           mainAxisSpacing: 10,
+          childAspectRatio: 0.7,
         ),
         itemCount: buyableItems.length,
         itemBuilder: (BuildContext context, int index) {
