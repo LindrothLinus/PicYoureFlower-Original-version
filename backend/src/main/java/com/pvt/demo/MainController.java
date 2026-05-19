@@ -204,4 +204,25 @@ public class MainController {
         String commonName = json.path("results").get(0).path("species").path("commonNames").get(0).asText();
         return commonName + " , " + bestMatch; // Change this for other info
     }
+
+    @GetMapping(path = "wikiinfo/{commonName}")
+    public @ResponseBody Object getWikiInfo(@PathVariable String commonName){
+        try {
+            final RestClient restClient = RestClient.create();
+            String nameToSend = commonName; //add formatting here, remove spaces?
+            String response = restClient.get()
+            .uri("https://en.wikipedia.org/api/rest_v1/page/summary/" + nameToSend)
+            .header("Accept", "application/json")
+            .retrieve()
+            .body(String.class);
+
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode json = mapper.readTree(response);
+            return json.path("extract").asText();
+
+        }
+        catch (Exception e) {
+            return "Could not find information";
+        }
+    }
 }
