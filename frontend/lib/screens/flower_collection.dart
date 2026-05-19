@@ -11,7 +11,7 @@ import '../resources/constants.dart';
 //Blommorna, dess färg och namn måste hämtas från databasen
 final flowerCollection = [
   RoseFlower(color: Colors.red, name: "Rose"),
-  SunFlower(color: Colors.yellow, name: "Sunflower"),
+  SunFlower(color: Colors.yellow, name: "Sunflowerhkjhkjhjhjkhk"),
   GenericFlower(color: Colors.blueAccent, name: "Flower"),
   TulipFlower(color: Colors.pinkAccent, name: "Tulip"),
   WoodanemoneFlower(color: Colors.white, name: "Wood anemone"),
@@ -90,7 +90,15 @@ class FlowerCollection extends StatelessWidget {
                     ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: [Text(item.name, style: TextStyles.infoText)],
+                      children: [
+                        Expanded(
+                          child: Text(
+                            item.name,
+                            style: TextStyles.infoText,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
