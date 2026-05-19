@@ -96,6 +96,7 @@ class FlowerCollection extends StatelessWidget {
                             item.name,
                             style: TextStyles.infoText,
                             overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.center,
                           ),
                         ),
                       ],
