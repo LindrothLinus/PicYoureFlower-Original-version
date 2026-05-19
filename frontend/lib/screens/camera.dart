@@ -21,7 +21,7 @@ class CameraState extends State<Camera> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        leading: CustomBackButton(),
+        leading: CustomBackButton(toHome: true),
       ),
       body: Center(child: cameraFeed),
 

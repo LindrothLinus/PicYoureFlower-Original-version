@@ -39,7 +39,7 @@ class Shop extends StatelessWidget {
       appBar: AppBar(
         title: Text('Shop', style: TextStyles.header),
         backgroundColor: backgroundColor,
-        leading: CustomBackButton(),
+        leading: CustomBackButton(toHome: true),
         actions: [Coins(coinsState: coinsState)],
       ),
       backgroundColor: backgroundColor,

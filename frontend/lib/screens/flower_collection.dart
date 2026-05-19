@@ -27,7 +27,7 @@ class FlowerCollection extends StatelessWidget {
       appBar: AppBar(
         title: Text('My flowers', style: TextStyles.header),
         backgroundColor: backgroundColor,
-        leading: CustomBackButton(),
+        leading: CustomBackButton(toHome: true),
       ),
       backgroundColor: backgroundColor,
       body: GridView.builder(

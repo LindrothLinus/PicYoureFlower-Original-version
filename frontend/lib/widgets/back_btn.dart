@@ -1,15 +1,22 @@
 import 'package:flutter/material.dart';
 
-class CustomBackButton extends StatelessWidget{
-    const CustomBackButton({super.key});
+class CustomBackButton extends StatelessWidget {
+  const CustomBackButton({super.key, required this.toHome});
 
-    @override
-    Widget build(BuildContext context) {
-        return IconButton(
-        icon: Icon(Icons.arrow_back_ios_new_rounded),
-        onPressed: () {
-            Navigator.of(context, rootNavigator: true).pop(); // för att komma tillbaka till huvudappens tidigare sida, kanske vill ändra detta sen
-        },
-        );
-    }
+  final bool toHome;
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      icon: Icon(Icons.arrow_back_ios_new_rounded),
+      onPressed: () {
+        if (toHome == true) {
+          Navigator.of(context).popUntil((route) => route.isFirst);
+        } else {
+          Navigator.of(context, rootNavigator: true).pop();
+        }
+        // för att komma tillbaka till huvudappens tidigare sida, kanske vill ändra detta sen
+      },
+    );
+  }
 }

@@ -23,6 +23,11 @@ class NavBarState extends State<NavBar> {
 
   @override
   Widget build(BuildContext context) {
+    final isCamera = ModalRoute.of(context)?.settings.name == '/camera';
+    final isShop = ModalRoute.of(context)?.settings.name == '/shop';
+    final isFlowerCollection =
+        ModalRoute.of(context)?.settings.name == '/flower_collection';
+
     return Visibility(
       visible: true,
 
@@ -33,12 +38,17 @@ class NavBarState extends State<NavBar> {
           children: [
             IconButton(
               icon: Image.asset(shopIconPath),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute<void>(builder: (context) => Shop()),
-                );
-              },
+              onPressed: isShop
+                  ? null
+                  : () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute<void>(
+                          settings: RouteSettings(name: '/shop'),
+                          builder: (context) => Shop(),
+                        ),
+                      );
+                    },
             ),
             IconButton(
               icon: Image.asset(buildmodeIconPath),
@@ -51,23 +61,31 @@ class NavBarState extends State<NavBar> {
             ),
             IconButton(
               icon: Image.asset(cameraIconPath),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute<void>(builder: (context) => Camera()),
-                );
-              },
+              onPressed: isCamera
+                  ? null
+                  : () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute<void>(
+                          settings: RouteSettings(name: '/camera'),
+                          builder: (context) => Camera(),
+                        ),
+                      );
+                    },
             ),
             IconButton(
               icon: Image.asset(flowerCollectionIconPath),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute<void>(
-                    builder: (context) => FlowerCollection(),
-                  ),
-                );
-              },
+              onPressed: isFlowerCollection
+                  ? null
+                  : () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute<void>(
+                          settings: RouteSettings(name: '/flower_collection'),
+                          builder: (context) => FlowerCollection(),
+                        ),
+                      );
+                    },
             ),
           ],
         ),
