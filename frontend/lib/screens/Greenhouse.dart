@@ -16,7 +16,7 @@ class _Greenhouse extends State<Greenhouse>{
   final TransformationController controller = TransformationController();
   final double imageWidth = 5906;
   final double imageHeight = 4725;
-  final double scale = 0.3;
+  final double scale = 0.17;
 
   @override
   void initState(){
@@ -36,7 +36,7 @@ class _Greenhouse extends State<Greenhouse>{
         clipBehavior: Clip.none,
         panEnabled: true,
         scaleEnabled: false,
-        panAxis: PanAxis.aligned,
+        panAxis: PanAxis.free,
         interactionEndFrictionCoefficient: 0.00001,
         
         transformationController: controller,
