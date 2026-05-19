@@ -49,6 +49,12 @@ public class MainController {
         return entityRepository.findAll();
     }
 
+    @GetMapping(path = "/all")
+    public @ResponseBody Iterable<DatabaseEntity> getAllEntitiesFromUser(String username) {
+
+        return entityRepository.findByUsername(username);
+    }
+
     @GetMapping(path = "/rename/{id}/{commonName}/{latinName}")
     public @ResponseBody Object entityRename(@PathVariable @NonNull Integer id, @PathVariable String commonName,
             @PathVariable String latinName) {

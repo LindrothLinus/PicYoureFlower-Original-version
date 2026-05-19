@@ -9,12 +9,6 @@ import java.time.LocalDateTime;
 @Entity
 public class DatabaseEntity {
 
-    // almänn info
-    // användare
-    // x,y värde
-    // utplacerad eller Inte
-    // mall bara namn
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id; // long
