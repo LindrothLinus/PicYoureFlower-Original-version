@@ -21,7 +21,7 @@ class CameraState extends State<Camera> {
         backgroundColor: Colors.transparent,
         leading: CustomBackButton(),
       ),
-      body: Stack(children: [cameraFeed]),
+      body: Center(child: cameraFeed),
 
       backgroundColor: mainColor,
       bottomNavigationBar: CameraButtonBar(
