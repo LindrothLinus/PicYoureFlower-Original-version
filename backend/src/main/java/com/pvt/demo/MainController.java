@@ -230,14 +230,13 @@ public class MainController {
         entity.setColor(getColor(image)); // testa detta
         entity.setPicTaken(java.time.LocalDateTime.now());
         entity.setTemplate(template[(int) (Math.random() * template.length)]); // slumpmässig
-        // entity.setOwner(owner); ta bort kommentar när setOwner är implementerat
-
+        entity.setUsername(owner);
         // lägg till i databasen
         addEntity(entity);
 
+        //skicka tillbaka till kamera
         return entity;
 
-        // return commonName + " , " + bestMatch; // Change this for other info
     }
 
     @GetMapping(path = "wikiinfo/{commonName}")
