@@ -394,7 +394,7 @@ class FriendMenuState extends State<FriendMenu>{
                               Row(
                                 children: [
                                   profileBoxPic(purpleColor, 40, 40, 'lib/resources/images/flower_icon.png'),
-                                  profileBoxText(Colors.white, 155, 40, 'PowPowGood'),
+                                  profileBoxText(Colors.white, 155, 40, '1,234'),
                                 ],
                               ),
                             ],
