@@ -66,12 +66,14 @@ flutter:
     - lib/resources/images/coin.webp
     - lib/resources/images/brown.webp
     - lib/resources/images/blue.webp
+    - lib/resources/images/blue.png
     - lib/resources/images/green.webp
     - lib/resources/images/mint.webp
     - lib/resources/images/pink.webp
     - lib/resources/images/purple.webp
     - lib/resources/images/yellow.webp
     - lib/resources/images/Add.webp
+    - lib/resources/images/Add.png
     - lib/resources/images/ros_sticker.png
     - lib/resources/images/ros_sticker_kontur.png
     - lib/resources/images/Greenhouse.svg
