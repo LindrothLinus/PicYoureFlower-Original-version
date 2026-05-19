@@ -55,17 +55,6 @@ public class MainController {
         return entityRepository.findByUsername(username);
     }
 
-    @GetMapping(path = "/recolor/{id}/{color}")
-    public @ResponseBody Object entityRename(@PathVariable @NonNull Integer id, @PathVariable String color) {
-        try {
-            DatabaseEntity entity = entityRepository.findById(id).orElseThrow(IllegalArgumentException::new);
-            entity.setColor(color);
-            return entityRepository.save(entity);
-        } catch (IllegalArgumentException e) {
-            return "Entity not found";
-        }
-    }
-
     @GetMapping(path = "/addusername/{id}/{username}")
     public @ResponseBody Object addUsername(@PathVariable @NonNull Integer id, @PathVariable String username) {
         try {
