@@ -37,7 +37,7 @@ class MyAppState extends State<MyApp> {
   late BuildBar buildBar;
 
   final itemSelected = ValueNotifier<Widget?>(null);
-  @override
+  @override 
   void initState() {
     List<Pot> pots=[Pot(item:itemSelected),];
 

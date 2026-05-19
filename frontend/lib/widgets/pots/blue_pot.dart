@@ -11,7 +11,7 @@ class Pot extends StatefulWidget {
 
 class PotState extends State<Pot> {
   bool isTaken = false;
-  Widget? lockedItem;
+  Widget? plantedItem;
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +23,7 @@ class PotState extends State<Pot> {
             if (item != null) {
               setState(() {
                 isTaken = true;
-                lockedItem = item;
+                plantedItem = item;
               });
             }
           },
@@ -35,8 +35,8 @@ class PotState extends State<Pot> {
                 top:-100,
                 left: -10,
                 right: 0,
-                child: lockedItem ?? Container(),
-              ),              
+                child: plantedItem ?? Container(),
+              ),
             ],
           ),
         );

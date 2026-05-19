@@ -38,7 +38,7 @@ class BuildBarState extends State<BuildBar> {
           topLeft: Radius.circular(15),
           topRight: Radius.circular(15),
         ),
-        color: Colors.blue,
+        color: buildBarColor,
       ),
       child: FractionallySizedBox(
         widthFactor: 1,
