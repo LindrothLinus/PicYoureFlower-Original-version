@@ -38,4 +38,4 @@ const Color blueColor = Color(0xFFB8E9FF);
 const Color buildBarColor = Color(0xFFFFF4F4);
 
 
-const double addButtonSize = 100; 
+const double addButtonSize = 300; 
