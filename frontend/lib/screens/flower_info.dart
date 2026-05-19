@@ -6,6 +6,9 @@ class FlowerInfoScreen extends StatelessWidget {
   final dynamic flowerItem; 
 
   const FlowerInfoScreen({super.key, required this.flowerItem});
+  static const String calendarIcon = "lib/resources/images/Calendar_v2.png";
+  static const String identityIcon = "lib/resources/images/Identity.png";
+  static const String locationIcon = "lib/resources/images/Location_v2.png";
 
   @override
   Widget build(BuildContext context) {
@@ -79,9 +82,9 @@ class FlowerInfoScreen extends StatelessWidget {
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                _buildInfoRow("26-05-05", Icons.calendar_month, infoPurple, blackBorder, standardRadius), 
-                                _buildInfoRow("Taraxacum", Icons.local_florist_outlined, infoPurple, blackBorder, standardRadius),
-                                _buildInfoRow("Järvafältet", Icons.location_on_outlined, infoPurple, blackBorder, standardRadius),
+                                _buildInfoRow("26-05-05", calendarIcon, infoPurple, blackBorder, standardRadius), 
+                                _buildInfoRow("Taraxacum", identityIcon, infoPurple, blackBorder, standardRadius),
+                                _buildInfoRow("Järvafältet", locationIcon, infoPurple, blackBorder, standardRadius),
                               ],
                             ),
                           ),
@@ -121,7 +124,7 @@ class FlowerInfoScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildInfoRow(String text, IconData icon, Color badgeColor, BoxBorder border, BorderRadius radius) {
+  Widget _buildInfoRow(String text, dynamic iconOrAsset, Color badgeColor, BoxBorder border, BorderRadius radius) {
     return Container(
       height: 40,
       decoration: BoxDecoration(
@@ -138,7 +141,9 @@ class FlowerInfoScreen extends StatelessWidget {
               borderRadius: BorderRadius.only(topLeft: radius.topLeft, bottomLeft: radius.bottomLeft),
               border: Border(right: border.top), 
             ),
-            child: Icon(icon, size: 20, color: Colors.black87), 
+            child: iconOrAsset is String 
+              ? Image.asset(iconOrAsset, fit: BoxFit.contain)
+              : Icon(iconOrAsset as IconData, size: 20, color: Colors.black87),
           ),
           Expanded(
             child: Padding(
