@@ -73,6 +73,17 @@ public class MainController {
         }
     }
 
+    @GetMapping(path = "/addusername/{id}/{username}")
+    public @ResponseBody Object addUsername(@PathVariable @NonNull Integer id, @PathVariable String username) {
+        try {
+            DatabaseEntity entity = entityRepository.findById(id).orElseThrow(IllegalArgumentException::new);
+            entity.setUsername(username);
+            return entityRepository.save(entity);
+        } catch (IllegalArgumentException e) {
+            return "Entity not found";
+        }
+    }
+
     @PostMapping(path = "/identify", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public @ResponseBody Object identifyFlower(@RequestParam("image") MultipartFile file) {
         try {
@@ -205,10 +216,11 @@ public class MainController {
         return commonName + " , " + bestMatch; // Change this for other info
     }
 
-    //updated version taking and sending more info
+    // updated version taking and sending more info
     @PostMapping(value = "/fromcamera", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public @ResponseBody Object getNameFromPic(@RequestParam("image") MultipartFile image, @RequestParam("owner") String owner) throws Exception {
-        //identifierar
+    public @ResponseBody Object getNameFromPic(@RequestParam("image") MultipartFile image,
+            @RequestParam("owner") String owner) throws Exception {
+        // identifierar
         final RestClient restClient = RestClient.create();
         final String PLANTNET_API_KEY = "2b10bQPZR3ms3av4jXItPft5H";
         MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
@@ -228,43 +240,40 @@ public class MainController {
         String bestMatch = json.path("bestMatch").asText();
         String commonName = json.path("results").get(0).path("species").path("commonNames").get(0).asText();
         FlowerTemplate template[] = FlowerTemplate.values();
-        
-        //skapa databasentry
+
+        // skapa databasentry
         DatabaseEntity entity = new DatabaseEntity();
         entity.setCommonName(commonName);
         entity.setLatinName(bestMatch);
-        entity.setColor(getColor(image)); //testa detta
+        entity.setColor(getColor(image)); // testa detta
         entity.setPicTaken(java.time.LocalDateTime.now());
-        entity.setTemplate(template[(int) (Math.random() * template.length)]); //slumpmässig
-        //entity.setOwner(owner); ta bort kommentar när setOwner är implementerat
+        entity.setTemplate(template[(int) (Math.random() * template.length)]); // slumpmässig
+        // entity.setOwner(owner); ta bort kommentar när setOwner är implementerat
 
         // lägg till i databasen
         addEntity(entity);
 
         return entity;
 
-
-        
-        //return commonName + " , " + bestMatch; // Change this for other info
+        // return commonName + " , " + bestMatch; // Change this for other info
     }
 
     @GetMapping(path = "wikiinfo/{commonName}")
-    public @ResponseBody Object getWikiInfo(@PathVariable String commonName){
+    public @ResponseBody Object getWikiInfo(@PathVariable String commonName) {
         try {
             final RestClient restClient = RestClient.create();
-            String nameToSend = commonName; //add formatting here, remove spaces?
+            String nameToSend = commonName; // add formatting here, remove spaces?
             String response = restClient.get()
-            .uri("https://en.wikipedia.org/api/rest_v1/page/summary/" + nameToSend)
-            .header("Accept", "application/json")
-            .retrieve()
-            .body(String.class);
+                    .uri("https://en.wikipedia.org/api/rest_v1/page/summary/" + nameToSend)
+                    .header("Accept", "application/json")
+                    .retrieve()
+                    .body(String.class);
 
             ObjectMapper mapper = new ObjectMapper();
             JsonNode json = mapper.readTree(response);
             return json.path("extract").asText();
 
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             return "Could not find information";
         }
     }

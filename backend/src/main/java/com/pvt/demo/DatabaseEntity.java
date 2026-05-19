@@ -9,7 +9,6 @@ import java.time.LocalDateTime;
 @Entity
 public class DatabaseEntity {
 
-    // template också.
     // almänn info
     // användare
     // x,y värde
@@ -25,6 +24,15 @@ public class DatabaseEntity {
     private String color;
     private LocalDateTime picTaken;
     private FlowerTemplate template;
+    private String username;
+
+    public String getUsername() {
+        return this.username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
     public FlowerTemplate getTemplate() {
         return this.template;
