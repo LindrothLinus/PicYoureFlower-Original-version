@@ -9,6 +9,11 @@ final TextStyle menuText = GoogleFonts.nunito(
   color: Colors.black,
 );
 
+class Friend {
+  String name;
+  Friend(this.name);
+}
+
 class FriendMenu extends StatefulWidget{
 
   @override
@@ -26,20 +31,10 @@ class FriendMenuState extends State<FriendMenu>{
   double panelHeigth = 0; 
 
   final friends = [
-    //should be friends pulled from the database
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
+    //NOTICE ME BACKEND!!!!
+    //add friends from the database here by the method below
+    //Friend("name from database")
+
   ];
 
   Padding heartButton(){
@@ -366,7 +361,7 @@ class FriendMenuState extends State<FriendMenu>{
                     ),
                     itemCount: friends.length,
                     itemBuilder: (BuildContext context, int index){
-                      //final item = friends[index];
+                      final friend = friends[index];
                       return Card(
                         elevation: 3,
                         child: Stack(
@@ -405,7 +400,7 @@ class FriendMenuState extends State<FriendMenu>{
                                   children: [
                                     Expanded(
                                       child: Text(
-                                        'name', //friends name
+                                        friend.name, //friends name
                                         style: infoText,
                                         overflow: TextOverflow.ellipsis,
                                         textAlign: TextAlign.center,
@@ -422,16 +417,6 @@ class FriendMenuState extends State<FriendMenu>{
                     }
                   ),
                   expandButton(),
-                  /*Column(
-                    children: [
-                      createFriendBoxes(),
-                      if(isExpanded)...[
-                        createFriendBoxes(),
-                        createFriendBoxes(),
-                        createFriendBoxes(),
-                      ]
-                    ]
-                  )*/
                 ],
                 if(activePanelColor == mainColor)...[
                   Center(
