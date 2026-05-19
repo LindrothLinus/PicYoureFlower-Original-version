@@ -13,12 +13,14 @@ class CameraButtonBar extends StatelessWidget {
   final CameraFeed cameraFeed;
   final GlobalKey<CameraFeedState>cameraKey;
 
-  Future<void> identifyFlower(XFile image) async {
+  Future<void> identifyFlower(XFile image, String owner) async {
     try {
       //final uri = Uri.parse('http://192.168.0.10:8080/home/identifyflower'); //for testing locally
-      final uri = Uri.parse('https://group-1-75.pvt.dsv.su.se/home/identifyflower');
+      //final uri = Uri.parse('https://group-1-75.pvt.dsv.su.se/home/identifyflower');
+      final uri = Uri.parse('https://group-1-75.pvt.dsv.su.se/home/fromcamera');
       final request = http.MultipartRequest('POST', uri);
       request.files.add(await http.MultipartFile.fromPath('image', image.path));
+      request.fields['owner'] = owner;
       print('Sending request'); //For debugging
       final response = await request.send();
       final responseBody = await response.stream.bytesToString();
@@ -38,7 +40,7 @@ class CameraButtonBar extends StatelessWidget {
           onPressed: () async {
             final image = await cameraKey.currentState?.takePicture();
             if (image != null) {
-              await identifyFlower(image);
+              await identifyFlower(image, "testusername");
             }
           },
           style: ElevatedButton.styleFrom(
