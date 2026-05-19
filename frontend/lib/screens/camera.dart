@@ -17,8 +17,10 @@ class CameraState extends State<Camera> {
     CameraFeed cameraFeed = CameraFeed(key: cameraKey);
 
     return Scaffold(
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
+        elevation: 0,
         leading: CustomBackButton(),
       ),
       body: Center(child: cameraFeed),
