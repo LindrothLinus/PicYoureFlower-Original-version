@@ -5,9 +5,11 @@ import 'package:flutter_demo/widgets/flowers/rose_flower.dart';
 import 'package:flutter_demo/widgets/flowers/flower.dart';
 
 class Carousel extends StatefulWidget {
-  const Carousel({super.key, required this.onItemSelected});
+  const Carousel({super.key, required this.onItemSelected,required this.items});
 
   final Function(Widget) onItemSelected;
+
+  final List<Widget> items;
 
   @override
   CarouselState createState() => CarouselState();
@@ -16,14 +18,7 @@ class Carousel extends StatefulWidget {
 class CarouselState extends State<Carousel> {
   @override
   Widget build(BuildContext context) {
-    final List<Flower> flowers = [
-      RoseFlower(color: Colors.red, name: "Rose"),
-      RoseFlower(color: Colors.blue, name: "Rose"),
-      RoseFlower(color: Colors.pink, name: "Rose"),
-      RoseFlower(color: Colors.orange, name: "Rose"),
-      RoseFlower(color: Colors.green, name: "Rose"),
-      RoseFlower(color: Colors.deepPurpleAccent, name: "Rose"),
-    ];
+    
     return Expanded(
       child: ScrollConfiguration(
         behavior: const MaterialScrollBehavior().copyWith(
@@ -32,7 +27,7 @@ class CarouselState extends State<Carousel> {
         child: ListView(
           scrollDirection: Axis.horizontal,
           children: [
-            for (final Widget item in flowers)
+            for (final Widget item in widget.items)
               AspectRatio(
                 aspectRatio: 1,
                 child: GestureDetector(
@@ -52,7 +47,7 @@ class CarouselState extends State<Carousel> {
                         ),
                       ],
                     ),
-                    child: Center(child: item),
+                    child: Center(child: AbsorbPointer( absorbing: true, child: item,)),
                   ),
                 ),
               ),

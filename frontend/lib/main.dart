@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_demo/widgets/add_button.dart';
 import 'package:flutter_demo/widgets/build_bar.dart';
 import 'package:flutter_demo/screens/Greenhouse.dart';
+import 'package:flutter_demo/widgets/flowers/flower.dart';
+import 'package:flutter_demo/widgets/flowers/rose_flower.dart';
 import 'package:flutter_demo/widgets/friend_menu.dart';
 import 'package:flutter_demo/widgets/login_popup.dart';
 import 'package:flutter_demo/widgets/nav_bar.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_demo/widgets/pots/blue_pot.dart';
 import '../resources/constants.dart';
 
 void main() async {
@@ -23,13 +26,24 @@ class MyApp extends StatefulWidget {
 }
 
 class MyAppState extends State<MyApp> {
+  final List<Flower> flowers = [
+      RoseFlower(color: Colors.red),
+      RoseFlower(color: Colors.blue),
+      RoseFlower(color: Colors.pink),
+      RoseFlower(color: Colors.orange),
+      RoseFlower(color: Colors.green),
+      RoseFlower(color: Colors.deepPurpleAccent),
+    ];
+
+
   final buildModeActiveNotifier = ValueNotifier<bool>(false);
   late BuildBar buildBar;
 
   final itemSelected = ValueNotifier<Widget?>(null);
-
-  @override
+  @override 
   void initState() {
+    List<Pot> pots=[Pot(item:itemSelected),];
+
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -37,6 +51,8 @@ class MyAppState extends State<MyApp> {
     });
 
     buildBar = BuildBar(
+      flowers: flowers,
+      pots: pots,
       visibilityNotifier: buildModeActiveNotifier,
       onFlowerSelected: (flower) {
         if (flower != itemSelected.value) {
