@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -55,11 +56,23 @@ public class MainController {
         return entityRepository.findByUsername(username);
     }
 
-    @GetMapping(path = "/addusername/{id}/{username}")
+    @PutMapping(path = "/addusername/{id}/{username}")
     public @ResponseBody Object addUsername(@PathVariable @NonNull Integer id, @PathVariable String username) {
         try {
             DatabaseEntity entity = entityRepository.findById(id).orElseThrow(IllegalArgumentException::new);
             entity.setUsername(username);
+            return entityRepository.save(entity);
+        } catch (IllegalArgumentException e) {
+            return "Entity not found";
+        }
+    }
+
+    @PutMapping(path = "/addxy/{id}/{x}/{y}")
+    public @ResponseBody Object addXY(@PathVariable @NonNull Integer id, @PathVariable int x, @PathVariable int y) {
+        try {
+            DatabaseEntity entity = entityRepository.findById(id).orElseThrow(IllegalArgumentException::new);
+            entity.setX(x);
+            entity.setY(y);
             return entityRepository.save(entity);
         } catch (IllegalArgumentException e) {
             return "Entity not found";
@@ -234,7 +247,7 @@ public class MainController {
         // lägg till i databasen
         addEntity(entity);
 
-        //skicka tillbaka till kamera
+        // skicka tillbaka till kamera
         return entity;
 
     }
