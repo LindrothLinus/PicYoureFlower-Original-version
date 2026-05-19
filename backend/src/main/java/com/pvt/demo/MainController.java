@@ -49,23 +49,10 @@ public class MainController {
         return entityRepository.findAll();
     }
 
-    @GetMapping(path = "/all")
-    public @ResponseBody Iterable<DatabaseEntity> getAllEntitiesFromUser(String username) {
+    @GetMapping(path = "/allbyuser/{username}")
+    public @ResponseBody Iterable<DatabaseEntity> getAllEntitiesFromUser(@PathVariable String username) {
 
         return entityRepository.findByUsername(username);
-    }
-
-    @GetMapping(path = "/rename/{id}/{commonName}/{latinName}")
-    public @ResponseBody Object entityRename(@PathVariable @NonNull Integer id, @PathVariable String commonName,
-            @PathVariable String latinName) {
-        try {
-            DatabaseEntity entity = entityRepository.findById(id).orElseThrow(IllegalArgumentException::new);
-            entity.setCommonName(commonName);
-            entity.setCommonName(latinName);
-            return entityRepository.save(entity);
-        } catch (IllegalArgumentException e) {
-            return "Entity not found";
-        }
     }
 
     @GetMapping(path = "/recolor/{id}/{color}")
