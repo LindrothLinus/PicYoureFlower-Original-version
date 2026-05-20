@@ -1,5 +1,7 @@
 package com.pvt.demo;
 
+import java.util.ArrayList;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -15,6 +17,19 @@ public class User {
     private String googleId;
     private String email;
     private String name;
+    private ArrayList<User> friends;
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public ArrayList<User> getFriends() {
+        return this.friends;
+    }
+
+    public void setFriends(ArrayList<User> friends) {
+        this.friends = friends;
+    }
 
     public Long getId() {
         return id;

@@ -63,6 +63,12 @@ public class MainController {
         return "hello";
     }
 
+    @GetMapping("/friends/{userId}")
+    public ArrayList<User> getAllFriends(@PathVariable Long userId) {
+        User entity = userRepository.findById(userId).orElseThrow(IllegalArgumentException::new);
+        return entity.getFriends();
+    }
+
     @GetMapping("/user/{userId}/flowers")
     public Iterable<DatabaseEntity> getFlowersByUser(@PathVariable Long userId) {
         return entityRepository.findByUserId(userId);
