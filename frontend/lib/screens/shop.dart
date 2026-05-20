@@ -8,7 +8,8 @@ import 'package:flutter_demo/states/coins_state.dart';
 import 'package:flutter_demo/widgets/nav_bar.dart';
 
 const String brownPotPath = "lib/resources/images/brown.webp";
-const String bluePotPath = "lib/resources/images/blue.webp";
+//const String bluePotPath = "lib/resources/images/blue.webp";
+const String bluePotPath = "lib/resources/images/BluePot_smaller.png";
 const String greenPotPath = "lib/resources/images/green.webp";
 const String mintPotPath = "lib/resources/images/mint.webp";
 const String pinkPotPath = "lib/resources/images/pink.webp";
@@ -49,6 +50,7 @@ class Shop extends StatelessWidget {
           crossAxisCount: 3,
           crossAxisSpacing: 10,
           mainAxisSpacing: 10,
+          childAspectRatio: 0.7,
         ),
         itemCount: buyableItems.length,
         itemBuilder: (BuildContext context, int index) {
@@ -85,37 +87,38 @@ class Shop extends StatelessWidget {
                       ),
                     ),
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Row(
+                          mainAxisSize: MainAxisSize.min,
                           children: [
                             Text(item.cost.toString(), style: TextStyles.body),
+
                             const SizedBox(width: 4),
                             Image.asset(
                               coinsPath,
-                              height: 30,
-                              width: 30,
-                              fit: BoxFit.contain,
+                              height: 20,
+                              width: 20,
+                              //fit: BoxFit.contain,
                             ),
                           ],
                         ),
-                        Row(
-                          children: [
-                            IconButton(
-                              onPressed: () {
-                                if (coinsState.getCoinValue() >= item.cost) {
-                                  coinsState.decreaseCoinValue(item.cost);
-                                  CheckButtonPopUp.showCheckButton(context);
-                                }
-                              },
-                              icon: Image.asset(
-                                addPath,
-                                height: 30,
-                                width: 30,
-                                fit: BoxFit.contain,
-                              ),
-                            ),
-                          ],
+                        const SizedBox(width: 6),
+                        IconButton(
+                          padding: EdgeInsets.zero,
+                          constraints: const BoxConstraints(),
+                          onPressed: () {
+                            if (coinsState.getCoinValue() >= item.cost) {
+                              coinsState.decreaseCoinValue(item.cost);
+                              CheckButtonPopUp.showCheckButton(context);
+                            }
+                          },
+                          icon: Image.asset(
+                            addPath,
+                            height: 20,
+                            width: 20,
+                            //fit: BoxFit.contain,
+                          ),
                         ),
                       ],
                     ),

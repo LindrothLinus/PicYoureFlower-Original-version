@@ -1,9 +1,9 @@
 package com.pvt.demo;
 
-import org.springframework.data.repository.CrudRepository;
 import java.util.List;
 
-public interface EntityRepository extends CrudRepository<DatabaseEntity, Integer> {
-    List<DatabaseEntity> findByUsername(String username);
+import org.springframework.data.jpa.repository.JpaRepository;
 
+public interface EntityRepository extends JpaRepository<DatabaseEntity, Long> {
+    List<DatabaseEntity> findByUserId(Long userId);
 }

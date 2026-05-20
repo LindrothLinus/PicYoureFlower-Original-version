@@ -1,5 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_demo/widgets/camera_button.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:http/http.dart' as http;
 
 final TextStyle headerText = GoogleFonts.nunito(
   fontSize: 25,
@@ -17,21 +22,83 @@ final TextStyle loginText = GoogleFonts.nunito(
   color: Colors.black,
 );
 
-void login_popup(BuildContext context) {
+final GoogleSignIn _googleSignIn = GoogleSignIn(
+  serverClientId: '167485843554-b82rj6jet7kr9rt81r0qm20jv40okesd.apps.googleusercontent.com',
+  clientId: '167485843554-2evckuk7fa0k7a2v8u67u1afijqqe0vr.apps.googleusercontent.com',
+  scopes: ['email', 'profile'],
+);
+
+Future<void> signInWithGoogle(BuildContext context, {VoidCallback? onSuccess}) async {
+  try {
+    final GoogleSignInAccount? account = await _googleSignIn.signIn();
+    if (account == null) return;
+
+    final GoogleSignInAuthentication auth = await account.authentication;
+    final String? idToken = auth.idToken;
+    if (idToken == null) throw Exception('No ID token received');
+
+    final response = await http.post( 
+      Uri.parse('http://10.0.2.2:8080/api/auth/google'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({'idToken': idToken}),
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      authToken = data['token'];
+      loggedInUserId = data['userId']?.toString();
+
+      onSuccess?.call();
+
+      if (context.mounted) {
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (context) {
+            return Center(
+              child: SizedBox(
+                width: 100,
+                height: 100,
+                child: Image.asset(
+                  'lib/resources/images/Check.webp',
+                  fit: BoxFit.contain,
+                ),
+              ),
+            );
+          },
+        );
+        await Future.delayed(const Duration(seconds: 1));
+        if (context.mounted) {
+          Navigator.of(context).pop();
+          Navigator.of(context).pop();
+        }
+      }
+    } else {
+      throw Exception('Backend returned ${response.statusCode}: ${response.body}');
+    }
+  } catch (e) {
+    print('Login error: $e');
+    if (context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Login failed: $e')),
+      );
+    }
+  }
+}
+
+void login_popup(BuildContext context, {VoidCallback? onSuccess}) {
   showDialog(
-    context: context, 
+    context: context,
     builder: (BuildContext context) {
       return AlertDialog(
         backgroundColor: const Color(0xFFFFDEF1),
 
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
-          side: const BorderSide(
-            color: Colors.black,
-            width: 2,
-          )
+          side: const BorderSide(color: Colors.black, width: 2),
         ),
 
+        // Main branch title preserved exactly
         title: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -39,11 +106,11 @@ void login_popup(BuildContext context) {
             SizedBox(width: 10),
             Icon(Icons.lock),
           ],
-        ), 
+        ),
 
         content: SizedBox(
           width: 200,
-          height: 100,
+          //height: 100,
           child: Padding(
             padding: EdgeInsets.only(top: 30),
             child: Column(
@@ -61,53 +128,26 @@ void login_popup(BuildContext context) {
         actions: [
           Center(
             child: Padding(
-              padding: EdgeInsets.only(bottom: 50),
+              padding: EdgeInsets.only(bottom: 10),
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   minimumSize: const Size(250, 50),
 
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
-                    side: BorderSide(
-                      color: Colors.black,
-                      width: 1,
-                    )
+                    side: BorderSide(color: Colors.black, width: 1),
                   ),
 
                   backgroundColor: Color(0xFFAEF7A1),
                 ),
-                onPressed: () async {
-                  //open the login microservice instead of just poping the screen
-                  showDialog(
-                    context: context,
-                    barrierDismissible: false,
-                    builder: (context) {
-                      return Center(
-                        child: SizedBox(
-                          width: 100,
-                          height: 100,
-                          child: Image.asset(
-                            'lib/resources/images/Check.webp',
-                            fit: BoxFit.contain,
-                          ),
-                        )
-                      );
-                    }
-                  );
-                  await Future.delayed(const Duration(seconds: 1));
-                  Navigator.of(context).pop();
-                  Navigator.of(context).pop();
-                },
-                child: Text(
-                  'Log in!',
-                  style: loginText
-                ),
-              ) 
-            )
-
-          ) 
+                // Your branch: real sign-in instead of dummy pop
+                onPressed: () => signInWithGoogle(context, onSuccess: onSuccess),
+                child: Text('Log in!', style: loginText),
+              ),
+            ),
+          ),
         ],
       );
-    }
+    },
   );
 }

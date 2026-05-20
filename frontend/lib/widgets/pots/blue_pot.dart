@@ -31,6 +31,7 @@ class PotState extends State<Pot> {
           child: Stack(
             clipBehavior: Clip.none,
             children: [
+              
               Image.asset("lib/resources/images/blue.webp", fit: BoxFit.fill,),
               Positioned(
                 top:-60,
