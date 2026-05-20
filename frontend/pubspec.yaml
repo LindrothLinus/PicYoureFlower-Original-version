@@ -16,7 +16,6 @@ dependencies:
   camera: ^0.12.0+1
   path_provider: ^2.1.5
   path: ^1.9.1
-  overlay_pop_up: ^1.0.6+6
   # Added for Google Sign-In
   google_sign_in: ^6.2.1
 
