@@ -24,7 +24,7 @@ class TextStyles {
   );
 
   static final TextStyle body = GoogleFonts.nunito(
-    fontSize: 30,
+    fontSize: 20,
     fontWeight: FontWeight.w500,
   );
 
@@ -37,5 +37,4 @@ class TextStyles {
 const Color blueColor = Color(0xFFB8E9FF);
 const Color buildBarColor = Color(0xFFFFF4F4);
 
-
-const double addButtonSize = 300; 
+const double addButtonSize = 300;
