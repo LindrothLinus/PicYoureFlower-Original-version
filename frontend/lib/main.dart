@@ -41,6 +41,7 @@ class MyAppState extends State<MyApp> {
   List<Flower> _flowers = [];
 
   final buildModeActiveNotifier = ValueNotifier<bool>(false);
+  final buildBarActiveNotifer = ValueNotifier<bool>(false);
   late BuildBar buildBar;
 
   final itemSelected = ValueNotifier<Widget?>(null);
@@ -64,7 +65,7 @@ class MyAppState extends State<MyApp> {
     buildBar = BuildBar(
       flowers: _flowers,
       pots: pots,
-      visibilityNotifier: buildModeActiveNotifier,
+      visibilityNotifier: buildBarActiveNotifer,
       onFlowerSelected: (flower) {
         if (flower != itemSelected.value) {
           itemSelected.value = flower;
@@ -146,60 +147,70 @@ class MyAppState extends State<MyApp> {
     // Main branch build() preserved exactly
     List<AddButton> addButtons = [
       AddButton(
+        buildBarActiveNotifer: buildBarActiveNotifer,
         builModeActiveNotifier: buildModeActiveNotifier,
         x: 3000,
         y: 1400,
         item: itemSelected,
       ),
       AddButton(
+        buildBarActiveNotifer: buildBarActiveNotifer,
         builModeActiveNotifier: buildModeActiveNotifier,
         x: 2500,
         y: 1400,
         item: itemSelected,
       ),
       AddButton(
+        buildBarActiveNotifer: buildBarActiveNotifer,
         builModeActiveNotifier: buildModeActiveNotifier,
         x: 3000,
         y: 2150,
         item: itemSelected,
       ),
       AddButton(
+        buildBarActiveNotifer: buildBarActiveNotifer,
         builModeActiveNotifier: buildModeActiveNotifier,
         x: 2500,
         y: 2150,
         item: itemSelected,
       ),
       AddButton(
+        buildBarActiveNotifer: buildBarActiveNotifer,
         builModeActiveNotifier: buildModeActiveNotifier,
         x: 3000,
         y: 2850,
         item: itemSelected,
       ),
       AddButton(
+        buildBarActiveNotifer: buildBarActiveNotifer,
         builModeActiveNotifier: buildModeActiveNotifier,
         x: 2500,
         y: 2850,
         item: itemSelected,
       ),
       AddButton(
+        buildBarActiveNotifer: buildBarActiveNotifer,
         builModeActiveNotifier: buildModeActiveNotifier,
         x: 2000,
         y: 2850,
         item: itemSelected,
       ),
       AddButton(
+        buildBarActiveNotifer: buildBarActiveNotifer,
         builModeActiveNotifier: buildModeActiveNotifier,
         x: 3500,
         y: 2850,
         item: itemSelected,
       ),
       AddButton(
+        buildBarActiveNotifer: buildBarActiveNotifer,
         builModeActiveNotifier: buildModeActiveNotifier,
         x: 4000,
         y: 2850,
         item: itemSelected,
       ),
       AddButton(
+        buildBarActiveNotifer: buildBarActiveNotifer,
         builModeActiveNotifier: buildModeActiveNotifier,
         x: 1500,
         y: 2850,
