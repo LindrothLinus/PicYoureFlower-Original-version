@@ -62,7 +62,7 @@ public class MainController {
         return entityRepository.findByUserId(userId);
     }
 
-    @GetMapping("/adduser/{flowerId}/{userId}")
+    @PutMapping("/adduser/{flowerId}/{userId}")
     public Object addUserToFlower(@PathVariable Long flowerId, @PathVariable Long userId) {
         try {
             DatabaseEntity entity = entityRepository.findById(flowerId).orElseThrow(IllegalArgumentException::new);
@@ -74,7 +74,7 @@ public class MainController {
         }
     }
 
-    @GetMapping("/rename/{id}/{commonName}/{latinName}")
+    @PutMapping("/rename/{id}/{commonName}/{latinName}")
     public Object entityRename(@PathVariable @NonNull Long id, @PathVariable String commonName,
             @PathVariable String latinName) {
         try {
@@ -87,7 +87,7 @@ public class MainController {
         }
     }
 
-    @GetMapping("/recolor/{id}/{color}")
+    @PutMapping("/recolor/{id}/{color}")
     public Object entityRecolor(@PathVariable @NonNull Long id, @PathVariable String color) {
         try {
             DatabaseEntity entity = entityRepository.findById(id).orElseThrow(IllegalArgumentException::new);
