@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_demo/widgets/flowers/flower.dart';
 
 class Pot extends StatefulWidget {
   Pot({super.key, required this.item});
@@ -20,7 +21,7 @@ class PotState extends State<Pot> {
       builder: (context, item, child) {
         return GestureDetector(
           onTap: () {
-            if (item != null) {
+            if (item != null && item is Flower) {
               setState(() {
                 isTaken = true;
                 plantedItem = item;
