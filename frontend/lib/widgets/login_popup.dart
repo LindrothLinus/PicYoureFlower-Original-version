@@ -19,17 +19,14 @@ final TextStyle loginText = GoogleFonts.nunito(
 
 void login_popup(BuildContext context) {
   showDialog(
-    context: context, 
+    context: context,
     builder: (BuildContext context) {
       return AlertDialog(
         backgroundColor: const Color(0xFFFFDEF1),
 
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
-          side: const BorderSide(
-            color: Colors.black,
-            width: 2,
-          )
+          side: const BorderSide(color: Colors.black, width: 2),
         ),
 
         title: Row(
@@ -39,11 +36,11 @@ void login_popup(BuildContext context) {
             SizedBox(width: 10),
             Icon(Icons.lock),
           ],
-        ), 
+        ),
 
         content: SizedBox(
           width: 200,
-          height: 100,
+          //height: 100,
           child: Padding(
             padding: EdgeInsets.only(top: 30),
             child: Column(
@@ -61,17 +58,14 @@ void login_popup(BuildContext context) {
         actions: [
           Center(
             child: Padding(
-              padding: EdgeInsets.only(bottom: 50),
+              padding: EdgeInsets.only(bottom: 10),
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   minimumSize: const Size(250, 50),
 
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
-                    side: BorderSide(
-                      color: Colors.black,
-                      width: 1,
-                    )
+                    side: BorderSide(color: Colors.black, width: 1),
                   ),
 
                   backgroundColor: Color(0xFFAEF7A1),
@@ -90,24 +84,20 @@ void login_popup(BuildContext context) {
                             'lib/resources/images/Check.webp',
                             fit: BoxFit.contain,
                           ),
-                        )
+                        ),
                       );
-                    }
+                    },
                   );
                   await Future.delayed(const Duration(seconds: 1));
                   Navigator.of(context).pop();
                   Navigator.of(context).pop();
                 },
-                child: Text(
-                  'Log in!',
-                  style: loginText
-                ),
-              ) 
-            )
-
-          ) 
+                child: Text('Log in!', style: loginText),
+              ),
+            ),
+          ),
         ],
       );
-    }
+    },
   );
 }
