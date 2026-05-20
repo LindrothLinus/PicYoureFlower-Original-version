@@ -22,6 +22,24 @@ public class DatabaseEntity {
     private String latinName;
     private String color;
     private LocalDateTime picTaken;
+    private int x;
+    private int y;
+
+    public int getX() {
+        return this.x;
+    }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public int getY() {
+        return this.y;
+    }
+
+    public void setY(int y) {
+        this.y = y;
+    }
 
     @Enumerated(EnumType.STRING)
     private FlowerTemplate template;
@@ -30,24 +48,59 @@ public class DatabaseEntity {
     @JoinColumn(name = "user_id")
     private User user;
 
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    public Long getId() {
+        return id;
+    }
 
-    public String getCommonName() { return commonName; }
-    public void setCommonName(String commonName) { this.commonName = commonName; }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    public String getLatinName() { return latinName; }
-    public void setLatinName(String latinName) { this.latinName = latinName; }
+    public String getCommonName() {
+        return commonName;
+    }
 
-    public String getColor() { return color; }
-    public void setColor(String color) { this.color = color; }
+    public void setCommonName(String commonName) {
+        this.commonName = commonName;
+    }
 
-    public LocalDateTime getPicTaken() { return picTaken; }
-    public void setPicTaken(LocalDateTime picTaken) { this.picTaken = picTaken; }
+    public String getLatinName() {
+        return latinName;
+    }
 
-    public FlowerTemplate getTemplate() { return template; }
-    public void setTemplate(FlowerTemplate template) { this.template = template; }
+    public void setLatinName(String latinName) {
+        this.latinName = latinName;
+    }
 
-    public User getUser() { return user; }
-    public void setUser(User user) { this.user = user; }
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
+    public LocalDateTime getPicTaken() {
+        return picTaken;
+    }
+
+    public void setPicTaken(LocalDateTime picTaken) {
+        this.picTaken = picTaken;
+    }
+
+    public FlowerTemplate getTemplate() {
+        return template;
+    }
+
+    public void setTemplate(FlowerTemplate template) {
+        this.template = template;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 }
