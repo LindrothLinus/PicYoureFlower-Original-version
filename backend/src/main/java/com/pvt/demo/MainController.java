@@ -75,7 +75,8 @@ public class MainController {
     }
 
     @GetMapping("/rename/{id}/{commonName}/{latinName}")
-    public Object entityRename(@PathVariable @NonNull Long id, @PathVariable String commonName, @PathVariable String latinName) {
+    public Object entityRename(@PathVariable @NonNull Long id, @PathVariable String commonName,
+            @PathVariable String latinName) {
         try {
             DatabaseEntity entity = entityRepository.findById(id).orElseThrow(IllegalArgumentException::new);
             entity.setCommonName(commonName);
@@ -97,6 +98,18 @@ public class MainController {
         }
     }
 
+    @PutMapping(path = "/addxy/{id}/{x}/{y}")
+    public @ResponseBody Object addXY(@PathVariable @NonNull Integer id, @PathVariable int x, @PathVariable int y) {
+        try {
+            DatabaseEntity entity = entityRepository.findById(id).orElseThrow(IllegalArgumentException::new);
+            entity.setX(x);
+            entity.setY(y);
+            return entityRepository.save(entity);
+        } catch (IllegalArgumentException e) {
+            return "Entity not found";
+        }
+    }
+
     @PostMapping("/add")
     public Object addEntity(@RequestBody @NonNull DatabaseEntity entity) {
         try {
@@ -107,7 +120,8 @@ public class MainController {
     }
 
     @PostMapping(value = "/identify", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> identifyAndSave(@RequestParam("image") MultipartFile image, @RequestParam(value = "userId", required = false) Long userId) {
+    public ResponseEntity<?> identifyAndSave(@RequestParam("image") MultipartFile image,
+            @RequestParam(value = "userId", required = false) Long userId) {
         try {
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.MULTIPART_FORM_DATA);
@@ -115,7 +129,8 @@ public class MainController {
             body.add("images", image.getResource());
             body.add("organs", "flower");
 
-            String plantNetJson = restTemplate.postForObject(PLANTNET_URL + PLANTNET_API_KEY, new HttpEntity<>(body, headers), String.class);
+            String plantNetJson = restTemplate.postForObject(PLANTNET_URL + PLANTNET_API_KEY,
+                    new HttpEntity<>(body, headers), String.class);
 
             JsonNode rootNode = mapper.readTree(plantNetJson);
             JsonNode results = rootNode.path("results");
@@ -125,14 +140,17 @@ public class MainController {
             for (JsonNode r : results) {
                 JsonNode species = r.path("species");
                 String sci = species.path("scientificNameWithoutAuthor").asText(null);
-                if (sci != null) scientificNames.add(sci);
-                for (JsonNode cn : species.path("commonNames")) commonNames.add(cn.asText());
+                if (sci != null)
+                    scientificNames.add(sci);
+                for (JsonNode cn : species.path("commonNames"))
+                    commonNames.add(cn.asText());
             }
             List<String> topSci = scientificNames.subList(0, Math.min(3, scientificNames.size()));
             List<String> topCom = commonNames.subList(0, Math.min(3, commonNames.size()));
 
             String color = findColor(topSci, topCom);
-            if (color == null) color = getColor(image);
+            if (color == null)
+                color = getColor(image);
 
             ObjectNode response = (ObjectNode) rootNode;
             response.put("color", color);
@@ -174,14 +192,16 @@ public class MainController {
                     int red = (pixel >> 16) & 0xff;
                     int green = (pixel >> 8) & 0xff;
                     int blue = pixel & 0xff;
-                    if (green > red && green > blue) continue;
+                    if (green > red && green > blue)
+                        continue;
                     r += red;
                     g += green;
                     b += blue;
                     count++;
                 }
             }
-            if (count == 0) return "#cccccc";
+            if (count == 0)
+                return "#cccccc";
             return boostColor(r / count, g / count, b / count);
         } catch (Exception e) {
             return "#cccccc";
@@ -197,7 +217,8 @@ public class MainController {
     }
 
     private String findColor(List<String> scientificNames, List<String> commonNames) {
-        if (scientificNames.isEmpty()) return null;
+        if (scientificNames.isEmpty())
+            return null;
 
         StringBuilder unions = new StringBuilder();
         for (String name : scientificNames) {
@@ -209,8 +230,7 @@ public class MainController {
         String genus = scientificNames.get(0).split(" ")[0];
         unions.append("{ ?plant wdt:P225 \"").append(escape(genus)).append("\" . }");
 
-        String sparql =
-                "SELECT ?hex WHERE { " +
+        String sparql = "SELECT ?hex WHERE { " +
                 "{ " + unions + " } " +
                 "?plant wdt:P2827 ?color . " +
                 "?color wdt:P465 ?hex . " +
@@ -230,17 +250,23 @@ public class MainController {
                 MultiValueMap<String, String> formBody = new LinkedMultiValueMap<>();
                 formBody.add("query", sparql);
 
-                ResponseEntity<String> resp = restTemplate.exchange(WIKIDATA_URL, HttpMethod.POST, new HttpEntity<>(formBody, h), String.class);
+                ResponseEntity<String> resp = restTemplate.exchange(WIKIDATA_URL, HttpMethod.POST,
+                        new HttpEntity<>(formBody, h), String.class);
 
                 JsonNode bindings = mapper.readTree(resp.getBody()).path("results").path("bindings");
                 if (bindings.isArray() && bindings.size() > 0) {
                     String val = bindings.get(0).path("hex").path("value").asText(null);
-                    if (val != null && !val.isBlank()) return val.startsWith("#") ? val : "#" + val;
+                    if (val != null && !val.isBlank())
+                        return val.startsWith("#") ? val : "#" + val;
                 }
                 return null;
             } catch (Exception e) {
                 System.out.println("SPARQL attempt " + (i + 1) + " failed: " + e.getMessage());
-                if (i < 2) try { Thread.sleep(1000); } catch (InterruptedException ignored) {}
+                if (i < 2)
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException ignored) {
+                    }
             }
         }
         return null;
@@ -251,7 +277,8 @@ public class MainController {
         try {
             final RestClient restClient = RestClient.create();
             String nameToSend = commonName; // add formatting here, remove spaces?
-            String response = restClient.get().uri("https://en.wikipedia.org/api/rest_v1/page/summary/" + nameToSend).header("Accept", "application/json").retrieve().body(String.class);
+            String response = restClient.get().uri("https://en.wikipedia.org/api/rest_v1/page/summary/" + nameToSend)
+                    .header("Accept", "application/json").retrieve().body(String.class);
             ObjectMapper mapper = new ObjectMapper();
             JsonNode json = mapper.readTree(response);
             return json.path("extract").asText();
