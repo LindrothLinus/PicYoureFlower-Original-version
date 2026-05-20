@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_demo/widgets/login_popup.dart';
 import '../resources/constants.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -7,6 +8,11 @@ final TextStyle menuText = GoogleFonts.nunito(
   fontWeight: FontWeight.w500,
   color: Colors.black,
 );
+
+class Friend {
+  String name;
+  Friend(this.name);
+}
 
 class FriendMenu extends StatefulWidget{
 
@@ -17,12 +23,69 @@ class FriendMenu extends StatefulWidget{
 
 class FriendMenuState extends State<FriendMenu>{
   bool showButtons = false;
+  bool isProfileExpanded = false;
   bool isExpanded = false;
-  Color? activePanelColor;
   double smallHeigth = 150;
   double mediumHeight = 300;
   double largeHeigth = 540;
   double panelHeigth = 0; 
+  Color? activePanelColor;
+  Friend? selectedFriend;
+
+  final TextEditingController friendController = TextEditingController();
+
+  var friends = [
+    //NOTICE ME BACKEND!!!!
+    //add friends from the database here by the method below
+    //Friend("name from database")
+
+    Friend("Tom"),
+    Friend("Lin"),
+    Friend("Hamlet"),
+  ];
+
+  @override
+  void dispose(){
+    friendController.dispose();
+    super.dispose();
+  }
+
+  void addFriends(Friend friend){
+    if(friend.name == ""){
+      return;
+    }
+    setState(() {
+      friends.add(friend);
+    });
+  }
+
+  void removeFriends(Friend? friend){
+    setState(() {
+      friends.remove(friend);
+      selectedFriend = null;
+    });
+  }
+
+  Future<void> showCheck() async{
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return Center(
+          child: SizedBox(
+            width: 100,
+            height: 100,
+            child: Image.asset(
+              'lib/resources/images/Check.webp',
+              fit: BoxFit.contain,
+            ),
+          )
+        );
+      }
+    );
+    await Future.delayed(const Duration(seconds: 1));
+    Navigator.of(context).pop();
+  }
 
   Padding heartButton(){
     return Padding(
@@ -54,6 +117,9 @@ class FriendMenuState extends State<FriendMenu>{
             backgroundColor: backgroundColor,
           ),
           onPressed: (){
+            setState(() {
+              selectedFriend = null;
+            });
             isExpanded = false;
             panelHeigth = smallHeigth;
             openPanel(backgroundColor);
@@ -103,6 +169,10 @@ class FriendMenuState extends State<FriendMenu>{
             backgroundColor: greenColor,
           ),
           onPressed: (){
+            setState(() {
+              selectedFriend = null;
+            });
+            isProfileExpanded = false;
             panelHeigth = mediumHeight;
             openPanel(greenColor);
           }, 
@@ -146,6 +216,55 @@ class FriendMenuState extends State<FriendMenu>{
     );
   }
 
+  Positioned expandProfileButton(){
+    return Positioned(
+      left: 10,
+      bottom: 10,
+      child: GestureDetector(
+        onTap:() {
+          toggleProfileExpand();
+        },
+        child: Image.asset(
+          'lib/resources/images/Expand.png',
+          width: 50,
+        ),
+      ),
+    );
+  }
+
+  Positioned unfriendButton(){
+    return Positioned(
+      left: 70,
+      right: 16,
+      bottom: 16,
+      child: SafeArea(
+        child: SizedBox(
+          height: 50,
+          child: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              side: BorderSide(
+                color: Colors.black,
+                width: 1,
+              ),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+              backgroundColor: Color(0xFFFFA6A6),
+            ),
+            onPressed: () {
+              //Remove friends from list and database
+              removeFriends(selectedFriend);
+            },
+            child: Text(
+              'Unfriend', 
+              style: menuText,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   Container searchConfirmButton(){
     return Container(
       margin: EdgeInsets.zero,
@@ -166,8 +285,9 @@ class FriendMenuState extends State<FriendMenu>{
 
   TextField searchTextField(){
     return TextField(
+      controller: friendController,
       decoration: InputDecoration(
-        hintText: "Username...",
+        hintText: "Add a Friend Here!",
         filled: true,
         fillColor: Colors.white,
         enabledBorder: OutlineInputBorder(
@@ -184,7 +304,12 @@ class FriendMenuState extends State<FriendMenu>{
         ),
         suffixIcon: GestureDetector(
           onTap: (){
-            //do something
+            //Send contents of textfield to backend to identity if the user exists and 
+            //add it to current users friend list if exists
+
+            addFriends(Friend(friendController.text));
+            friendController.text = "";
+            showCheck();
           },
           child: SizedBox(
             width: 60,
@@ -258,13 +383,13 @@ class FriendMenuState extends State<FriendMenu>{
           width: 1,
         )
       ),
-      child: Padding(
-        padding: EdgeInsets.only(left: 10),
-        child: Align(
-          alignment: Alignment.centerLeft,
-          child: Text(text, style: menuText,),
-        )
-      ),
+        child: Padding(
+          padding: EdgeInsets.only(left: 10),
+          child: Align(
+            alignment: Alignment.centerLeft,
+            child: Text(text, style: menuText,),
+          )
+        ),
     );
   }
 
@@ -281,6 +406,72 @@ class FriendMenuState extends State<FriendMenu>{
     );
   }
 
+  Card createCard(Friend friend){
+
+    bool isSelected = selectedFriend == friend;
+
+    return Card(
+      elevation: 1,
+      color: Colors.white,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+        side: BorderSide(
+          color: isSelected ? Color(0xFFFFA6A6) : Colors.black,
+          width: isSelected ? 3 : 1,
+        )
+      ),
+      child: Stack(
+        children: [
+
+          Center(
+            child: Padding(
+              padding: const EdgeInsets.only(top: 5, bottom: 35),
+              child: SizedBox(
+                height: 90,
+                child: Image.asset(
+                  'lib/resources/images/showel_icon.png',
+                  height: 90,
+                  width: 90,
+                  fit: BoxFit.contain,
+                ),
+              ),
+            ),
+          ),
+
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Container(
+              width: double.infinity,
+              height: 30,
+              padding: const EdgeInsets.all(1),
+              decoration: BoxDecoration(
+                color: purpleColor,
+                borderRadius: const BorderRadius.only(
+                  bottomLeft: Radius.circular(12),
+                  bottomRight: Radius.circular(12),
+                ),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Expanded(
+                    child: Text(
+                      friend.name, //friends name
+                      style: infoText,
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+
+        ],
+      ),
+    ); 
+  }
+
   void openPanel(Color color){
     setState((){
       activePanelColor = color;
@@ -292,6 +483,14 @@ class FriendMenuState extends State<FriendMenu>{
       isExpanded = !isExpanded;
 
       panelHeigth = isExpanded ? largeHeigth : smallHeigth;
+    });
+  }
+
+  void toggleProfileExpand(){
+    setState(() {
+      isProfileExpanded = !isProfileExpanded;
+
+      panelHeigth = isProfileExpanded ? largeHeigth : mediumHeight;
     });
   }
 
@@ -338,17 +537,21 @@ class FriendMenuState extends State<FriendMenu>{
             child: Stack(
               children: [
                 if(activePanelColor == backgroundColor)... [
+                  
+                  GridView.builder(
+                    padding: EdgeInsets.only(top: 15, left: 65),
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 3,
+                      crossAxisSpacing: 10,
+                      mainAxisSpacing: 10, 
+                    ),
+                    itemCount: friends.length,
+                    itemBuilder: (BuildContext context, int index){
+                      final friend = friends[index];
+                      return createCard(friend);
+                    }
+                  ),
                   expandButton(),
-                  Column(
-                    children: [
-                      createFriendBoxes(),
-                      if(isExpanded)...[
-                        createFriendBoxes(),
-                        createFriendBoxes(),
-                        createFriendBoxes(),
-                      ]
-                    ]
-                  )
                 ],
                 if(activePanelColor == mainColor)...[
                   Center(
@@ -359,55 +562,130 @@ class FriendMenuState extends State<FriendMenu>{
                   ),
                 ],
                 if(activePanelColor == greenColor)...[
-                  Column(
-                    children: [
-                      SizedBox(height: 30),
-                      Row(
-                        children: [
-                          SizedBox(width: 30),
-                          //profile pic
-                          profileBoxPic(Colors.white, 150, 150, 'lib/resources/images/showel_icon.png'),
-
-                          SizedBox(width: 20),
-                          //other column
-                          Column(
+                  if(panelHeigth == mediumHeight)...[
+                    Column(
+                      children: [
+                        
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(16, 30, 16, 16),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              //calender
-                              Row(
-                                children: [
-                                  profileBoxPic(purpleColor, 40, 40, 'lib/resources/images/Calendar_v2.png'),
-                                  profileBoxText(Colors.white, 155, 40, '26-05-15'),
-                                ],
+
+                              Flexible(
+                                flex: 2,
+                                child: profileBoxPic(Colors.white, 150, 150, 'lib/resources/images/showel_icon.png'),
+                              ),
+                            
+                              const SizedBox(width: 16),
+
+                              Expanded(
+                                flex: 3,
+                                child: Column(
+                                  children: [
+                                    Row(
+                                      children: [
+                                        profileBoxPic(purpleColor, 40, 40, 'lib/resources/images/Calendar_v2.png'),
+                                        const SizedBox(width: 8),
+                                        Expanded(
+                                          child: profileBoxText(Colors.white, double.infinity, 40, '26-05-15'),
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 15),
+                                    
+                                    Row(
+                                      children: [
+                                        profileBoxPic(purpleColor, 40, 40, 'lib/resources/images/Identity.png'),
+                                        const SizedBox(width: 8),
+                                        Expanded(
+                                          child: profileBoxText(Colors.white, double.infinity, 40, 'FlowerManiac'),
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 15),
+
+                                    Row(
+                                      children: [
+                                        profileBoxPic(purpleColor, 40, 40, 'lib/resources/images/flower_icon.png'),
+                                        const SizedBox(width: 8),
+                                        Expanded(
+                                          child: profileBoxText(Colors.white, double.infinity, 40, '123'),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
                               ),
 
-                              SizedBox(height: 15),
-                              //name
-                              Row(
-                                children: [
-                                  profileBoxPic(purpleColor, 40, 40, 'lib/resources/images/Identity.png'),
-                                  profileBoxText(Colors.white, 155, 40, 'FlowerManiac'),
-                                ],
-                              ),
-
-                              SizedBox(height: 15),
-                              //flower status
-                              Row(
-                                children: [
-                                  profileBoxPic(purpleColor, 40, 40, 'lib/resources/images/flower_icon.png'),
-                                  profileBoxText(Colors.white, 155, 40, '1,234'),
-                                ],
-                              ),
                             ],
-                          )
-                        ],
-                      ),
-                      
-                      SizedBox(height: 30),
-                      
-                      //second column slot, manage friends
-                      profileBoxText(purpleColor, 370, 50, 'Manage Friends'),
-                    ],
-                  ),
+                          ),
+                        ),
+
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
+                          child: SizedBox(
+                            width: double.infinity,
+                            child: GestureDetector(
+                              onTap: () {
+                                toggleProfileExpand();
+                              },
+                              child: Container(
+                                width: double.infinity,
+                                height: 50,
+                                decoration: BoxDecoration(
+                                  color: purpleColor,
+                                  borderRadius: BorderRadius.circular(8),
+                                  border: Border.all(
+                                    color: Colors.black,
+                                    width: 1,
+                                  )
+                                ),
+                                child: Padding(
+                                  padding: EdgeInsets.only(left: 10),
+                                  child: Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Text('Manage Friends', style: menuText,),
+                                  )
+                                ),
+                              ),
+                            ),
+                            
+                            //profileBoxText(purpleColor, double.infinity, 50, 'Manage Friends'),
+                          ),
+                        ),
+                        
+                      ],
+                    ),
+                  ],
+                  if(panelHeigth == largeHeigth)...[
+                    Stack(
+                      children: [
+                        GridView.builder(
+                          padding: EdgeInsets.only(top: 15, left: 65, bottom: 80),
+                          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 3,
+                            crossAxisSpacing: 10,
+                            mainAxisSpacing: 10, 
+                          ),
+                          itemCount: friends.length,
+                          itemBuilder: (BuildContext context, int index){
+                            final friend = friends[index];
+                            return InkWell(
+                              onTap: (){
+                                setState(() {
+                                  selectedFriend = friend;
+                                });
+                              },
+                              child: createCard(friend),
+                            );
+                          }
+                        ),
+                        unfriendButton(),
+                        expandProfileButton(),
+                      ],
+                    ),
+                  ],
                 ],
               ],
             ),
