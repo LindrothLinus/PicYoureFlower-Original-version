@@ -25,11 +25,12 @@ class FriendMenuState extends State<FriendMenu>{
   bool showButtons = false;
   bool isProfileExpanded = false;
   bool isExpanded = false;
-  Color? activePanelColor;
   double smallHeigth = 150;
   double mediumHeight = 300;
   double largeHeigth = 540;
   double panelHeigth = 0; 
+  Color? activePanelColor;
+  Friend? selectedFriend;
 
   var friends = [
     //NOTICE ME BACKEND!!!!
@@ -39,22 +40,20 @@ class FriendMenuState extends State<FriendMenu>{
     Friend("Tom"),
     Friend("Lin"),
     Friend("Hamlet"),
-    Friend("Tom"),
-    Friend("Lin"),
-    Friend("Hamlet"),
-    Friend("Tom"),
-    Friend("Lin"),
-    Friend("Hamlet"),
-    Friend("Tom"),
-    Friend("Lin"),
-    Friend("Hamlet"),
-    Friend("Tom"),
-    Friend("Lin"),
-    Friend("Hamlet"),
-    Friend("Tom"),
-    Friend("Lin"),
-    Friend("Hamlet"),
   ];
+
+  void addFriends(Friend friend){
+    setState(() {
+      friends.add(friend);
+    });
+  }
+
+  void removeFriends(Friend? friend){
+    setState(() {
+      friends.remove(friend);
+      selectedFriend = null;
+    });
+  }
 
   Padding heartButton(){
     return Padding(
@@ -86,6 +85,9 @@ class FriendMenuState extends State<FriendMenu>{
             backgroundColor: backgroundColor,
           ),
           onPressed: (){
+            setState(() {
+              selectedFriend = null;
+            });
             isExpanded = false;
             panelHeigth = smallHeigth;
             openPanel(backgroundColor);
@@ -135,6 +137,9 @@ class FriendMenuState extends State<FriendMenu>{
             backgroundColor: greenColor,
           ),
           onPressed: (){
+            setState(() {
+              selectedFriend = null;
+            });
             isProfileExpanded = false;
             panelHeigth = mediumHeight;
             openPanel(greenColor);
@@ -216,6 +221,7 @@ class FriendMenuState extends State<FriendMenu>{
             ),
             onPressed: () {
               //Remove friends from list and database
+              removeFriends(selectedFriend);
             },
             child: Text(
               'Unfriend', 
@@ -363,6 +369,72 @@ class FriendMenuState extends State<FriendMenu>{
     );
   }
 
+  Card createCard(Friend friend){
+
+    bool isSelected = selectedFriend == friend;
+
+    return Card(
+      elevation: 1,
+      color: Colors.white,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+        side: BorderSide(
+          color: isSelected ? Color(0xFFFFA6A6) : Colors.black,
+          width: isSelected ? 3 : 1,
+        )
+      ),
+      child: Stack(
+        children: [
+
+          Center(
+            child: Padding(
+              padding: const EdgeInsets.only(top: 5, bottom: 35),
+              child: SizedBox(
+                height: 90,
+                child: Image.asset(
+                  'lib/resources/images/showel_icon.png',
+                  height: 90,
+                  width: 90,
+                  fit: BoxFit.contain,
+                ),
+              ),
+            ),
+          ),
+
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Container(
+              width: double.infinity,
+              height: 30,
+              padding: const EdgeInsets.all(1),
+              decoration: BoxDecoration(
+                color: purpleColor,
+                borderRadius: const BorderRadius.only(
+                  bottomLeft: Radius.circular(12),
+                  bottomRight: Radius.circular(12),
+                ),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Expanded(
+                    child: Text(
+                      friend.name, //friends name
+                      style: infoText,
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+
+        ],
+      ),
+    ); 
+  }
+
   void openPanel(Color color){
     setState((){
       activePanelColor = color;
@@ -439,7 +511,8 @@ class FriendMenuState extends State<FriendMenu>{
                     itemCount: friends.length,
                     itemBuilder: (BuildContext context, int index){
                       final friend = friends[index];
-                      return Card(
+                      return createCard(friend);
+                      /*return Card(
                         elevation: 3,
                         color: Colors.white,
                         child: Stack(
@@ -491,7 +564,7 @@ class FriendMenuState extends State<FriendMenu>{
 
                           ],
                         ),
-                      );
+                      );*/
                     }
                   ),
                   expandButton(),
@@ -614,58 +687,13 @@ class FriendMenuState extends State<FriendMenu>{
                           itemCount: friends.length,
                           itemBuilder: (BuildContext context, int index){
                             final friend = friends[index];
-                            return Card(
-                              elevation: 3,
-                              color: Colors.white,
-                              child: Stack(
-                                children: [
-
-                                  Center(
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(top: 5, bottom: 35),
-                                      child: SizedBox(
-                                        height: 90,
-                                        child: Image.asset(
-                                          'lib/resources/images/showel_icon.png',
-                                          height: 90,
-                                          width: 90,
-                                          fit: BoxFit.contain,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-
-                                  Align(
-                                    alignment: Alignment.bottomCenter,
-                                    child: Container(
-                                      width: double.infinity,
-                                      height: 30,
-                                      padding: const EdgeInsets.all(1),
-                                      decoration: BoxDecoration(
-                                        color: purpleColor,
-                                        borderRadius: const BorderRadius.only(
-                                          bottomLeft: Radius.circular(12),
-                                          bottomRight: Radius.circular(12),
-                                        ),
-                                      ),
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        children: [
-                                          Expanded(
-                                            child: Text(
-                                              friend.name, //friends name
-                                              style: infoText,
-                                              overflow: TextOverflow.ellipsis,
-                                              textAlign: TextAlign.center,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-
-                                ],
-                              ),
+                            return InkWell(
+                              onTap: (){
+                                setState(() {
+                                  selectedFriend = friend;
+                                });
+                              },
+                              child: createCard(friend),
                             );
                           }
                         ),

@@ -91,6 +91,7 @@ flutter:
     - lib/resources/images/Identity.png
     - lib/resources/images/Social.png
     - lib/resources/images/Search.png
+    - lib/resources/images/BluePot_smaller.png
 
 
   # The following line ensures that the Material Icons font is
