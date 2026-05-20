@@ -32,6 +32,8 @@ class FriendMenuState extends State<FriendMenu>{
   Color? activePanelColor;
   Friend? selectedFriend;
 
+  final TextEditingController friendController = TextEditingController();
+
   var friends = [
     //NOTICE ME BACKEND!!!!
     //add friends from the database here by the method below
@@ -42,7 +44,16 @@ class FriendMenuState extends State<FriendMenu>{
     Friend("Hamlet"),
   ];
 
+  @override
+  void dispose(){
+    friendController.dispose();
+    super.dispose();
+  }
+
   void addFriends(Friend friend){
+    if(friend.name == ""){
+      return;
+    }
     setState(() {
       friends.add(friend);
     });
@@ -53,6 +64,27 @@ class FriendMenuState extends State<FriendMenu>{
       friends.remove(friend);
       selectedFriend = null;
     });
+  }
+
+  Future<void> showCheck() async{
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return Center(
+          child: SizedBox(
+            width: 100,
+            height: 100,
+            child: Image.asset(
+              'lib/resources/images/Check.webp',
+              fit: BoxFit.contain,
+            ),
+          )
+        );
+      }
+    );
+    await Future.delayed(const Duration(seconds: 1));
+    Navigator.of(context).pop();
   }
 
   Padding heartButton(){
@@ -253,8 +285,9 @@ class FriendMenuState extends State<FriendMenu>{
 
   TextField searchTextField(){
     return TextField(
+      controller: friendController,
       decoration: InputDecoration(
-        hintText: "Username...",
+        hintText: "Add a Friend Here!",
         filled: true,
         fillColor: Colors.white,
         enabledBorder: OutlineInputBorder(
@@ -273,6 +306,10 @@ class FriendMenuState extends State<FriendMenu>{
           onTap: (){
             //Send contents of textfield to backend to identity if the user exists and 
             //add it to current users friend list if exists
+
+            addFriends(Friend(friendController.text));
+            friendController.text = "";
+            showCheck();
           },
           child: SizedBox(
             width: 60,
@@ -512,59 +549,6 @@ class FriendMenuState extends State<FriendMenu>{
                     itemBuilder: (BuildContext context, int index){
                       final friend = friends[index];
                       return createCard(friend);
-                      /*return Card(
-                        elevation: 3,
-                        color: Colors.white,
-                        child: Stack(
-                          children: [
-
-                            Center(
-                              child: Padding(
-                                padding: const EdgeInsets.only(top: 5, bottom: 35),
-                                child: SizedBox(
-                                  height: 90,
-                                  child: Image.asset(
-                                    'lib/resources/images/showel_icon.png',
-                                    height: 90,
-                                    width: 90,
-                                    fit: BoxFit.contain,
-                                  ),
-                                ),
-                              ),
-                            ),
-
-                            Align(
-                              alignment: Alignment.bottomCenter,
-                              child: Container(
-                                width: double.infinity,
-                                height: 30,
-                                padding: const EdgeInsets.all(1),
-                                decoration: BoxDecoration(
-                                  color: purpleColor,
-                                  borderRadius: const BorderRadius.only(
-                                    bottomLeft: Radius.circular(12),
-                                    bottomRight: Radius.circular(12),
-                                  ),
-                                ),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Expanded(
-                                      child: Text(
-                                        friend.name, //friends name
-                                        style: infoText,
-                                        overflow: TextOverflow.ellipsis,
-                                        textAlign: TextAlign.center,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-
-                          ],
-                        ),
-                      );*/
                     }
                   ),
                   expandButton(),
