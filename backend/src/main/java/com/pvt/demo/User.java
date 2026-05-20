@@ -16,11 +16,31 @@ public class User {
     private String email;
     private String name;
 
-    public Long getId() { return id; }
-    public String getGoogleId() { return googleId; }
-    public void setGoogleId(String g) { this.googleId = g; }
-    public String getEmail() { return email; }
-    public void setEmail(String e) { this.email = e; }
-    public String getName() { return name; }
-    public void setName(String n) { this.name = n; }
+    public Long getId() {
+        return id;
+    }
+
+    public String getGoogleId() {
+        return googleId;
+    }
+
+    public void setGoogleId(String g) {
+        this.googleId = g;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String e) {
+        this.email = e;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String n) {
+        this.name = n;
+    }
 }
