@@ -27,7 +27,7 @@ class FriendMenuState extends State<FriendMenu>{
   bool isExpanded = false;
   double smallHeigth = 150;
   double mediumHeight = 300;
-  double largeHeigth = 540;
+  double largeHeigth = 0;
   double panelHeigth = 0; 
   Color? activePanelColor;
   Friend? selectedFriend;
@@ -496,6 +496,8 @@ class FriendMenuState extends State<FriendMenu>{
 
   @override
   Widget build(BuildContext context){
+    largeHeigth = (MediaQuery.of(context).size.height) * 0.4;
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
