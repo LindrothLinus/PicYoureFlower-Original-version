@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -49,24 +50,29 @@ public class MainController {
         return entityRepository.findAll();
     }
 
-    @GetMapping(path = "/rename/{id}/{commonName}/{latinName}")
-    public @ResponseBody Object entityRename(@PathVariable @NonNull Integer id, @PathVariable String commonName,
-            @PathVariable String latinName) {
+    @GetMapping(path = "/allbyuser/{username}")
+    public @ResponseBody Iterable<DatabaseEntity> getAllEntitiesFromUser(@PathVariable String username) {
+
+        return entityRepository.findByUsername(username);
+    }
+
+    @PutMapping(path = "/addusername/{id}/{username}")
+    public @ResponseBody Object addUsername(@PathVariable @NonNull Integer id, @PathVariable String username) {
         try {
             DatabaseEntity entity = entityRepository.findById(id).orElseThrow(IllegalArgumentException::new);
-            entity.setCommonName(commonName);
-            entity.setCommonName(latinName);
+            entity.setUsername(username);
             return entityRepository.save(entity);
         } catch (IllegalArgumentException e) {
             return "Entity not found";
         }
     }
 
-    @GetMapping(path = "/recolor/{id}/{color}")
-    public @ResponseBody Object entityRename(@PathVariable @NonNull Integer id, @PathVariable String color) {
+    @PutMapping(path = "/addxy/{id}/{x}/{y}")
+    public @ResponseBody Object addXY(@PathVariable @NonNull Integer id, @PathVariable int x, @PathVariable int y) {
         try {
             DatabaseEntity entity = entityRepository.findById(id).orElseThrow(IllegalArgumentException::new);
-            entity.setColor(color);
+            entity.setX(x);
+            entity.setY(y);
             return entityRepository.save(entity);
         } catch (IllegalArgumentException e) {
             return "Entity not found";
@@ -205,10 +211,11 @@ public class MainController {
         return commonName + " , " + bestMatch; // Change this for other info
     }
 
-    //updated version taking and sending more info
+    // updated version taking and sending more info
     @PostMapping(value = "/fromcamera", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public @ResponseBody Object getNameFromPic(@RequestParam("image") MultipartFile image, @RequestParam("owner") String owner) throws Exception {
-        //identifierar
+    public @ResponseBody Object getNameFromPic(@RequestParam("image") MultipartFile image,
+            @RequestParam("owner") String owner) throws Exception {
+        // identifierar
         final RestClient restClient = RestClient.create();
         final String PLANTNET_API_KEY = "2b10bQPZR3ms3av4jXItPft5H";
         MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
@@ -228,43 +235,39 @@ public class MainController {
         String bestMatch = json.path("bestMatch").asText();
         String commonName = json.path("results").get(0).path("species").path("commonNames").get(0).asText();
         FlowerTemplate template[] = FlowerTemplate.values();
-        
-        //skapa databasentry
+
+        // skapa databasentry
         DatabaseEntity entity = new DatabaseEntity();
         entity.setCommonName(commonName);
         entity.setLatinName(bestMatch);
-        entity.setColor(getColor(image)); //testa detta
+        entity.setColor(getColor(image)); // testa detta
         entity.setPicTaken(java.time.LocalDateTime.now());
-        entity.setTemplate(template[(int) (Math.random() * template.length)]); //slumpmässig
-        //entity.setOwner(owner); ta bort kommentar när setOwner är implementerat
-
+        entity.setTemplate(template[(int) (Math.random() * template.length)]); // slumpmässig
+        entity.setUsername(owner);
         // lägg till i databasen
         addEntity(entity);
 
+        // skicka tillbaka till kamera
         return entity;
 
-
-        
-        //return commonName + " , " + bestMatch; // Change this for other info
     }
 
     @GetMapping(path = "wikiinfo/{commonName}")
-    public @ResponseBody Object getWikiInfo(@PathVariable String commonName){
+    public @ResponseBody Object getWikiInfo(@PathVariable String commonName) {
         try {
             final RestClient restClient = RestClient.create();
-            String nameToSend = commonName; //add formatting here, remove spaces?
+            String nameToSend = commonName; // add formatting here, remove spaces?
             String response = restClient.get()
-            .uri("https://en.wikipedia.org/api/rest_v1/page/summary/" + nameToSend)
-            .header("Accept", "application/json")
-            .retrieve()
-            .body(String.class);
+                    .uri("https://en.wikipedia.org/api/rest_v1/page/summary/" + nameToSend)
+                    .header("Accept", "application/json")
+                    .retrieve()
+                    .body(String.class);
 
             ObjectMapper mapper = new ObjectMapper();
             JsonNode json = mapper.readTree(response);
             return json.path("extract").asText();
 
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             return "Could not find information";
         }
     }

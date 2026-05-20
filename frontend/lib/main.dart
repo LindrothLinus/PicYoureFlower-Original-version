@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_demo/screens/Greenhouse.dart';
 import 'package:flutter_demo/widgets/add_button.dart';
 import 'package:flutter_demo/widgets/build_bar.dart';
-import 'package:flutter_demo/screens/Greenhouse.dart';
 import 'package:flutter_demo/widgets/flowers/flower.dart';
+import 'package:flutter_demo/widgets/flowers/genericflower.dart';
 import 'package:flutter_demo/widgets/flowers/rose_flower.dart';
+import 'package:flutter_demo/widgets/flowers/sunflower.dart';
+import 'package:flutter_demo/widgets/flowers/tulip.dart';
+import 'package:flutter_demo/widgets/flowers/woodanemone.dart';
 import 'package:flutter_demo/widgets/friend_menu.dart';
 import 'package:flutter_demo/widgets/login_popup.dart';
 import 'package:flutter_demo/widgets/nav_bar.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_demo/widgets/pots/blue_pot.dart';
+
 import '../resources/constants.dart';
 
 void main() async {
@@ -28,11 +33,11 @@ class MyApp extends StatefulWidget {
 class MyAppState extends State<MyApp> {
   final List<Flower> flowers = [
       RoseFlower(color: Colors.red, name: "k",),
-      RoseFlower(color: Colors.blue,name: "k"),
-      RoseFlower(color: Colors.pink,name: "k"),
-      RoseFlower(color: Colors.orange,name: "k"),
-      RoseFlower(color: Colors.green,name: "k"),
-      RoseFlower(color: Colors.deepPurpleAccent,name: "k"),
+      GenericFlower(color: Colors.lightBlue, name: "o"),
+      SunFlower(color: Colors.yellowAccent, name: ""),
+      TulipFlower(color: Colors.purpleAccent, name: "name"),
+      WoodanemoneFlower(color: Colors.green, name: "")
+
     ];
 
 
@@ -79,15 +84,65 @@ class MyAppState extends State<MyApp> {
       AddButton(
         builModeActiveNotifier: buildModeActiveNotifier,
         x: 3000,
-        y: 1550,
+        y: 1400,
         item: itemSelected,
       ),
       AddButton(
         builModeActiveNotifier: buildModeActiveNotifier,
         x: 2500,
-        y: 1550,
+        y: 1400,
         item: itemSelected,
       ),
+      AddButton(
+        builModeActiveNotifier: buildModeActiveNotifier,
+        x: 3000,
+        y: 2150,
+        item: itemSelected,
+      ),
+      AddButton(
+        builModeActiveNotifier: buildModeActiveNotifier,
+        x: 2500,
+        y: 2150,
+        item: itemSelected,
+      ),
+      AddButton(
+        builModeActiveNotifier: buildModeActiveNotifier,
+        x: 3000,
+        y: 2850,
+        item: itemSelected,
+      ),
+      AddButton(
+        builModeActiveNotifier: buildModeActiveNotifier,
+        x: 2500,
+        y: 2850,
+        item: itemSelected,
+      ),
+            AddButton(
+        builModeActiveNotifier: buildModeActiveNotifier,
+        x: 2000,
+        y: 2850,
+        item: itemSelected,
+      ),
+      AddButton(
+        builModeActiveNotifier: buildModeActiveNotifier,
+        x: 3500,
+        y: 2850,
+        item: itemSelected,
+      ),
+
+            AddButton(
+        builModeActiveNotifier: buildModeActiveNotifier,
+        x: 4000,
+        y: 2850,
+        item: itemSelected,
+      ),
+      AddButton(
+        builModeActiveNotifier: buildModeActiveNotifier,
+        x: 1500,
+        y: 2850,
+        item: itemSelected,
+      ),
+      
     ];
 
     return Scaffold(
@@ -116,3 +171,4 @@ class MyAppState extends State<MyApp> {
     //test du kan ta bort denna komentar
   }
 }
+//test

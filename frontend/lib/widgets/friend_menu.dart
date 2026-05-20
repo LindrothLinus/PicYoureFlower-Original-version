@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_demo/widgets/login_popup.dart';
 import '../resources/constants.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -7,6 +8,11 @@ final TextStyle menuText = GoogleFonts.nunito(
   fontWeight: FontWeight.w500,
   color: Colors.black,
 );
+
+class Friend {
+  String name;
+  Friend(this.name);
+}
 
 class FriendMenu extends StatefulWidget{
 
@@ -23,6 +29,13 @@ class FriendMenuState extends State<FriendMenu>{
   double mediumHeight = 300;
   double largeHeigth = 540;
   double panelHeigth = 0; 
+
+  final friends = [
+    //NOTICE ME BACKEND!!!!
+    //add friends from the database here by the method below
+    //Friend("name from database")
+
+  ];
 
   Padding heartButton(){
     return Padding(
@@ -338,17 +351,72 @@ class FriendMenuState extends State<FriendMenu>{
             child: Stack(
               children: [
                 if(activePanelColor == backgroundColor)... [
+                  
+                  GridView.builder(
+                    padding: EdgeInsets.only(top: 15, left: 65),
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 3,
+                      crossAxisSpacing: 10,
+                      mainAxisSpacing: 10, 
+                    ),
+                    itemCount: friends.length,
+                    itemBuilder: (BuildContext context, int index){
+                      final friend = friends[index];
+                      return Card(
+                        elevation: 3,
+                        child: Stack(
+                          children: [
+
+                            Center(
+                              child: Padding(
+                                padding: const EdgeInsets.only(top: 5, bottom: 35),
+                                child: SizedBox(
+                                  height: 90,
+                                  child: Image.asset(
+                                    'lib/resources/images/showel_icon.png',
+                                    height: 90,
+                                    width: 90,
+                                    fit: BoxFit.contain,
+                                  ),
+                                ),
+                              ),
+                            ),
+
+                            Align(
+                              alignment: Alignment.bottomCenter,
+                              child: Container(
+                                width: double.infinity,
+                                height: 30,
+                                padding: const EdgeInsets.all(1),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: const BorderRadius.only(
+                                    bottomLeft: Radius.circular(12),
+                                    bottomRight: Radius.circular(12),
+                                  ),
+                                ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Expanded(
+                                      child: Text(
+                                        friend.name, //friends name
+                                        style: infoText,
+                                        overflow: TextOverflow.ellipsis,
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+
+                          ],
+                        ),
+                      );
+                    }
+                  ),
                   expandButton(),
-                  Column(
-                    children: [
-                      createFriendBoxes(),
-                      if(isExpanded)...[
-                        createFriendBoxes(),
-                        createFriendBoxes(),
-                        createFriendBoxes(),
-                      ]
-                    ]
-                  )
                 ],
                 if(activePanelColor == mainColor)...[
                   Center(
