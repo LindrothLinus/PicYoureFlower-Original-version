@@ -6,7 +6,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
 
-// Main branch text styles preserved exactly
 final TextStyle headerText = GoogleFonts.nunito(
   fontSize: 25,
   fontWeight: FontWeight.w500,
@@ -23,14 +22,12 @@ final TextStyle loginText = GoogleFonts.nunito(
   color: Colors.black,
 );
 
-// Your branch: real Google Sign-In setup
 final GoogleSignIn _googleSignIn = GoogleSignIn(
   serverClientId: '167485843554-b82rj6jet7kr9rt81r0qm20jv40okesd.apps.googleusercontent.com',
   clientId: '167485843554-2evckuk7fa0k7a2v8u67u1afijqqe0vr.apps.googleusercontent.com',
   scopes: ['email', 'profile'],
 );
 
-// Your branch: actual sign-in logic (replaces the dummy onPressed)
 Future<void> signInWithGoogle(BuildContext context, {VoidCallback? onSuccess}) async {
   try {
     final GoogleSignInAccount? account = await _googleSignIn.signIn();
@@ -54,7 +51,6 @@ Future<void> signInWithGoogle(BuildContext context, {VoidCallback? onSuccess}) a
       onSuccess?.call();
 
       if (context.mounted) {
-        // Main branch check animation preserved exactly
         showDialog(
           context: context,
           barrierDismissible: false,
@@ -90,7 +86,6 @@ Future<void> signInWithGoogle(BuildContext context, {VoidCallback? onSuccess}) a
   }
 }
 
-// Your branch: onSuccess param added; main branch dialog UI preserved exactly
 void login_popup(BuildContext context, {VoidCallback? onSuccess}) {
   showDialog(
     context: context,
@@ -113,7 +108,6 @@ void login_popup(BuildContext context, {VoidCallback? onSuccess}) {
           ],
         ),
 
-        // Main branch content preserved exactly
         content: SizedBox(
           width: 200,
           //height: 100,
@@ -131,7 +125,6 @@ void login_popup(BuildContext context, {VoidCallback? onSuccess}) {
           ),
         ),
 
-        // Main branch button styling preserved exactly; onPressed now calls real sign-in
         actions: [
           Center(
             child: Padding(

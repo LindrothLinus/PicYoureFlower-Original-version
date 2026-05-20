@@ -17,7 +17,6 @@ import '../resources/constants.dart';
 
 const String _baseUrl = 'http://10.0.2.2:8080';
 
-// Your branch: StatefulWidget so we can fetch + show loading/error states
 class FlowerCollection extends StatefulWidget {
   const FlowerCollection({super.key});
 
@@ -26,7 +25,6 @@ class FlowerCollection extends StatefulWidget {
 }
 
 class _FlowerCollectionState extends State<FlowerCollection> {
-  // Your branch: dynamic list instead of hardcoded flowerCollection
   List<Flower> _flowers = [];
   bool _isLoading = true;
   String? _error;
@@ -39,7 +37,6 @@ class _FlowerCollectionState extends State<FlowerCollection> {
     });
   }
 
-  // Your branch: hex color parser
   Color _parseColor(String? hex) {
     if (hex == null || hex.isEmpty) return Colors.pink;
     try {
@@ -49,7 +46,6 @@ class _FlowerCollectionState extends State<FlowerCollection> {
     }
   }
 
-  // Your branch: map backend JSON to Flower widget
   Flower _buildFlower(Map<String, dynamic> data) {
     final String template = (data['template'] as String?) ?? 'GENERIC';
     final Color color = _parseColor(data['color'] as String?);
@@ -63,7 +59,6 @@ class _FlowerCollectionState extends State<FlowerCollection> {
     }
   }
 
-  // Your branch: fetch from backend with auth
   Future<void> _fetchFlowers() async {
     if (!mounted) return;
     setState(() { _isLoading = true; _error = null; });
@@ -100,7 +95,6 @@ class _FlowerCollectionState extends State<FlowerCollection> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // Main branch AppBar preserved exactly
       appBar: AppBar(
         title: Text('My flowers', style: TextStyles.header),
         backgroundColor: backgroundColor,
@@ -108,7 +102,6 @@ class _FlowerCollectionState extends State<FlowerCollection> {
       ),
       backgroundColor: backgroundColor,
 
-      // Your branch: loading/error/empty states wrapping the main branch grid
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : _error != null
@@ -135,7 +128,6 @@ class _FlowerCollectionState extends State<FlowerCollection> {
                     )
                   : RefreshIndicator(
                       onRefresh: _fetchFlowers,
-                      // Main branch GridView + Card layout preserved exactly
                       child: GridView.builder(
                         padding: const EdgeInsets.all(20),
                         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -147,7 +139,6 @@ class _FlowerCollectionState extends State<FlowerCollection> {
                         itemBuilder: (BuildContext context, int index) {
                           final item = _flowers[index];
 
-                          // Main branch GestureDetector + FlowerInfoScreen navigation preserved
                           return GestureDetector(
                             onTap: () {
                               Navigator.push(
@@ -161,7 +152,6 @@ class _FlowerCollectionState extends State<FlowerCollection> {
                               elevation: 5,
                               child: Stack(
                                 children: [
-                                  // Main branch: background image with color tint
                                   Center(
                                     child: Padding(
                                       padding: const EdgeInsets.only(bottom: 25),
@@ -178,7 +168,6 @@ class _FlowerCollectionState extends State<FlowerCollection> {
                                     ),
                                   ),
 
-                                  // Main branch: front image on top
                                   Center(
                                     child: Padding(
                                       padding: const EdgeInsets.only(bottom: 25),
@@ -194,7 +183,6 @@ class _FlowerCollectionState extends State<FlowerCollection> {
                                     ),
                                   ),
 
-                                  // Main branch: name label at bottom preserved exactly
                                   Align(
                                     alignment: Alignment.bottomCenter,
                                     child: Container(
@@ -231,7 +219,6 @@ class _FlowerCollectionState extends State<FlowerCollection> {
                       ),
                     ),
 
-      // Main branch bottomNavigationBar preserved exactly
       bottomNavigationBar: NavBar(onBuildModeButtonPressed: () {}),
     );
   }

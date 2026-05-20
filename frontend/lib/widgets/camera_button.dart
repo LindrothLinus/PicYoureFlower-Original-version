@@ -10,11 +10,9 @@ import 'package:path_provider/path_provider.dart';
 import '../resources/constants.dart';
 import '../screens/flower_info.dart';
 
-// Your branch: global auth state set by login_popup after successful Google Sign-In
 String? authToken;
 String? loggedInUserId;
 
-// Main branch: TemporaryFlowerItem preserved exactly
 class TemporaryFlowerItem {
   final String name;
   final String backGround;
@@ -35,7 +33,6 @@ class CameraButtonBar extends StatelessWidget {
   final CameraFeed cameraFeed;
   final GlobalKey<CameraFeedState> cameraKey;
 
-  // Your branch: real identify with auth headers (replaces old dummy endpoint)
   Future<void> identifyFlower(XFile image) async {
     try {
       final uri = Uri.parse('http://10.0.2.2:8080/home/identify');
@@ -59,7 +56,6 @@ class CameraButtonBar extends StatelessWidget {
     }
   }
 
-  // Your branch: test image helper for dev without a physical camera
   Future<void> identifyTestImage() async {
     try {
       final uri = Uri.parse('http://10.0.2.2:8080/home/identify');
@@ -91,7 +87,6 @@ class CameraButtonBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Main branch build() preserved exactly
     return BottomAppBar(
       color: mainColor,
       child: Center(
