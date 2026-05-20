@@ -6,12 +6,28 @@ import 'package:flutter_demo/widgets/camera_feed.dart';
 import '../resources/constants.dart';
 import '../screens/shop.dart';
 import 'package:http/http.dart' as http;
+import '../screens/flower_info.dart';
+
+// En temporär klass för att paketera data 
+class TemporaryFlowerItem {
+  final String name;
+  final String backGround;
+  final String frontImage;
+  final Color color;
+
+  TemporaryFlowerItem({
+    required this.name,
+    required this.backGround,
+    required this.frontImage,
+    this.color = Colors.transparent,
+  });
+}
 
 class CameraButtonBar extends StatelessWidget {
-  CameraButtonBar({super.key, required this.cameraFeed,required this.cameraKey});
+  CameraButtonBar({super.key, required this.cameraFeed, required this.cameraKey});
 
   final CameraFeed cameraFeed;
-  final GlobalKey<CameraFeedState>cameraKey;
+  final GlobalKey<CameraFeedState> cameraKey;
 
   Future<void> identifyFlower(XFile image, String owner) async {
     try {
@@ -40,7 +56,27 @@ class CameraButtonBar extends StatelessWidget {
           onPressed: () async {
             final image = await cameraKey.currentState?.takePicture();
             if (image != null) {
+
               await identifyFlower(image, "testusername");
+
+            
+              final dummyItem = TemporaryFlowerItem(
+                name: "Dandelion", 
+                backGround: "lib/resources/images/VBSolros.png", 
+                frontImage: "lib/resources/images/Solros.png",
+                color: Colors.yellow.withOpacity(0.3),
+              );
+
+              
+              if (!context.mounted) return; 
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => FlowerInfoScreen(
+                    flowerItem: dummyItem,
+                  ),
+                ),
+              );
             }
           },
           style: ElevatedButton.styleFrom(

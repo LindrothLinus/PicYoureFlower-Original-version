@@ -6,9 +6,10 @@ import 'package:flutter_demo/widgets/flowers/sunflower.dart';
 import 'package:flutter_demo/widgets/flowers/tulip.dart';
 import 'package:flutter_demo/widgets/flowers/woodanemone.dart';
 import 'package:flutter_demo/widgets/nav_bar.dart';
+import 'package:flutter_demo/screens/flower_info.dart'; 
 import '../resources/constants.dart';
 
-//Blommorna, dess färg och namn måste hämtas från databasen
+// Blommorna, dess färg och namn måste hämtas från databasen
 final flowerCollection = [
   RoseFlower(color: Colors.red, name: "Rose"),
   SunFlower(color: Colors.yellow, name: "Sunflowerhkjhkjhjhjkhk"),
@@ -40,73 +41,87 @@ class FlowerCollection extends StatelessWidget {
         itemCount: flowerCollection.length,
         itemBuilder: (BuildContext context, int index) {
           final item = flowerCollection[index];
-          return Card(
-            elevation: 5,
-            child: Stack(
-              children: [
-                Center(
-                  child: Padding(
-                    padding: const EdgeInsets.only(bottom: 25),
-                    child: SizedBox(
-                      height: 90,
-                      child: Image.asset(
-                        item.backGround,
-                        color: item.color,
-                        height: 90,
-                        width: 90,
-                        fit: BoxFit.contain,
-                      ),
-                    ),
-                  ),
+          
+          return GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => FlowerInfoScreen(flowerItem: item),
                 ),
-
-                Center(
-                  child: Padding(
-                    padding: const EdgeInsets.only(bottom: 25),
-                    child: SizedBox(
-                      height: 90,
-                      child: Image.asset(
-                        item.frontImage,
+              );
+            },
+            child: Card(
+              elevation: 5,
+              child: Stack(
+                children: [
+                 
+                  Center(
+                    child: Padding(
+                      padding: const EdgeInsets.only(bottom: 25),
+                      child: SizedBox(
                         height: 90,
-                        width: 90,
-                        fit: BoxFit.contain,
-                      ),
-                    ),
-                  ),
-                ),
-
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Container(
-                    width: double.infinity,
-                    height: 30,
-                    padding: const EdgeInsets.all(1),
-                    decoration: BoxDecoration(
-                      color: purpleColor,
-                      borderRadius: const BorderRadius.only(
-                        bottomLeft: Radius.circular(12),
-                        bottomRight: Radius.circular(12),
-                      ),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Expanded(
-                          child: Text(
-                            item.name,
-                            style: TextStyles.infoText,
-                            overflow: TextOverflow.ellipsis,
-                            textAlign: TextAlign.center,
-                          ),
+                        child: Image.asset(
+                          item.backGround,
+                          color: item.color,
+                          height: 90,
+                          width: 90,
+                          fit: BoxFit.contain,
                         ),
-                      ],
+                      ),
                     ),
                   ),
-                ),
-              ],
+                  
+                
+                  Center(
+                    child: Padding(
+                      padding: const EdgeInsets.only(bottom: 25),
+                      child: SizedBox(
+                        height: 90,
+                        child: Image.asset(
+                          item.frontImage,
+                          height: 90,
+                          width: 90,
+                          fit: BoxFit.contain,
+                        ),
+                      ),
+                    ),
+                  ),
+                  
+                  
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Container(
+                      width: double.infinity,
+                      height: 30,
+                      padding: const EdgeInsets.all(1),
+                      decoration: BoxDecoration(
+                        color: purpleColor,
+                        borderRadius: const BorderRadius.only(
+                          bottomLeft: Radius.circular(12),
+                          bottomRight: Radius.circular(12),
+                        ),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Expanded(
+                            child: Text(
+                              item.name,
+                              style: TextStyles.infoText,
+                              overflow: TextOverflow.ellipsis,
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           );
-        },
+        }, // Slut på itemBuilder
       ),
       bottomNavigationBar: NavBar(onBuildModeButtonPressed: () {}),
     );
