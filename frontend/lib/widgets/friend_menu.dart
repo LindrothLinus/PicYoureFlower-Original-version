@@ -30,11 +30,14 @@ class FriendMenuState extends State<FriendMenu>{
   double largeHeigth = 540;
   double panelHeigth = 0; 
 
-  final friends = [
+  var friends = [
     //NOTICE ME BACKEND!!!!
     //add friends from the database here by the method below
     //Friend("name from database")
 
+    Friend("Tom"),
+    Friend("Lin"),
+    Friend("Hamlet"),
   ];
 
   Padding heartButton(){
@@ -197,7 +200,8 @@ class FriendMenuState extends State<FriendMenu>{
         ),
         suffixIcon: GestureDetector(
           onTap: (){
-            //do something
+            //Send contents of textfield to backend to identity if the user exists and 
+            //add it to current users friend list if exists
           },
           child: SizedBox(
             width: 60,
@@ -429,51 +433,71 @@ class FriendMenuState extends State<FriendMenu>{
                 if(activePanelColor == greenColor)...[
                   Column(
                     children: [
-                      SizedBox(height: 30),
-                      Row(
-                        children: [
-                          SizedBox(width: 30),
-                          //profile pic
-                          profileBoxPic(Colors.white, 150, 150, 'lib/resources/images/showel_icon.png'),
+                      
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(16, 30, 16, 16),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
 
-                          SizedBox(width: 20),
-                          //other column
-                          Column(
-                            children: [
-                              //calender
-                              Row(
+                            Flexible(
+                              flex: 2,
+                              child: profileBoxPic(Colors.white, 150, 150, 'lib/resources/images/showel_icon.png'),
+                            ),
+                          
+                            const SizedBox(width: 16),
+
+                            Expanded(
+                              flex: 3,
+                              child: Column(
                                 children: [
-                                  profileBoxPic(purpleColor, 40, 40, 'lib/resources/images/Calendar_v2.png'),
-                                  profileBoxText(Colors.white, 155, 40, '26-05-15'),
+                                  Row(
+                                    children: [
+                                      profileBoxPic(purpleColor, 40, 40, 'lib/resources/images/Calendar_v2.png'),
+                                      const SizedBox(width: 8),
+                                      Expanded(
+                                        child: profileBoxText(Colors.white, double.infinity, 40, '26-05-15'),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 15),
+                                  
+                                  Row(
+                                    children: [
+                                      profileBoxPic(purpleColor, 40, 40, 'lib/resources/images/Identity.png'),
+                                      const SizedBox(width: 8),
+                                      Expanded(
+                                        child: profileBoxText(Colors.white, double.infinity, 40, 'FlowerManiac'),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 15),
+
+                                  Row(
+                                    children: [
+                                      profileBoxPic(purpleColor, 40, 40, 'lib/resources/images/flower_icon.png'),
+                                      const SizedBox(width: 8),
+                                      Expanded(
+                                        child: profileBoxText(Colors.white, double.infinity, 40, '123'),
+                                      ),
+                                    ],
+                                  ),
                                 ],
                               ),
+                            ),
 
-                              SizedBox(height: 15),
-                              //name
-                              Row(
-                                children: [
-                                  profileBoxPic(purpleColor, 40, 40, 'lib/resources/images/Identity.png'),
-                                  profileBoxText(Colors.white, 155, 40, 'FlowerManiac'),
-                                ],
-                              ),
+                          ],
+                        ),
+                      ),
 
-                              SizedBox(height: 15),
-                              //flower status
-                              Row(
-                                children: [
-                                  profileBoxPic(purpleColor, 40, 40, 'lib/resources/images/flower_icon.png'),
-                                  profileBoxText(Colors.white, 155, 40, '1,234'),
-                                ],
-                              ),
-                            ],
-                          )
-                        ],
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
+                        child: SizedBox(
+                          width: double.infinity,
+                          child: profileBoxText(purpleColor, double.infinity, 50, 'Manage Friends'),
+                        ),
                       ),
                       
-                      SizedBox(height: 30),
-                      
-                      //second column slot, manage friends
-                      profileBoxText(purpleColor, 370, 50, 'Manage Friends'),
                     ],
                   ),
                 ],
