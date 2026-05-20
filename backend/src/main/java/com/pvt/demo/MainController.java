@@ -5,6 +5,7 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import javax.imageio.ImageIO;
 
@@ -63,18 +64,36 @@ public class MainController {
         return "hello";
     }
 
+    // User repository methods bellow-------------------------------
+
     @GetMapping("/friends/{userId}")
-    public ArrayList<User> getAllFriends(@PathVariable Long userId) {
+    public Set<User> getAllFriends(@PathVariable Long userId) {
         User entity = userRepository.findById(userId).orElseThrow(IllegalArgumentException::new);
         return entity.getFriends();
     }
+
+    @GetMapping("/allusers")
+    public Iterable<User> getAllUsers() {
+        return userRepository.findAll();
+    }
+
+    @GetMapping("/adduser")
+    public Object addUser() {
+        User entity = new User();
+        User friend = new User();
+        entity.getFriends().add(friend);
+        userRepository.save(friend);
+        return userRepository.save(entity);
+    }
+
+    // User repository methods above-------------------------------
 
     @GetMapping("/user/{userId}/flowers")
     public Iterable<DatabaseEntity> getFlowersByUser(@PathVariable Long userId) {
         return entityRepository.findByUserId(userId);
     }
 
-    @PutMapping("/adduser/{flowerId}/{userId}")
+    @PutMapping("/addfloweruser/{flowerId}/{userId}")
     public Object addUserToFlower(@PathVariable Long flowerId, @PathVariable Long userId) {
         try {
             DatabaseEntity entity = entityRepository.findById(flowerId).orElseThrow(IllegalArgumentException::new);

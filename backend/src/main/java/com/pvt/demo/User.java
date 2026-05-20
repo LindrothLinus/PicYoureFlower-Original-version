@@ -1,11 +1,13 @@
 package com.pvt.demo;
 
-import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -17,18 +19,20 @@ public class User {
     private String googleId;
     private String email;
     private String name;
-    private ArrayList<User> friends;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    @ManyToMany
+    private Set<User> friends = new HashSet<>();
 
-    public ArrayList<User> getFriends() {
+    public Set<User> getFriends() {
         return this.friends;
     }
 
-    public void setFriends(ArrayList<User> friends) {
+    public void setFriends(Set<User> friends) {
         this.friends = friends;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public Long getId() {
