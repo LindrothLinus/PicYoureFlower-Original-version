@@ -96,8 +96,8 @@ class Shop extends StatelessWidget {
                             const SizedBox(width: 4),
                             Image.asset(
                               coinsPath,
-                              height: 22,
-                              width: 22,
+                              height: 20,
+                              width: 20,
                               //fit: BoxFit.contain,
                             ),
                           ],
@@ -114,8 +114,8 @@ class Shop extends StatelessWidget {
                           },
                           icon: Image.asset(
                             addPath,
-                            height: 24,
-                            width: 24,
+                            height: 20,
+                            width: 20,
                             //fit: BoxFit.contain,
                           ),
                         ),
