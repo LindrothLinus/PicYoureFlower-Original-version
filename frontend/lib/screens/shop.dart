@@ -86,37 +86,43 @@ class Shop extends StatelessWidget {
                       ),
                     ),
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Row(
-                          children: [
-                            Text(item.cost.toString(), style: TextStyles.body),
-                            const SizedBox(width: 4),
-                            Image.asset(
-                              coinsPath,
-                              height: 30,
-                              width: 30,
-                              fit: BoxFit.contain,
-                            ),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            IconButton(
-                              onPressed: () {
-                                if (coinsState.getCoinValue() >= item.cost) {
-                                  coinsState.decreaseCoinValue(item.cost);
-                                  CheckButtonPopUp.showCheckButton(context);
-                                }
-                              },
-                              icon: Image.asset(
-                                addPath,
+                        Flexible(
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                item.cost.toString(),
+                                style: TextStyles.body,
+                              ),
+
+                              const SizedBox(width: 4),
+                              Image.asset(
+                                coinsPath,
                                 height: 30,
                                 width: 30,
                                 fit: BoxFit.contain,
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        IconButton(
+                          padding: EdgeInsets.zero,
+                          constraints: const BoxConstraints(),
+                          onPressed: () {
+                            if (coinsState.getCoinValue() >= item.cost) {
+                              coinsState.decreaseCoinValue(item.cost);
+                              CheckButtonPopUp.showCheckButton(context);
+                            }
+                          },
+                          icon: Image.asset(
+                            addPath,
+                            height: 30,
+                            width: 30,
+                            fit: BoxFit.contain,
+                          ),
                         ),
                       ],
                     ),
