@@ -26,6 +26,9 @@ backend/HELP.md
 
 #---Extras-----
 macos/
-android/
+frontend/android/app/debug/
+frontend/android/app/profile/
+frontend/android/app/release/
+!android/debug.keystore
 ios/
 .dart_tool/
