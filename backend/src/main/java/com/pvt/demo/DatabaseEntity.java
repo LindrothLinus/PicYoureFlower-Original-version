@@ -17,13 +17,19 @@ public class DatabaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String commonName;
     private String latinName;
     private String color;
     private LocalDateTime picTaken;
     private int x;
     private int y;
+
+    @Enumerated(EnumType.STRING)
+    private FlowerTemplate template;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
     public int getX() {
         return this.x;
@@ -41,18 +47,11 @@ public class DatabaseEntity {
         this.y = y;
     }
 
-    @Enumerated(EnumType.STRING)
-    private FlowerTemplate template;
-
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
-
-    public Long getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(long id) {
         this.id = id;
     }
 

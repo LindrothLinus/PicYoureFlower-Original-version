@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -55,6 +56,11 @@ public class MainController {
     @GetMapping("/all")
     public Iterable<DatabaseEntity> getAllEntities() {
         return entityRepository.findAll();
+    }
+
+    @GetMapping("/hello")
+    public String hello() {
+        return "hello";
     }
 
     @GetMapping("/user/{userId}/flowers")
@@ -99,7 +105,7 @@ public class MainController {
     }
 
     @PutMapping(path = "/addxy/{id}/{x}/{y}")
-    public @ResponseBody Object addXY(@PathVariable @NonNull Integer id, @PathVariable int x, @PathVariable int y) {
+    public @ResponseBody Object addXY(@PathVariable @NonNull Long id, @PathVariable int x, @PathVariable int y) {
         try {
             DatabaseEntity entity = entityRepository.findById(id).orElseThrow(IllegalArgumentException::new);
             entity.setX(x);
