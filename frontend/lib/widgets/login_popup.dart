@@ -24,7 +24,7 @@ final TextStyle loginText = GoogleFonts.nunito(
 
 final GoogleSignIn _googleSignIn = GoogleSignIn(
   serverClientId: '167485843554-b82rj6jet7kr9rt81r0qm20jv40okesd.apps.googleusercontent.com',
-  clientId: '167485843554-2evckuk7fa0k7a2v8u67u1afijqqe0vr.apps.googleusercontent.com',
+  clientId: '167485843554-7drapkqia61ksol45iu6cl9oobj3s0t6.apps.googleusercontent.com',
   scopes: ['email', 'profile'],
 );
 
