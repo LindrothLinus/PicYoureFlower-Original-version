@@ -89,26 +89,21 @@ class Shop extends StatelessWidget {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Flexible(
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text(
-                                item.cost.toString(),
-                                style: TextStyles.body,
-                              ),
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(item.cost.toString(), style: TextStyles.body),
 
-                              const SizedBox(width: 4),
-                              Image.asset(
-                                coinsPath,
-                                height: 30,
-                                width: 30,
-                                fit: BoxFit.contain,
-                              ),
-                            ],
-                          ),
+                            const SizedBox(width: 4),
+                            Image.asset(
+                              coinsPath,
+                              height: 20,
+                              width: 20,
+                              //fit: BoxFit.contain,
+                            ),
+                          ],
                         ),
-                        const SizedBox(width: 8),
+                        const SizedBox(width: 6),
                         IconButton(
                           padding: EdgeInsets.zero,
                           constraints: const BoxConstraints(),
@@ -120,9 +115,9 @@ class Shop extends StatelessWidget {
                           },
                           icon: Image.asset(
                             addPath,
-                            height: 30,
-                            width: 30,
-                            fit: BoxFit.contain,
+                            height: 20,
+                            width: 20,
+                            //fit: BoxFit.contain,
                           ),
                         ),
                       ],
