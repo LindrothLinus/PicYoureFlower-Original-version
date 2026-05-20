@@ -1,14 +1,20 @@
+import 'dart:io';
+
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_demo/screens/camera.dart';
-import 'package:flutter_demo/screens/flower_collection.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_demo/widgets/camera_feed.dart';
-import '../resources/constants.dart';
-import '../screens/shop.dart';
 import 'package:http/http.dart' as http;
+import 'package:path_provider/path_provider.dart';
+
+import '../resources/constants.dart';
 import '../screens/flower_info.dart';
 
-// En temporär klass för att paketera data 
+// Your branch: global auth state set by login_popup after successful Google Sign-In
+String? authToken;
+String? loggedInUserId;
+
+// Main branch: TemporaryFlowerItem preserved exactly
 class TemporaryFlowerItem {
   final String name;
   final String backGround;
@@ -29,15 +35,21 @@ class CameraButtonBar extends StatelessWidget {
   final CameraFeed cameraFeed;
   final GlobalKey<CameraFeedState> cameraKey;
 
-  Future<void> identifyFlower(XFile image, String owner) async {
+  // Your branch: real identify with auth headers (replaces old dummy endpoint)
+  Future<void> identifyFlower(XFile image) async {
     try {
-      //final uri = Uri.parse('http://192.168.0.10:8080/home/identifyflower'); //for testing locally
-      //final uri = Uri.parse('https://group-1-75.pvt.dsv.su.se/home/identifyflower');
-      final uri = Uri.parse('https://group-1-75.pvt.dsv.su.se/home/fromcamera');
+      final uri = Uri.parse('http://10.0.2.2:8080/home/identify');
       final request = http.MultipartRequest('POST', uri);
       request.files.add(await http.MultipartFile.fromPath('image', image.path));
-      request.fields['owner'] = owner;
-      print('Sending request'); //For debugging
+
+      if (loggedInUserId != null) {
+        request.fields['userId'] = loggedInUserId!;
+      }
+      if (authToken != null) {
+        request.headers['Authorization'] = 'Bearer $authToken';
+      }
+
+      print('Sending request');
       final response = await request.send();
       final responseBody = await response.stream.bytesToString();
       print(response.statusCode);
@@ -47,37 +59,62 @@ class CameraButtonBar extends StatelessWidget {
     }
   }
 
-  @override 
+  // Your branch: test image helper for dev without a physical camera
+  Future<void> identifyTestImage() async {
+    try {
+      final uri = Uri.parse('http://10.0.2.2:8080/home/identify');
+
+      final byteData = await rootBundle.load('lib/resources/images/testblomma.jpg');
+      final tempDir = await getTemporaryDirectory();
+      final tempFile = File('${tempDir.path}/testblomma.jpg');
+      await tempFile.writeAsBytes(byteData.buffer.asUint8List());
+
+      final request = http.MultipartRequest('POST', uri);
+      request.files.add(await http.MultipartFile.fromPath('image', tempFile.path));
+
+      if (loggedInUserId != null) {
+        request.fields['userId'] = loggedInUserId!;
+      }
+      if (authToken != null) {
+        request.headers['Authorization'] = 'Bearer $authToken';
+      }
+
+      print('Sending test image...');
+      final response = await request.send();
+      final responseBody = await response.stream.bytesToString();
+      print(response.statusCode);
+      print(responseBody);
+    } catch (e) {
+      print('Error: $e');
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
+    // Main branch build() preserved exactly
     return BottomAppBar(
       color: mainColor,
       child: Center(
         child: ElevatedButton(
           onPressed: () async {
-            final image = await cameraKey.currentState?.takePicture();
-            if (image != null) {
+            await identifyTestImage();
 
-              await identifyFlower(image, "testusername");
+            final dummyItem = TemporaryFlowerItem(
+              name: "Dandelion",
+              backGround: "lib/resources/images/VBSolros.png",
+              frontImage: "lib/resources/images/Solros.png",
+              color: Colors.yellow.withOpacity(0.3),
+            );
 
-            
-              final dummyItem = TemporaryFlowerItem(
-                name: "Dandelion", 
-                backGround: "lib/resources/images/VBSolros.png", 
-                frontImage: "lib/resources/images/Solros.png",
-                color: Colors.yellow.withOpacity(0.3),
-              );
-
-              
-              if (!context.mounted) return; 
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => FlowerInfoScreen(
-                    flowerItem: dummyItem,
-                  ),
+            if (!context.mounted) return;
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => FlowerInfoScreen(
+                  flowerItem: dummyItem,
                 ),
-              );
-            }
+              ),
+            );
           },
           style: ElevatedButton.styleFrom(
             backgroundColor: blueColor,

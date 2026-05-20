@@ -1,6 +1,12 @@
-import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'dart:convert';
 
+import 'package:flutter/material.dart';
+import 'package:flutter_demo/widgets/camera_button.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:http/http.dart' as http;
+
+// Main branch text styles preserved exactly
 final TextStyle headerText = GoogleFonts.nunito(
   fontSize: 25,
   fontWeight: FontWeight.w500,
@@ -17,7 +23,75 @@ final TextStyle loginText = GoogleFonts.nunito(
   color: Colors.black,
 );
 
-void login_popup(BuildContext context) {
+// Your branch: real Google Sign-In setup
+final GoogleSignIn _googleSignIn = GoogleSignIn(
+  serverClientId: '167485843554-b82rj6jet7kr9rt81r0qm20jv40okesd.apps.googleusercontent.com',
+  clientId: '167485843554-2evckuk7fa0k7a2v8u67u1afijqqe0vr.apps.googleusercontent.com',
+  scopes: ['email', 'profile'],
+);
+
+// Your branch: actual sign-in logic (replaces the dummy onPressed)
+Future<void> signInWithGoogle(BuildContext context, {VoidCallback? onSuccess}) async {
+  try {
+    final GoogleSignInAccount? account = await _googleSignIn.signIn();
+    if (account == null) return;
+
+    final GoogleSignInAuthentication auth = await account.authentication;
+    final String? idToken = auth.idToken;
+    if (idToken == null) throw Exception('No ID token received');
+
+    final response = await http.post( 
+      Uri.parse('http://10.0.2.2:8080/api/auth/google'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({'idToken': idToken}),
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      authToken = data['token'];
+      loggedInUserId = data['userId']?.toString();
+
+      onSuccess?.call();
+
+      if (context.mounted) {
+        // Main branch check animation preserved exactly
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (context) {
+            return Center(
+              child: SizedBox(
+                width: 100,
+                height: 100,
+                child: Image.asset(
+                  'lib/resources/images/Check.webp',
+                  fit: BoxFit.contain,
+                ),
+              ),
+            );
+          },
+        );
+        await Future.delayed(const Duration(seconds: 1));
+        if (context.mounted) {
+          Navigator.of(context).pop();
+          Navigator.of(context).pop();
+        }
+      }
+    } else {
+      throw Exception('Backend returned ${response.statusCode}: ${response.body}');
+    }
+  } catch (e) {
+    print('Login error: $e');
+    if (context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Login failed: $e')),
+      );
+    }
+  }
+}
+
+// Your branch: onSuccess param added; main branch dialog UI preserved exactly
+void login_popup(BuildContext context, {VoidCallback? onSuccess}) {
   showDialog(
     context: context,
     builder: (BuildContext context) {
@@ -29,6 +103,7 @@ void login_popup(BuildContext context) {
           side: const BorderSide(color: Colors.black, width: 2),
         ),
 
+        // Main branch title preserved exactly
         title: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -38,6 +113,7 @@ void login_popup(BuildContext context) {
           ],
         ),
 
+        // Main branch content preserved exactly
         content: SizedBox(
           width: 200,
           //height: 100,
@@ -55,6 +131,7 @@ void login_popup(BuildContext context) {
           ),
         ),
 
+        // Main branch button styling preserved exactly; onPressed now calls real sign-in
         actions: [
           Center(
             child: Padding(
@@ -70,28 +147,8 @@ void login_popup(BuildContext context) {
 
                   backgroundColor: Color(0xFFAEF7A1),
                 ),
-                onPressed: () async {
-                  //open the login microservice instead of just poping the screen
-                  showDialog(
-                    context: context,
-                    barrierDismissible: false,
-                    builder: (context) {
-                      return Center(
-                        child: SizedBox(
-                          width: 100,
-                          height: 100,
-                          child: Image.asset(
-                            'lib/resources/images/Check.webp',
-                            fit: BoxFit.contain,
-                          ),
-                        ),
-                      );
-                    },
-                  );
-                  await Future.delayed(const Duration(seconds: 1));
-                  Navigator.of(context).pop();
-                  Navigator.of(context).pop();
-                },
+                // Your branch: real sign-in instead of dummy pop
+                onPressed: () => signInWithGoogle(context, onSuccess: onSuccess),
                 child: Text('Log in!', style: loginText),
               ),
             ),
