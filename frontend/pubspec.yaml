@@ -64,6 +64,12 @@ flutter:
     - lib/resources/images/testblomma.jpg
     - lib/resources/images/Location_v2.png
     - lib/resources/images/BluePot_smaller.png
+    - lib/resources/images/Avatar_Blue.png
+    - lib/resources/images/Avatar_Green.png
+    - lib/resources/images/Avatar_Pink.png
+    - lib/resources/images/Avatar_Purple.png
+    - lib/resources/images/Avatar_Red.png
+    - lib/resources/images/Avatar_Yellow.png
 
 
 
