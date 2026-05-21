@@ -12,9 +12,7 @@ class LikeButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: liked,
-      child: Image.asset(likePath, height: 30, width: 30),
+      child: Image.asset(likePath, height: 60, width: 60),
     );
   }
-
-  void likeSent(BuildContext context) {}
 }
