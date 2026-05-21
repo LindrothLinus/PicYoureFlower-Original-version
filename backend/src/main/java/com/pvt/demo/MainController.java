@@ -18,6 +18,7 @@ import org.springframework.lang.NonNull;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,7 +28,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -63,10 +63,63 @@ public class MainController {
         return "hello";
     }
 
+    // User repository methods bellow-------------------------------
+
     @GetMapping("/friends/{userId}")
-    public ArrayList<User> getAllFriends(@PathVariable Long userId) {
+    public Object getAllFriends(@PathVariable Long userId) {
         User entity = userRepository.findById(userId).orElseThrow(IllegalArgumentException::new);
-        return entity.getFriends();
+        return userRepository.save(entity);
+    }
+
+    @GetMapping("/allusers")
+    public Iterable<User> getAllUsers() {
+        return userRepository.findAll();
+    }
+
+    @GetMapping("/adduser")
+    public Object addUser() {
+        User entity = new User();
+        return userRepository.save(entity);
+    }
+
+    @GetMapping("/coins/{userId}")
+    public Object getCoins(@PathVariable Long userId) {
+        User entity = userRepository.findById(userId).orElseThrow(IllegalArgumentException::new);
+        return entity.getCoins();
+    }
+
+    @GetMapping("/addcoins/{userId}/{amount}")
+    public Object addCoins(@PathVariable Long userId, @PathVariable int amount) {
+        User entity = userRepository.findById(userId).orElseThrow(IllegalArgumentException::new);
+        entity.setCoins(entity.getCoins() + amount);
+        userRepository.save(entity);
+        return entity.getCoins();
+    }
+
+    @GetMapping("/userpots/{userId}")
+    public Iterable<PotTemplate> getUserPots(@PathVariable Long userId) {
+        User entity = userRepository.findById(userId).orElseThrow(IllegalArgumentException::new);
+        return entity.getPots();
+    }
+
+    @PutMapping("/addpot/{userId}/{pot}")
+    public Object addPots(@PathVariable Long userId, @PathVariable PotTemplate pot) {
+        User entity = userRepository.findById(userId).orElseThrow(IllegalArgumentException::new);
+        entity.getPots().add(pot);
+        return userRepository.save(entity);
+    }
+
+    @GetMapping("/allpots")
+    public List<PotTemplate> getAllPots() {
+        return List.of(PotTemplate.values());
+    }
+
+    // User repository methods above-------------------------------
+
+    @DeleteMapping("/deleteflower/{flowerId}")
+    public void deleteFlower(@PathVariable Long flowerId) {
+        DatabaseEntity entity = entityRepository.findById(flowerId).orElseThrow(IllegalArgumentException::new);
+        entityRepository.delete(entity);
     }
 
     @GetMapping("/user/{userId}/flowers")
@@ -74,48 +127,12 @@ public class MainController {
         return entityRepository.findByUserId(userId);
     }
 
-    @PutMapping("/adduser/{flowerId}/{userId}")
+    @PutMapping("/addfloweruser/{flowerId}/{userId}")
     public Object addUserToFlower(@PathVariable Long flowerId, @PathVariable Long userId) {
         try {
             DatabaseEntity entity = entityRepository.findById(flowerId).orElseThrow(IllegalArgumentException::new);
             User user = userRepository.findById(userId).orElseThrow(IllegalArgumentException::new);
             entity.setUser(user);
-            return entityRepository.save(entity);
-        } catch (IllegalArgumentException e) {
-            return "Entity not found";
-        }
-    }
-
-    @PutMapping("/rename/{id}/{commonName}/{latinName}")
-    public Object entityRename(@PathVariable @NonNull Long id, @PathVariable String commonName,
-            @PathVariable String latinName) {
-        try {
-            DatabaseEntity entity = entityRepository.findById(id).orElseThrow(IllegalArgumentException::new);
-            entity.setCommonName(commonName);
-            entity.setLatinName(latinName);
-            return entityRepository.save(entity);
-        } catch (IllegalArgumentException e) {
-            return "Entity not found";
-        }
-    }
-
-    @PutMapping("/recolor/{id}/{color}")
-    public Object entityRecolor(@PathVariable @NonNull Long id, @PathVariable String color) {
-        try {
-            DatabaseEntity entity = entityRepository.findById(id).orElseThrow(IllegalArgumentException::new);
-            entity.setColor(color);
-            return entityRepository.save(entity);
-        } catch (IllegalArgumentException e) {
-            return "Entity not found";
-        }
-    }
-
-    @PutMapping(path = "/addxy/{id}/{x}/{y}")
-    public @ResponseBody Object addXY(@PathVariable @NonNull Long id, @PathVariable int x, @PathVariable int y) {
-        try {
-            DatabaseEntity entity = entityRepository.findById(id).orElseThrow(IllegalArgumentException::new);
-            entity.setX(x);
-            entity.setY(y);
             return entityRepository.save(entity);
         } catch (IllegalArgumentException e) {
             return "Entity not found";
@@ -181,6 +198,11 @@ public class MainController {
             }
 
             entityRepository.save(entity);
+
+            response.put("commonName", entity.getCommonName());
+            response.put("latinName", entity.getLatinName());
+            response.put("template", entity.getTemplate().name());
+            response.put("picTaken", entity.getPicTaken().toString());
 
             return ResponseEntity.ok(mapper.writeValueAsString(response));
         } catch (Exception e) {
@@ -285,17 +307,37 @@ public class MainController {
     }
 
     @GetMapping(path = "wikiinfo/{commonName}")
-    public @ResponseBody Object getWikiInfo(@PathVariable String commonName) {
+    public @ResponseBody Object getWikiInfo(@PathVariable String commonName,
+            @RequestParam(required = false) String latinName) {
+        String result = fetchWikiExtract(commonName);
+        if (result != null) return result;
+        if (latinName != null && !latinName.isBlank()) {
+            result = fetchWikiExtract(latinName);
+            if (result != null) return result;
+            result = fetchWikiExtract(latinName.split(" ")[0]);
+            if (result != null) return result;
+        }
+        return "Could not find information";
+    }
+
+    private String fetchWikiExtract(String name) {
         try {
-            final RestClient restClient = RestClient.create();
-            String nameToSend = commonName; // add formatting here, remove spaces?
-            String response = restClient.get().uri("https://en.wikipedia.org/api/rest_v1/page/summary/" + nameToSend)
-                    .header("Accept", "application/json").retrieve().body(String.class);
-            ObjectMapper mapper = new ObjectMapper();
-            JsonNode json = mapper.readTree(response);
-            return json.path("extract").asText();
+            HttpHeaders h = new HttpHeaders();
+            h.set("User-Agent", "PlantIdentifierApp/1.0");
+            h.set("Accept", "application/json");
+            ResponseEntity<String> resp = restTemplate.exchange(
+                    "https://en.wikipedia.org/api/rest_v1/page/summary/" + name.replace(" ", "_"),
+                    HttpMethod.GET,
+                    new HttpEntity<>(h),
+                    String.class);
+            if (resp.getBody() == null) return null;
+            JsonNode json = mapper.readTree(resp.getBody());
+            String extract = json.path("extract").asText(null);
+            if (extract != null && !extract.isBlank()) return extract;
+            return null;
         } catch (Exception e) {
-            return "Could not find information";
+            System.out.println("Wiki fetch failed for \"" + name + "\": " + e.getMessage());
+            return null;
         }
     }
 

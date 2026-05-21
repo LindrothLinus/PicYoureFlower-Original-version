@@ -6,13 +6,18 @@ class Pot extends StatefulWidget {
 
   final ValueNotifier<Widget?> item;
 
+  Widget? plantedItem;
   @override
   PotState createState() => PotState();
+
+  Widget? getPlantedItem(){
+    return plantedItem;
+  }
 }
 
 class PotState extends State<Pot> {
   bool isTaken = false;
-  Widget? plantedItem;
+  
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +29,7 @@ class PotState extends State<Pot> {
             if (item != null && item is Flower) {
               setState(() {
                 isTaken = true;
-                plantedItem = item;
+                widget.plantedItem = item;
               });
             }
           },
@@ -37,7 +42,7 @@ class PotState extends State<Pot> {
                 top:-60,
                 left: 0,
                 right: 0,
-                child: plantedItem ?? Container(),
+                child: widget.plantedItem ?? Container(),
               ),
             ],
           ),

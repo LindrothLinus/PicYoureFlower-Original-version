@@ -26,6 +26,7 @@ class FlowerCollection extends StatefulWidget {
 
 class _FlowerCollectionState extends State<FlowerCollection> {
   List<Flower> _flowers = [];
+  List<Map<String, dynamic>> _flowerData = [];
   bool _isLoading = true;
   String? _error;
 
@@ -78,9 +79,11 @@ class _FlowerCollectionState extends State<FlowerCollection> {
       );
       if (!mounted) return;
       if (response.statusCode == 200) {
-        final List<dynamic> data = jsonDecode(response.body);
+        final List<dynamic> raw = jsonDecode(response.body);
+        final maps = raw.cast<Map<String, dynamic>>();
         setState(() {
-          _flowers = data.cast<Map<String, dynamic>>().map(_buildFlower).toList();
+          _flowerData = maps;
+          _flowers = maps.map(_buildFlower).toList();
           _isLoading = false;
         });
       } else {
@@ -144,7 +147,10 @@ class _FlowerCollectionState extends State<FlowerCollection> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => FlowerInfoScreen(flowerItem: item),
+                                  builder: (context) => FlowerInfoScreen(
+                                    flowerItem: item,
+                                    data: _flowerData[index],
+                                  ),
                                 ),
                               );
                             },
@@ -215,7 +221,7 @@ class _FlowerCollectionState extends State<FlowerCollection> {
                               ),
                             ),
                           );
-                        }, // Slut på itemBuilder
+                        },
                       ),
                     ),
 
