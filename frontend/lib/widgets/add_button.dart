@@ -34,12 +34,7 @@ class AddButtonState extends State<AddButton> {
               builder: (context, item, child) {
                 return GestureDetector(
                   onTap: () {
-                    if (item != null && !isTaken&&item is Pot) {
-                      setState(() {
-                        isTaken = true;
-                        lockedItem = item; // Lock the current value
-                      });
-                    }
+                    setPot(item);
                   },
                   child: isTaken
                       ? FittedBox(
@@ -62,5 +57,16 @@ class AddButtonState extends State<AddButton> {
         );
       },
     );
+  }
+
+
+
+  void setPot(Widget? item){
+    if (item != null && !isTaken&&item is Pot) {
+                      setState(() {
+                        isTaken = true;
+                        lockedItem = item;
+                      });
+                    }
   }
 }

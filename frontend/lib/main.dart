@@ -145,42 +145,11 @@ class MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     // Main branch build() preserved exactly
     List<AddButton> addButtons = [
-      AddButton(
-        builModeActiveNotifier: buildModeActiveNotifier,
-        x: 3000,
-        y: 1400,
-        item: itemSelected,
-      ),
-      AddButton(
-        builModeActiveNotifier: buildModeActiveNotifier,
-        x: 2500,
-        y: 1400,
-        item: itemSelected,
-      ),
-      AddButton(
-        builModeActiveNotifier: buildModeActiveNotifier,
-        x: 3000,
-        y: 2150,
-        item: itemSelected,
-      ),
-      AddButton(
-        builModeActiveNotifier: buildModeActiveNotifier,
-        x: 2500,
-        y: 2150,
-        item: itemSelected,
-      ),
-      AddButton(
-        builModeActiveNotifier: buildModeActiveNotifier,
-        x: 3000,
-        y: 2850,
-        item: itemSelected,
-      ),
-      AddButton(
-        builModeActiveNotifier: buildModeActiveNotifier,
-        x: 2500,
-        y: 2850,
-        item: itemSelected,
-      ),
+      
+      
+      
+      
+      
       AddButton(
         builModeActiveNotifier: buildModeActiveNotifier,
         x: 2000,
@@ -206,6 +175,31 @@ class MyAppState extends State<MyApp> {
         item: itemSelected,
       ),
     ];
+
+
+    final Map<int, GlobalKey<AddButtonState>> buttonKeys = {};
+late List<AddButton> addButtons;
+
+    final List<({double x, double y})> addButtoncordinates = [
+    (x: 3000, y: 1400),
+    (x: 2500, y: 1400),
+    (x: 3000, y: 2150),
+    (x: 2000, y: 2150),
+    (x: 3000, y: 2850,),
+    (x: 2500, y: 2850,)
+  ];
+
+  addButtons = List.generate(addButtoncordinates.length, (i) {
+    final key = GlobalKey<AddButtonState>();
+    buttonKeys[i] = key;
+    return AddButton(
+      key: key,
+      x: addButtoncordinates[i].x,
+      y: addButtoncordinates[i].y,
+      buildModeActiveNotifier: buildModeActiveNotifier,
+      item: itemSelected,
+    );
+  });
 
     return Scaffold(
       appBar: AppBar(
