@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:ffi';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_demo/screens/flower_collection.dart';
@@ -46,6 +47,7 @@ class _Shop extends State<Shop> {
 
     WidgetsBinding.instance.addPostFrameCallback((_){
       _fetchPots();
+      
     });
   }
 
@@ -158,7 +160,8 @@ class _Shop extends State<Shop> {
                           constraints: const BoxConstraints(),
                           onPressed: () {
                             if (coinsState.getCoinValue() >= item.cost) {
-                              coinsState.decreaseCoinValue(item.cost);
+                              int newValue = coinsState.getCoinValue() - item.cost as int;
+                              coinsState.setCoinValue(newValue);
                               CheckButtonPopUp.showCheckButton(context);
                             }
                           },
