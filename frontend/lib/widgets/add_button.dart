@@ -69,4 +69,8 @@ class AddButtonState extends State<AddButton> {
                       });
                     }
   }
+
+  Widget? getPot(){
+    return lockedItem;
+  }
 }

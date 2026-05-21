@@ -43,7 +43,7 @@ class MyAppState extends State<MyApp> {
 
 
   // Your branch: flowers now fetched from API instead of hardcoded
-  List<Flower> _flowers = [];
+  List<Flower> _flowers = [RoseFlower(color: Colors.red, name: "")];
 
   final buildModeActiveNotifier = ValueNotifier<bool>(false);
   late BuildBar buildBar;
@@ -219,5 +219,30 @@ class MyAppState extends State<MyApp> {
 
     //test du kan ta bort denna komentar
   }
+
+
+
+  void extractPots(){
+    List<({int index, Pot pot, Flower? flower})> data =[];
+    for(int i=0; i<buttonKeys.length;i++){
+      Widget? potWidget = buttonKeys[i]?.currentState?.getPot();
+      if(potWidget is Pot){
+        Pot pot =potWidget;
+
+
+
+        Widget? flowerWidgt = pot.getPlantedItem();
+        if(flowerWidgt is Flower){
+          data.add((index: i, pot: pot, flower:flowerWidgt));
+        }
+        else{
+          data.add((index: i, pot: pot, flower:null));
+        }
+      }
+
+    }
+  }
+
+
 }
 //test
