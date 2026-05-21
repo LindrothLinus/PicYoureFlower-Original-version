@@ -26,13 +26,7 @@ const String addPath = "lib/resources/images/Add.webp";
 const String coinsPath = "lib/resources/images/coin.webp";
 //Alla items
 var buyableItems = [
-  //BuyableItemCreator(cost: 5, image: brownPotPath),
-  /*BuyableItemCreator(cost: 5, image: bluePotPath),
-  BuyableItemCreator(cost: 5, image: greenPotPath),
-  BuyableItemCreator(cost: 5, image: mintPotPath),
-  BuyableItemCreator(cost: 5, image: pinkPotPath),
-  BuyableItemCreator(cost: 5, image: purplePotPath),
-  BuyableItemCreator(cost: 5, image: yellowPotPath),*/
+
 ];
 
 class Shop extends StatefulWidget {
@@ -46,8 +40,6 @@ class _Shop extends State<Shop> {
 
   final CoinsState coinsState = CoinsState();
 
-  //INIT CODE
-
   @override
   void initState(){
     super.initState();
@@ -59,49 +51,33 @@ class _Shop extends State<Shop> {
 
   //FETCH POTS CODE
 
-  BuyableItemCreator _buildPot(Map<String, dynamic> data) {
-    print("Inside buildPot");
-    return BuyableItemCreator(cost: 5, image: mintPotPath);
-    /*final String color = (data['template'] as String);
-    switch(color){
-      case 'BLUE':        return BuyableItemCreator(cost: 5, image: bluePotPath);
-      case 'BROWN':       return BuyableItemCreator(cost: 5, image: brownPotPath);
-      case 'GREEN':       return BuyableItemCreator(cost: 5, image: greenPotPath);
-      case 'TURQUOISE':   return BuyableItemCreator(cost: 5, image: mintPotPath);
-      case 'PINK':        return BuyableItemCreator(cost: 5, image: pinkPotPath);
-      case 'PURPLE':      return BuyableItemCreator(cost: 5, image: purplePotPath);
-      case 'YELLOW':      return BuyableItemCreator(cost: 5, image: yellowPotPath);
-      default:            return BuyableItemCreator(cost: 5, image: brownPotPath);
-    }*/
-  }
-
   Future<void> _fetchPots() async {
-    print("Before try catch in fetchPots");
     try{
-
-      print("Before response pull");
       final response = await http.get(
         Uri.parse('$_baseUrl/home/allpots'), 
       );
-      print("Before response statusCode");
-      print(response.statusCode);
       if(response.statusCode == 200){
-        print("Successful database load"); 
         
-        final List<dynamic> data = jsonDecode(response.body);
-        print(response.body);
-        print(data.runtimeType);
-        //This far is okay, 
+        final List<dynamic> data = jsonDecode(response.body); 
         setState(() {
-          print("inside setState");
-          //buildpot is not called, wrong type is being passed to argument
-          buyableItems = data.cast<Map<String, dynamic>>().map(_buildPot).toList();
+          buyableItems.clear();
+          for(dynamic potColor in data){
+            switch(potColor){
+              case 'BLUE':        buyableItems.add(BuyableItemCreator(cost: 5, image: bluePotPath)); break;
+              case 'BROWN':       buyableItems.add(BuyableItemCreator(cost: 5, image: brownPotPath)); break;
+              case 'GREEN':       buyableItems.add(BuyableItemCreator(cost: 5, image: greenPotPath)); break;
+              case 'TURQUOISE':   buyableItems.add(BuyableItemCreator(cost: 5, image: mintPotPath)); break;
+              case 'PINK':        buyableItems.add(BuyableItemCreator(cost: 5, image: pinkPotPath)); break;
+              case 'PURPLE':      buyableItems.add(BuyableItemCreator(cost: 5, image: purplePotPath)); break;
+              case 'YELLOW':      buyableItems.add(BuyableItemCreator(cost: 5, image: yellowPotPath)); break;
+              default:            buyableItems.add(BuyableItemCreator(cost: 5, image: brownPotPath)); break;
+            }
+          }
         });
       }
 
     } catch (e){
       print("Error");
-      //
     }
     
   }
@@ -109,7 +85,6 @@ class _Shop extends State<Shop> {
 
   @override
   Widget build(BuildContext context) {
-    //buyableItems.add(BuyableItemCreator(cost: 5, image: brownPotPath));
     return Scaffold(
       appBar: AppBar(
         title: Text('Shop', style: TextStyles.header),
