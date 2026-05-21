@@ -12,6 +12,8 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 
@@ -28,6 +30,20 @@ public class User {
     @ElementCollection(targetClass = PotTemplate.class)
     @Enumerated(EnumType.STRING)
     private List<PotTemplate> pots = new ArrayList<>();
+    /*
+     * @ManyToMany
+     * 
+     * @JoinTable(name = "user_friends", joinColumns = @JoinColumn(name =
+     * "user_id"), inverseJoinColumns = @JoinColumn(name = "friend_id"))
+     * private Set<User> friends = new HashSet<>();
+     * 
+     * public Set<User> getFriends() {
+     * return this.friends;
+     * }
+     * public void setFriends(Set<User> friends) {
+     * this.friends = friends;
+     * }
+     */
 
     public List<PotTemplate> getPots() {
         return this.pots;
@@ -43,17 +59,6 @@ public class User {
 
     public void setCoins(int coins) {
         this.coins = coins;
-    }
-
-    @ManyToMany
-    private Set<User> friends = new HashSet<>();
-
-    public Set<User> getFriends() {
-        return this.friends;
-    }
-
-    public void setFriends(Set<User> friends) {
-        this.friends = friends;
     }
 
     public void setId(Long id) {
