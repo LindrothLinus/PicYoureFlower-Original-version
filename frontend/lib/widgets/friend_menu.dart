@@ -2,6 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_demo/widgets/login_popup.dart';
 import '../resources/constants.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'dart:math';
+
+final List<String> avatarImages = [
+  "lib/resources/images/Avatar_Blue.png",
+  "lib/resources/images/Avatar_Pink.png",
+  "lib/resources/images/Avatar_Purple.png",
+  "lib/resources/images/Avatar_Green.png",
+  "lib/resources/images/Avatar_Red.png",
+  "lib/resources/images/Avatar_Yellow.png",
+];
+
+final random = Random();
 
 final TextStyle menuText = GoogleFonts.nunito(
   fontSize: 20,
@@ -11,24 +23,24 @@ final TextStyle menuText = GoogleFonts.nunito(
 
 class Friend {
   String name;
-  Friend(this.name);
+  String avatar;
+  Friend(this.name)
+    : avatar = avatarImages[random.nextInt(avatarImages.length)];
 }
 
-class FriendMenu extends StatefulWidget{
-
+class FriendMenu extends StatefulWidget {
   @override
   FriendMenuState createState() => FriendMenuState();
-
 }
 
-class FriendMenuState extends State<FriendMenu>{
+class FriendMenuState extends State<FriendMenu> {
   bool showButtons = false;
   bool isProfileExpanded = false;
   bool isExpanded = false;
   double smallHeigth = 150;
   double mediumHeight = 300;
   double largeHeigth = 0;
-  double panelHeigth = 0; 
+  double panelHeigth = 0;
   Color? activePanelColor;
   Friend? selectedFriend;
 
@@ -38,20 +50,19 @@ class FriendMenuState extends State<FriendMenu>{
     //NOTICE ME BACKEND!!!!
     //add friends from the database here by the method below
     //Friend("name from database")
-
     Friend("Tom"),
     Friend("Lin"),
     Friend("Hamlet"),
   ];
 
   @override
-  void dispose(){
+  void dispose() {
     friendController.dispose();
     super.dispose();
   }
 
-  void addFriends(Friend friend){
-    if(friend.name == ""){
+  void addFriends(Friend friend) {
+    if (friend.name == "") {
       return;
     }
     setState(() {
@@ -59,14 +70,14 @@ class FriendMenuState extends State<FriendMenu>{
     });
   }
 
-  void removeFriends(Friend? friend){
+  void removeFriends(Friend? friend) {
     setState(() {
       friends.remove(friend);
       selectedFriend = null;
     });
   }
 
-  Future<void> showCheck() async{
+  Future<void> showCheck() async {
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -79,20 +90,20 @@ class FriendMenuState extends State<FriendMenu>{
               'lib/resources/images/Check.webp',
               fit: BoxFit.contain,
             ),
-          )
+          ),
         );
-      }
+      },
     );
     await Future.delayed(const Duration(seconds: 1));
     Navigator.of(context).pop();
   }
 
-  Padding heartButton(){
+  Padding heartButton() {
     return Padding(
       padding: const EdgeInsets.only(left: 10),
       child: GestureDetector(
-        onTap:() {
-          setState((){
+        onTap: () {
+          setState(() {
             showButtons = true;
           });
         },
@@ -105,91 +116,76 @@ class FriendMenuState extends State<FriendMenu>{
     );
   }
 
-  Expanded friendsButton(){
+  Expanded friendsButton() {
     return Expanded(
       child: SizedBox(
         height: 80,
         child: ElevatedButton(
           style: ElevatedButton.styleFrom(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.zero,
-            ),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.zero),
             backgroundColor: backgroundColor,
           ),
-          onPressed: (){
+          onPressed: () {
             setState(() {
               selectedFriend = null;
             });
             isExpanded = false;
             panelHeigth = smallHeigth;
             openPanel(backgroundColor);
-          }, 
-          child: Text(
-            'Friends',
-            style: menuText,
-          ),
+          },
+          child: Text('Friends', style: menuText),
         ),
-      ), 
+      ),
     );
   }
 
-  Expanded searchButton(){
+  Expanded searchButton() {
     return Expanded(
       child: SizedBox(
         height: 80,
         child: ElevatedButton(
           style: ElevatedButton.styleFrom(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.zero,
-            ),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.zero),
             backgroundColor: mainColor,
           ),
-          onPressed: (){
+          onPressed: () {
             panelHeigth = smallHeigth;
             openPanel(mainColor);
-          }, 
-          child: Text(
-            'Search',
-            style: menuText,
-          ),
+          },
+          child: Text('Search', style: menuText),
         ),
-      ), 
+      ),
     );
   }
 
-  Expanded profileButton(){
+  Expanded profileButton() {
     return Expanded(
       child: SizedBox(
         height: 80,
         child: ElevatedButton(
           style: ElevatedButton.styleFrom(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.zero,
-            ),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.zero),
             backgroundColor: greenColor,
           ),
-          onPressed: (){
+          onPressed: () {
             setState(() {
               selectedFriend = null;
             });
             isProfileExpanded = false;
             panelHeigth = mediumHeight;
             openPanel(greenColor);
-          }, 
-          child: Text(
-            'Profile',
-            style: menuText,
-          ),
+          },
+          child: Text('Profile', style: menuText),
         ),
-      ), 
+      ),
     );
   }
 
-  Positioned cancelButton(){
+  Positioned cancelButton() {
     return Positioned(
       top: 10,
       child: IconButton(
-      icon: Icon(Icons.close, size: 30,),
+        icon: Icon(Icons.close, size: 30),
         onPressed: () {
           setState(() {
             showButtons = false;
@@ -200,39 +196,33 @@ class FriendMenuState extends State<FriendMenu>{
     );
   }
 
-  Positioned expandButton(){
+  Positioned expandButton() {
     return Positioned(
       left: 10,
       bottom: 10,
       child: GestureDetector(
-        onTap:() {
+        onTap: () {
           toggleExpand();
         },
-        child: Image.asset(
-          'lib/resources/images/Expand.png',
-          width: 50,
-        ),
+        child: Image.asset('lib/resources/images/Expand.png', width: 50),
       ),
     );
   }
 
-  Positioned expandProfileButton(){
+  Positioned expandProfileButton() {
     return Positioned(
       left: 10,
       bottom: 10,
       child: GestureDetector(
-        onTap:() {
+        onTap: () {
           toggleProfileExpand();
         },
-        child: Image.asset(
-          'lib/resources/images/Expand.png',
-          width: 50,
-        ),
+        child: Image.asset('lib/resources/images/Expand.png', width: 50),
       ),
     );
   }
 
-  Positioned unfriendButton(){
+  Positioned unfriendButton() {
     return Positioned(
       left: 70,
       right: 16,
@@ -242,10 +232,7 @@ class FriendMenuState extends State<FriendMenu>{
           height: 50,
           child: ElevatedButton(
             style: ElevatedButton.styleFrom(
-              side: BorderSide(
-                color: Colors.black,
-                width: 1,
-              ),
+              side: BorderSide(color: Colors.black, width: 1),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8),
               ),
@@ -255,35 +242,27 @@ class FriendMenuState extends State<FriendMenu>{
               //Remove friends from list and database
               removeFriends(selectedFriend);
             },
-            child: Text(
-              'Unfriend', 
-              style: menuText,
-            ),
+            child: Text('Unfriend', style: menuText),
           ),
         ),
       ),
     );
   }
 
-  Container searchConfirmButton(){
+  Container searchConfirmButton() {
     return Container(
       margin: EdgeInsets.zero,
       padding: EdgeInsets.all(8),
       decoration: BoxDecoration(
         color: greenColor,
-        border: Border.all(
-          color: Colors.black,
-          width: 1,
-        ),
-        borderRadius: BorderRadius.circular(6)
+        border: Border.all(color: Colors.black, width: 1),
+        borderRadius: BorderRadius.circular(6),
       ),
-      child: Image.asset(
-        'lib/resources/images/Search.png',
-      ),
+      child: Image.asset('lib/resources/images/Search.png'),
     );
   }
 
-  TextField searchTextField(){
+  TextField searchTextField() {
     return TextField(
       controller: friendController,
       decoration: InputDecoration(
@@ -291,52 +270,39 @@ class FriendMenuState extends State<FriendMenu>{
         filled: true,
         fillColor: Colors.white,
         enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-            color: Colors.black,
-            width: 1,
-          ),
+          borderSide: BorderSide(color: Colors.black, width: 1),
         ),
         focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-            color: Colors.black,
-            width: 1,
-          ),
+          borderSide: BorderSide(color: Colors.black, width: 1),
         ),
         suffixIcon: GestureDetector(
-          onTap: (){
-            //Send contents of textfield to backend to identity if the user exists and 
+          onTap: () {
+            //Send contents of textfield to backend to identity if the user exists and
             //add it to current users friend list if exists
 
             addFriends(Friend(friendController.text));
             friendController.text = "";
             showCheck();
           },
-          child: SizedBox(
-            width: 60,
-            height: 60,
-            child: searchConfirmButton(),
-          ),
-        )
+          child: SizedBox(width: 60, height: 60, child: searchConfirmButton()),
+        ),
       ),
     );
   }
 
-  Container menuBox(){
+  Container menuBox() {
     return Container(
       width: 80,
       height: 80,
       decoration: BoxDecoration(
         color: Colors.white,
-        border: Border.all(
-          color:Colors.black,
-          width: 2,
-        ),
+        border: Border.all(color: Colors.black, width: 2),
         borderRadius: BorderRadius.circular(8),
       ),
     );
   }
 
-  Padding friendBox(){
+  Padding friendBox() {
     return Padding(
       padding: EdgeInsets.only(top: 20),
       child: GestureDetector(
@@ -348,52 +314,44 @@ class FriendMenuState extends State<FriendMenu>{
             menuBox(),
             Text('Name', style: menuText),
           ],
-        )
-      ),
-    );
-  }
-
-  Container profileBoxPic(Color c, double w, double h, String image){
-    return Container(
-      width: w,
-      height: h,
-      decoration: BoxDecoration(
-        color: c,
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(
-          color: Colors.black,
-          width: 1,
-        )
-      ),
-      child: Image.asset(
-        image,
-      ),
-    );
-  }
-
-  Container profileBoxText(Color c, double w, double h, String text){
-    return Container(
-      width: w,
-      height: h,
-      decoration: BoxDecoration(
-        color: c,
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(
-          color: Colors.black,
-          width: 1,
-        )
-      ),
-        child: Padding(
-          padding: EdgeInsets.only(left: 10),
-          child: Align(
-            alignment: Alignment.centerLeft,
-            child: Text(text, style: menuText,),
-          )
         ),
+      ),
     );
   }
 
-  Widget createFriendBoxes(){
+  Container profileBoxPic(Color c, double w, double h, String image) {
+    return Container(
+      width: w,
+      height: h,
+      decoration: BoxDecoration(
+        color: c,
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: Colors.black, width: 1),
+      ),
+      child: Image.asset(image),
+    );
+  }
+
+  Container profileBoxText(Color c, double w, double h, String text) {
+    return Container(
+      width: w,
+      height: h,
+      decoration: BoxDecoration(
+        color: c,
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: Colors.black, width: 1),
+      ),
+      child: Padding(
+        padding: EdgeInsets.only(left: 10),
+        child: Align(
+          alignment: Alignment.centerLeft,
+          child: Text(text, style: menuText),
+        ),
+      ),
+    );
+  }
+
+  Widget createFriendBoxes() {
     return Row(
       children: [
         SizedBox(width: 100),
@@ -402,12 +360,11 @@ class FriendMenuState extends State<FriendMenu>{
         friendBox(),
         SizedBox(width: 30),
         friendBox(),
-      ]
+      ],
     );
   }
 
-  Card createCard(Friend friend){
-
+  Card createCard(Friend friend) {
     bool isSelected = selectedFriend == friend;
 
     return Card(
@@ -418,18 +375,17 @@ class FriendMenuState extends State<FriendMenu>{
         side: BorderSide(
           color: isSelected ? Color(0xFFFFA6A6) : Colors.black,
           width: isSelected ? 3 : 1,
-        )
+        ),
       ),
       child: Stack(
         children: [
-
           Center(
             child: Padding(
               padding: const EdgeInsets.only(top: 5, bottom: 35),
               child: SizedBox(
                 height: 90,
                 child: Image.asset(
-                  'lib/resources/images/showel_icon.png',
+                  friend.avatar,
                   height: 90,
                   width: 90,
                   fit: BoxFit.contain,
@@ -466,19 +422,18 @@ class FriendMenuState extends State<FriendMenu>{
               ),
             ),
           ),
-
         ],
       ),
-    ); 
+    );
   }
 
-  void openPanel(Color color){
-    setState((){
+  void openPanel(Color color) {
+    setState(() {
       activePanelColor = color;
     });
   }
-  
-  void toggleExpand(){
+
+  void toggleExpand() {
     setState(() {
       isExpanded = !isExpanded;
 
@@ -486,7 +441,7 @@ class FriendMenuState extends State<FriendMenu>{
     });
   }
 
-  void toggleProfileExpand(){
+  void toggleProfileExpand() {
     setState(() {
       isProfileExpanded = !isProfileExpanded;
 
@@ -495,90 +450,86 @@ class FriendMenuState extends State<FriendMenu>{
   }
 
   @override
-  Widget build(BuildContext context){
+  Widget build(BuildContext context) {
     largeHeigth = (MediaQuery.of(context).size.height) * 0.4;
 
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-          
         //Buttons
         Stack(
           alignment: Alignment.centerLeft,
           children: [
-            if(!showButtons)
-            heartButton(),
-              
+            if (!showButtons) heartButton(),
+
             //Buttons that show up when friend menu appears
-            if(showButtons)
-            SizedBox(
-              width: double.infinity,
-              height: 70,
-              child: Stack(
-                children: [
-                  Row(
-                    children: [
-                      friendsButton(),
-                      searchButton(),
-                      profileButton(),
-                    ],
-                  ),
-                  cancelButton(),
-                ],
-              ), 
-            ),
+            if (showButtons)
+              SizedBox(
+                width: double.infinity,
+                height: 70,
+                child: Stack(
+                  children: [
+                    Row(
+                      children: [
+                        friendsButton(),
+                        searchButton(),
+                        profileButton(),
+                      ],
+                    ),
+                    cancelButton(),
+                  ],
+                ),
+              ),
           ],
         ),
 
         //InfoBox
-        if(activePanelColor != null)
+        if (activePanelColor != null)
           Container(
             width: double.infinity,
             height: panelHeigth,
             color: activePanelColor,
             child: Stack(
               children: [
-                if(activePanelColor == backgroundColor)... [
-                  
+                if (activePanelColor == backgroundColor) ...[
                   GridView.builder(
                     padding: EdgeInsets.only(top: 15, left: 65),
-                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 3,
-                      crossAxisSpacing: 10,
-                      mainAxisSpacing: 10, 
-                    ),
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 3,
+                          crossAxisSpacing: 10,
+                          mainAxisSpacing: 10,
+                        ),
                     itemCount: friends.length,
-                    itemBuilder: (BuildContext context, int index){
+                    itemBuilder: (BuildContext context, int index) {
                       final friend = friends[index];
                       return createCard(friend);
-                    }
+                    },
                   ),
                   expandButton(),
                 ],
-                if(activePanelColor == mainColor)...[
-                  Center(
-                    child:SizedBox(
-                      width: 350,
-                      child: searchTextField(),
-                    ),
-                  ),
+                if (activePanelColor == mainColor) ...[
+                  Center(child: SizedBox(width: 350, child: searchTextField())),
                 ],
-                if(activePanelColor == greenColor)...[
-                  if(panelHeigth == mediumHeight)...[
+                if (activePanelColor == greenColor) ...[
+                  if (panelHeigth == mediumHeight) ...[
                     Column(
                       children: [
-                        
                         Padding(
                           padding: const EdgeInsets.fromLTRB(16, 30, 16, 16),
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-
                               Flexible(
                                 flex: 2,
-                                child: profileBoxPic(Colors.white, 150, 150, 'lib/resources/images/showel_icon.png'),
+                                child: profileBoxPic(
+                                  Colors.white,
+                                  150,
+                                  150,
+                                  'lib/resources/images/showel_icon.png',
+                                ),
                               ),
-                            
+
                               const SizedBox(width: 16),
 
                               Expanded(
@@ -587,21 +538,20 @@ class FriendMenuState extends State<FriendMenu>{
                                   children: [
                                     Row(
                                       children: [
-                                        profileBoxPic(purpleColor, 40, 40, 'lib/resources/images/Calendar_v2.png'),
-                                        const SizedBox(width: 8),
-                                        Expanded(
-                                          child: profileBoxText(Colors.white, double.infinity, 40, '26-05-15'),
+                                        profileBoxPic(
+                                          purpleColor,
+                                          40,
+                                          40,
+                                          'lib/resources/images/Calendar_v2.png',
                                         ),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 15),
-                                    
-                                    Row(
-                                      children: [
-                                        profileBoxPic(purpleColor, 40, 40, 'lib/resources/images/Identity.png'),
                                         const SizedBox(width: 8),
                                         Expanded(
-                                          child: profileBoxText(Colors.white, double.infinity, 40, 'FlowerManiac'),
+                                          child: profileBoxText(
+                                            Colors.white,
+                                            double.infinity,
+                                            40,
+                                            '26-05-15',
+                                          ),
                                         ),
                                       ],
                                     ),
@@ -609,17 +559,47 @@ class FriendMenuState extends State<FriendMenu>{
 
                                     Row(
                                       children: [
-                                        profileBoxPic(purpleColor, 40, 40, 'lib/resources/images/flower_icon.png'),
+                                        profileBoxPic(
+                                          purpleColor,
+                                          40,
+                                          40,
+                                          'lib/resources/images/Identity.png',
+                                        ),
                                         const SizedBox(width: 8),
                                         Expanded(
-                                          child: profileBoxText(Colors.white, double.infinity, 40, '123'),
+                                          child: profileBoxText(
+                                            Colors.white,
+                                            double.infinity,
+                                            40,
+                                            'FlowerManiac',
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 15),
+
+                                    Row(
+                                      children: [
+                                        profileBoxPic(
+                                          purpleColor,
+                                          40,
+                                          40,
+                                          'lib/resources/images/flower_icon.png',
+                                        ),
+                                        const SizedBox(width: 8),
+                                        Expanded(
+                                          child: profileBoxText(
+                                            Colors.white,
+                                            double.infinity,
+                                            40,
+                                            '123',
+                                          ),
                                         ),
                                       ],
                                     ),
                                   ],
                                 ),
                               ),
-
                             ],
                           ),
                         ),
@@ -641,47 +621,54 @@ class FriendMenuState extends State<FriendMenu>{
                                   border: Border.all(
                                     color: Colors.black,
                                     width: 1,
-                                  )
+                                  ),
                                 ),
                                 child: Padding(
                                   padding: EdgeInsets.only(left: 10),
                                   child: Align(
                                     alignment: Alignment.centerLeft,
-                                    child: Text('Manage Friends', style: menuText,),
-                                  )
+                                    child: Text(
+                                      'Manage Friends',
+                                      style: menuText,
+                                    ),
+                                  ),
                                 ),
                               ),
                             ),
-                            
+
                             //profileBoxText(purpleColor, double.infinity, 50, 'Manage Friends'),
                           ),
                         ),
-                        
                       ],
                     ),
                   ],
-                  if(panelHeigth == largeHeigth)...[
+                  if (panelHeigth == largeHeigth) ...[
                     Stack(
                       children: [
                         GridView.builder(
-                          padding: EdgeInsets.only(top: 15, left: 65, bottom: 80),
-                          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 3,
-                            crossAxisSpacing: 10,
-                            mainAxisSpacing: 10, 
+                          padding: EdgeInsets.only(
+                            top: 15,
+                            left: 65,
+                            bottom: 80,
                           ),
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 3,
+                                crossAxisSpacing: 10,
+                                mainAxisSpacing: 10,
+                              ),
                           itemCount: friends.length,
-                          itemBuilder: (BuildContext context, int index){
+                          itemBuilder: (BuildContext context, int index) {
                             final friend = friends[index];
                             return InkWell(
-                              onTap: (){
+                              onTap: () {
                                 setState(() {
                                   selectedFriend = friend;
                                 });
                               },
                               child: createCard(friend),
                             );
-                          }
+                          },
                         ),
                         unfriendButton(),
                         expandProfileButton(),
@@ -694,6 +681,5 @@ class FriendMenuState extends State<FriendMenu>{
           ),
       ],
     );
-   
   }
 }
