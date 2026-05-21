@@ -13,7 +13,6 @@ class FlowerInfoScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final lightBlueBg = const Color(0xffbce3fc);
-    final lightPinkBg = const Color(0xfffcd3e4);
     final infoPurple = const Color(0xffd5bbf7);
     
     final blackBorder = Border.all(color: Colors.black, width: 1.5);
@@ -105,19 +104,6 @@ class FlowerInfoScreen extends StatelessWidget {
                 ),
               ),
             ),
-            Container(
-              color: lightPinkBg,
-              padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  _buildBottomIcon(Icons.shopping_cart_outlined),
-                  _buildBottomIcon(Icons.hardware_outlined), 
-                  _buildBottomIcon(Icons.camera_alt_outlined),
-                  _buildBottomIcon(Icons.yard_outlined), 
-                ],
-              ),
-            ),
           ],
         ),
       ),
@@ -157,13 +143,6 @@ class FlowerInfoScreen extends StatelessWidget {
           ),
         ],
       ),
-    );
-  }
-
-  Widget _buildBottomIcon(IconData icon) {
-    return IconButton(
-      icon: Icon(icon, size: 36, color: Colors.black87),
-      onPressed: () {},
     );
   }
 }
