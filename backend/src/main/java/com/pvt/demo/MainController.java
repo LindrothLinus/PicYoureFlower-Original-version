@@ -65,15 +65,12 @@ public class MainController {
     }
 
     // User repository methods bellow-------------------------------
-    /*
-     * @GetMapping("/friends/{userId}")
-     * public Object getAllFriends(@PathVariable Long userId) {
-     * User entity =
-     * userRepository.findById(userId).orElseThrow(IllegalArgumentException::new);
-     * entity.getFriends().clear();
-     * return userRepository.save(entity);
-     * }
-     */
+
+    @GetMapping("/friends/{userId}")
+    public Object getAllFriends(@PathVariable Long userId) {
+        User entity = userRepository.findById(userId).orElseThrow(IllegalArgumentException::new);
+        return userRepository.save(entity);
+    }
 
     @GetMapping("/allusers")
     public Iterable<User> getAllUsers() {

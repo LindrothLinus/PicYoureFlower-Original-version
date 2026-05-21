@@ -30,20 +30,18 @@ public class User {
     @ElementCollection(targetClass = PotTemplate.class)
     @Enumerated(EnumType.STRING)
     private List<PotTemplate> pots = new ArrayList<>();
-    /*
-     * @ManyToMany
-     * 
-     * @JoinTable(name = "user_friends", joinColumns = @JoinColumn(name =
-     * "user_id"), inverseJoinColumns = @JoinColumn(name = "friend_id"))
-     * private Set<User> friends = new HashSet<>();
-     * 
-     * public Set<User> getFriends() {
-     * return this.friends;
-     * }
-     * public void setFriends(Set<User> friends) {
-     * this.friends = friends;
-     * }
-     */
+    @ManyToMany
+
+    @JoinTable(name = "user_friends", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "friend_id"))
+    private Set<User> friends = new HashSet<>();
+
+    public Set<User> getFriends() {
+        return this.friends;
+    }
+
+    public void setFriends(Set<User> friends) {
+        this.friends = friends;
+    }
 
     public List<PotTemplate> getPots() {
         return this.pots;
