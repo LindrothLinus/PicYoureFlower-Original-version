@@ -134,42 +134,6 @@ public class MainController {
         }
     }
 
-    @PutMapping("/rename/{id}/{commonName}/{latinName}")
-    public Object entityRename(@PathVariable @NonNull Long id, @PathVariable String commonName,
-            @PathVariable String latinName) {
-        try {
-            DatabaseEntity entity = entityRepository.findById(id).orElseThrow(IllegalArgumentException::new);
-            entity.setCommonName(commonName);
-            entity.setLatinName(latinName);
-            return entityRepository.save(entity);
-        } catch (IllegalArgumentException e) {
-            return "Entity not found";
-        }
-    }
-
-    @PutMapping("/recolor/{id}/{color}")
-    public Object entityRecolor(@PathVariable @NonNull Long id, @PathVariable String color) {
-        try {
-            DatabaseEntity entity = entityRepository.findById(id).orElseThrow(IllegalArgumentException::new);
-            entity.setColor(color);
-            return entityRepository.save(entity);
-        } catch (IllegalArgumentException e) {
-            return "Entity not found";
-        }
-    }
-
-    @PutMapping(path = "/addxy/{id}/{x}/{y}")
-    public @ResponseBody Object addXY(@PathVariable @NonNull Long id, @PathVariable int x, @PathVariable int y) {
-        try {
-            DatabaseEntity entity = entityRepository.findById(id).orElseThrow(IllegalArgumentException::new);
-            entity.setX(x);
-            entity.setY(y);
-            return entityRepository.save(entity);
-        } catch (IllegalArgumentException e) {
-            return "Entity not found";
-        }
-    }
-
     @PostMapping("/add")
     public Object addEntity(@RequestBody @NonNull DatabaseEntity entity) {
         try {
