@@ -19,6 +19,7 @@ import org.springframework.lang.NonNull;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -116,6 +117,12 @@ public class MainController {
     }
 
     // User repository methods above-------------------------------
+
+    @DeleteMapping("/deleteflower/{flowerId}")
+    public void deleteFlower(@PathVariable Long flowerId) {
+        DatabaseEntity entity = entityRepository.findById(flowerId).orElseThrow(IllegalArgumentException::new);
+        entityRepository.delete(entity);
+    }
 
     @GetMapping("/user/{userId}/flowers")
     public Iterable<DatabaseEntity> getFlowersByUser(@PathVariable Long userId) {
