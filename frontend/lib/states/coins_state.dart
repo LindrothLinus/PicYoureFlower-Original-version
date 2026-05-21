@@ -11,19 +11,10 @@ class CoinsState {
   final ValueNotifier<int> coinValue = ValueNotifier<int>(0);
 
   Future<void> updateCoinValue(int coins) async {
-    /*try{
-      final uri = Uri.parse('$_baseUrl/home/coins/$loggedInUserId');
-      final response = await http.put(
-        uri,
-        headers: {
-          'Content-Type': 'application/json',
-          if(authToken != null)
-            'Authorization': 'Bearer $authToken',
-        },
-        body:jsonEncode({
-          "coins" : coins
-        })
-      );
+    /*
+    try{
+      final uri = Uri.parse('$_baseUrl/home/coins/$loggedInUserId/$coins');
+      final response = await http.put(uri);
 
       print(response.statusCode);
       print(response.body);
