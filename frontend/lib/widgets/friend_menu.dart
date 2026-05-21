@@ -526,7 +526,7 @@ class FriendMenuState extends State<FriendMenu> {
                                   Colors.white,
                                   150,
                                   150,
-                                  'lib/resources/images/showel_icon.png',
+                                  'lib/resources/images/Avatar_Pink.png',
                                 ),
                               ),
 
