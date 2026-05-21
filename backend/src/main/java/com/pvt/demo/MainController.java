@@ -97,8 +97,8 @@ public class MainController {
         return entity.getCoins();
     }
 
-    @GetMapping("/allpots/{userId}")
-    public Iterable<PotTemplate> getPots(@PathVariable Long userId) {
+    @GetMapping("/userpots/{userId}")
+    public Iterable<PotTemplate> getUserPots(@PathVariable Long userId) {
         User entity = userRepository.findById(userId).orElseThrow(IllegalArgumentException::new);
         return entity.getPots();
     }
@@ -108,6 +108,11 @@ public class MainController {
         User entity = userRepository.findById(userId).orElseThrow(IllegalArgumentException::new);
         entity.getPots().add(pot);
         return userRepository.save(entity);
+    }
+
+    @GetMapping("/allpots")
+    public List<PotTemplate> getAllPots() {
+        return List.of(PotTemplate.values());
     }
 
     // User repository methods above-------------------------------
