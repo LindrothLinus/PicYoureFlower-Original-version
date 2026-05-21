@@ -5,7 +5,6 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 import javax.imageio.ImageIO;
 
@@ -29,7 +28,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -201,6 +199,11 @@ public class MainController {
 
             entityRepository.save(entity);
 
+            response.put("commonName", entity.getCommonName());
+            response.put("latinName", entity.getLatinName());
+            response.put("template", entity.getTemplate().name());
+            response.put("picTaken", entity.getPicTaken().toString());
+
             return ResponseEntity.ok(mapper.writeValueAsString(response));
         } catch (Exception e) {
             return ResponseEntity.status(500).body("Error: " + e.getMessage());
@@ -304,17 +307,37 @@ public class MainController {
     }
 
     @GetMapping(path = "wikiinfo/{commonName}")
-    public @ResponseBody Object getWikiInfo(@PathVariable String commonName) {
+    public @ResponseBody Object getWikiInfo(@PathVariable String commonName,
+            @RequestParam(required = false) String latinName) {
+        String result = fetchWikiExtract(commonName);
+        if (result != null) return result;
+        if (latinName != null && !latinName.isBlank()) {
+            result = fetchWikiExtract(latinName);
+            if (result != null) return result;
+            result = fetchWikiExtract(latinName.split(" ")[0]);
+            if (result != null) return result;
+        }
+        return "Could not find information";
+    }
+
+    private String fetchWikiExtract(String name) {
         try {
-            final RestClient restClient = RestClient.create();
-            String nameToSend = commonName; // add formatting here, remove spaces?
-            String response = restClient.get().uri("https://en.wikipedia.org/api/rest_v1/page/summary/" + nameToSend)
-                    .header("Accept", "application/json").retrieve().body(String.class);
-            ObjectMapper mapper = new ObjectMapper();
-            JsonNode json = mapper.readTree(response);
-            return json.path("extract").asText();
+            HttpHeaders h = new HttpHeaders();
+            h.set("User-Agent", "PlantIdentifierApp/1.0");
+            h.set("Accept", "application/json");
+            ResponseEntity<String> resp = restTemplate.exchange(
+                    "https://en.wikipedia.org/api/rest_v1/page/summary/" + name.replace(" ", "_"),
+                    HttpMethod.GET,
+                    new HttpEntity<>(h),
+                    String.class);
+            if (resp.getBody() == null) return null;
+            JsonNode json = mapper.readTree(resp.getBody());
+            String extract = json.path("extract").asText(null);
+            if (extract != null && !extract.isBlank()) return extract;
+            return null;
         } catch (Exception e) {
-            return "Could not find information";
+            System.out.println("Wiki fetch failed for \"" + name + "\": " + e.getMessage());
+            return null;
         }
     }
 
