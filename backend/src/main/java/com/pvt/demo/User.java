@@ -19,6 +19,15 @@ public class User {
     private String googleId;
     private String email;
     private String name;
+    private int coins;
+
+    public int getCoins() {
+        return this.coins;
+    }
+
+    public void setCoins(int coins) {
+        this.coins = coins;
+    }
 
     @ManyToMany
     private Set<User> friends = new HashSet<>();

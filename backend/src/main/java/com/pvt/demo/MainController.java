@@ -67,9 +67,9 @@ public class MainController {
     // User repository methods bellow-------------------------------
     /*
      * all friends
-    add friend - mutual?
-    delete friend - mutual
-    
+     * add friend - mutual?
+     * delete friend - mutual
+     * 
      */
 
     @GetMapping("/friends/{userId}")
@@ -87,6 +87,20 @@ public class MainController {
     public Object addUser() {
         User entity = new User();
         return userRepository.save(entity);
+    }
+
+    @GetMapping("/coins/{userId}")
+    public Object getCoins(@PathVariable Long userId) {
+        User entity = userRepository.findById(userId).orElseThrow(IllegalArgumentException::new);
+        return entity.getCoins();
+    }
+
+    @GetMapping("/addcoins/{userId}/{amount}")
+    public Object addCoins(@PathVariable Long userId, @PathVariable int amount) {
+        User entity = userRepository.findById(userId).orElseThrow(IllegalArgumentException::new);
+        entity.setCoins(entity.getCoins() + amount);
+        userRepository.save(entity);
+        return entity.getCoins();
     }
 
     // User repository methods above-------------------------------
