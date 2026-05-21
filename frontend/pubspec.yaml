@@ -91,6 +91,8 @@ flutter:
     - lib/resources/images/Identity.png
     - lib/resources/images/Social.png
     - lib/resources/images/Search.png
+    - lib/resources/images/Like.png
+    - lib/resources/images/SentLike.png
 
 
   # The following line ensures that the Material Icons font is
