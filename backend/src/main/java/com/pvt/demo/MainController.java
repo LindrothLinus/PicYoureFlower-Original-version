@@ -65,6 +65,12 @@ public class MainController {
     }
 
     // User repository methods bellow-------------------------------
+    /*
+     * all friends
+    add friend - mutual?
+    delete friend - mutual
+    
+     */
 
     @GetMapping("/friends/{userId}")
     public Set<User> getAllFriends(@PathVariable Long userId) {
@@ -80,9 +86,6 @@ public class MainController {
     @GetMapping("/adduser")
     public Object addUser() {
         User entity = new User();
-        User friend = new User();
-        entity.getFriends().add(friend);
-        userRepository.save(friend);
         return userRepository.save(entity);
     }
 
