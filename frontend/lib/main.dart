@@ -29,6 +29,7 @@ void main() async {
 }
 
 class MyApp extends StatefulWidget {
+  
   const MyApp({super.key});
   final String title = "PicYourFlower";
 
@@ -37,6 +38,8 @@ class MyApp extends StatefulWidget {
 }
 
 class MyAppState extends State<MyApp> {
+  late List<AddButton> addButtons=[];
+
   // Your branch: flowers now fetched from API instead of hardcoded
   List<Flower> _flowers = [];
 
@@ -82,6 +85,47 @@ class MyAppState extends State<MyApp> {
         print(itemSelected.value);
       },
     );
+
+
+
+
+
+        final Map<int, GlobalKey<AddButtonState>> buttonKeys = {};
+
+    final List<({double x, double y})> addButtoncordinates = [
+    (x: 3000, y: 1400),
+    (x: 2500, y: 1400),
+    (x: 3000, y: 2150),
+    (x: 2500, y: 2150),
+    (x: 3000, y: 2850,),
+    (x: 2500, y: 2850,),
+    (x: 2000, y: 2850,),
+    (x: 3500 ,y: 2850,),
+    (x: 4000, y: 2850,),
+    (x: 1500, y: 2850,)
+
+  ];
+
+  addButtons = List.generate(addButtoncordinates.length, (i) {
+    final key = GlobalKey<AddButtonState>();
+    buttonKeys[i] = key;
+    return AddButton(
+      key: key,
+      x: addButtoncordinates[i].x,
+      y: addButtoncordinates[i].y,
+      builModeActiveNotifier: buildModeActiveNotifier,
+      item: itemSelected,
+    );
+  });
+
+
+    List<int> potOnAddButton = [0,1,2,3,4,5];
+
+    for(int i in potOnAddButton){
+      buttonKeys[i]?.currentState?.setPot(Pot(item: itemSelected,));
+      print("kör");
+    }
+
   }
 
   // Your branch: parse hex color string from backend
@@ -144,62 +188,9 @@ class MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     // Main branch build() preserved exactly
-    List<AddButton> addButtons = [
-      
-      
-      
-      
-      
-      AddButton(
-        builModeActiveNotifier: buildModeActiveNotifier,
-        x: 2000,
-        y: 2850,
-        item: itemSelected,
-      ),
-      AddButton(
-        builModeActiveNotifier: buildModeActiveNotifier,
-        x: 3500,
-        y: 2850,
-        item: itemSelected,
-      ),
-      AddButton(
-        builModeActiveNotifier: buildModeActiveNotifier,
-        x: 4000,
-        y: 2850,
-        item: itemSelected,
-      ),
-      AddButton(
-        builModeActiveNotifier: buildModeActiveNotifier,
-        x: 1500,
-        y: 2850,
-        item: itemSelected,
-      ),
-    ];
+ 
 
 
-    final Map<int, GlobalKey<AddButtonState>> buttonKeys = {};
-late List<AddButton> addButtons;
-
-    final List<({double x, double y})> addButtoncordinates = [
-    (x: 3000, y: 1400),
-    (x: 2500, y: 1400),
-    (x: 3000, y: 2150),
-    (x: 2000, y: 2150),
-    (x: 3000, y: 2850,),
-    (x: 2500, y: 2850,)
-  ];
-
-  addButtons = List.generate(addButtoncordinates.length, (i) {
-    final key = GlobalKey<AddButtonState>();
-    buttonKeys[i] = key;
-    return AddButton(
-      key: key,
-      x: addButtoncordinates[i].x,
-      y: addButtoncordinates[i].y,
-      buildModeActiveNotifier: buildModeActiveNotifier,
-      item: itemSelected,
-    );
-  });
 
     return Scaffold(
       appBar: AppBar(
