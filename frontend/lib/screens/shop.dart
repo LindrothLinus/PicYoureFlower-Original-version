@@ -79,70 +79,32 @@ class _Shop extends State<Shop> {
     print("Before try catch in fetchPots");
     try{
 
-
-      /*setState(() {
-        buyableItems.add(BuyableItemCreator(cost: 5, image: brownPotPath));        
-      });*/
       print("Before response pull");
       final response = await http.get(
-        Uri.parse('$_baseUrl/home/allpots'), //acces to all pots path needed
-        /*headers: {
-          if (authToken != null) 'Authorization': 'Bearer $authToken',
-        },*/
+        Uri.parse('$_baseUrl/home/allpots'), 
       );
       print("Before response statusCode");
       print(response.statusCode);
       if(response.statusCode == 200){
         print("Successful database load"); 
-        //This far is okay
+        
         final List<dynamic> data = jsonDecode(response.body);
         print(response.body);
         print(data.runtimeType);
+        //This far is okay, 
         setState(() {
           print("inside setState");
+          //buildpot is not called, wrong type is being passed to argument
           buyableItems = data.cast<Map<String, dynamic>>().map(_buildPot).toList();
         });
       }
 
     } catch (e){
+      print("Error");
       //
     }
     
   }
-
-  /*Future<void> _fetchPots() async {
-    if (!mounted) return;
-    setState(() { _isLoading = true; _error = null; });
-
-    if (loggedInUserId == null) {
-      if (!mounted) return;
-      setState(() { _error = 'Not logged in'; _isLoading = false; });
-      return;
-    }
-
-    try {
-      final response = await http.get(
-        Uri.parse('$_baseUrl/home/user/$loggedInUserId/flowers'),
-        headers: {
-          if (authToken != null) 'Authorization': 'Bearer $authToken',
-        },
-      );
-      if (!mounted) return;
-      if (response.statusCode == 200) {
-        final List<dynamic> data = jsonDecode(response.body);
-        setState(() {
-          _flowers = data.cast<Map<String, dynamic>>().map(_buildFlower).toList();
-          _isLoading = false;
-        });
-      } else {
-        setState(() { _error = 'Error ${response.statusCode}'; _isLoading = false; });
-      }
-    } catch (e) {
-      if (!mounted) return;
-      setState(() { _error = 'Network error'; _isLoading = false; });
-    }
-  }*/
-
   //FETCH POTS CODE
 
   @override
@@ -245,51 +207,3 @@ class _Shop extends State<Shop> {
     );
   }
 }
-
-////FETCHING POTS CODE
-
-/*Flower _buildFlower(Map<String, dynamic> data) {
-    final String template = (data['template'] as String?) ?? 'GENERIC';
-    final Color color = _parseColor(data['color'] as String?);
-    final String name = (data['commonName'] as String?) ?? 'Unknown';
-    switch (template) {
-      case 'ROSE':        return RoseFlower(color: color, name: name);
-      case 'SUNFLOWER':   return SunFlower(color: color, name: name);
-      case 'TULIP':       return TulipFlower(color: color, name: name);
-      case 'WOODANEMONE': return WoodanemoneFlower(color: color, name: name);
-      default:            return GenericFlower(color: color, name: name);
-    }
-  }*/
-
-  /*Future<void> _fetchPots() async {
-    if (!mounted) return;
-    setState(() { _isLoading = true; _error = null; });
-
-    if (loggedInUserId == null) {
-      if (!mounted) return;
-      setState(() { _error = 'Not logged in'; _isLoading = false; });
-      return;
-    }
-
-    try {
-      final response = await http.get(
-        Uri.parse('$_baseUrl/home/user/$loggedInUserId/flowers'),
-        headers: {
-          if (authToken != null) 'Authorization': 'Bearer $authToken',
-        },
-      );
-      if (!mounted) return;
-      if (response.statusCode == 200) {
-        final List<dynamic> data = jsonDecode(response.body);
-        setState(() {
-          _flowers = data.cast<Map<String, dynamic>>().map(_buildFlower).toList();
-          _isLoading = false;
-        });
-      } else {
-        setState(() { _error = 'Error ${response.statusCode}'; _isLoading = false; });
-      }
-    } catch (e) {
-      if (!mounted) return;
-      setState(() { _error = 'Network error'; _isLoading = false; });
-    }
-  }*/
