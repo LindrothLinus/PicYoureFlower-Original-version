@@ -5,25 +5,23 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 class Greenhouse extends StatefulWidget {
   const Greenhouse({super.key, required this.addButtons});
-  final List <AddButton> addButtons;
+  final List<AddButton> addButtons;
 
   @override
   State<Greenhouse> createState() => _Greenhouse();
 }
 
-class _Greenhouse extends State<Greenhouse>{
-
+class _Greenhouse extends State<Greenhouse> {
   final TransformationController controller = TransformationController();
   final double imageWidth = 5906;
   final double imageHeight = 4725;
   final double scale = 0.17;
 
   @override
-  void initState(){
+  void initState() {
     super.initState();
 
     controller.value = Matrix4.diagonal3Values(scale, scale, 1.0);
-
   }
 
   @override
@@ -38,7 +36,7 @@ class _Greenhouse extends State<Greenhouse>{
         scaleEnabled: false,
         panAxis: PanAxis.free,
         interactionEndFrictionCoefficient: 0.00001,
-        
+
         transformationController: controller,
         child: SizedBox(
           width: imageWidth,
@@ -47,17 +45,22 @@ class _Greenhouse extends State<Greenhouse>{
             fit: StackFit.expand,
             children: [
               Positioned.fill(
-                child: SvgPicture.asset(
-                  "lib/resources/images/Greenhouse.svg",
-                ),                
+                child: SvgPicture.asset("lib/resources/images/Greenhouse.svg"),
               ),
-             ...widget.addButtons, 
+              ...widget.addButtons,
               //FriendMenu(),
-            ]
-          )
+            ],
+          ),
         ),
       ),
     );
   }
 
+  bool showLiked = false;
+
+  void showLikeButton() {
+    setState(() {
+      showLiked = true;
+    });
+  }
 }
