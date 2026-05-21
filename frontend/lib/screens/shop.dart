@@ -8,7 +8,8 @@ import 'package:flutter_demo/states/coins_state.dart';
 import 'package:flutter_demo/widgets/nav_bar.dart';
 
 const String brownPotPath = "lib/resources/images/brown.webp";
-const String bluePotPath = "lib/resources/images/blue.webp";
+//const String bluePotPath = "lib/resources/images/blue.webp";
+const String bluePotPath = "lib/resources/images/BluePot_smaller.png";
 const String greenPotPath = "lib/resources/images/green.webp";
 const String mintPotPath = "lib/resources/images/mint.webp";
 const String pinkPotPath = "lib/resources/images/pink.webp";

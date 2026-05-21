@@ -1,69 +1,44 @@
 package com.pvt.demo;
 
+import java.time.LocalDateTime;
+
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import java.time.LocalDateTime;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 
 @Entity
 public class DatabaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id; // long
-
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private String commonName;
     private String latinName;
     private String color;
     private LocalDateTime picTaken;
+
+    @Enumerated(EnumType.STRING)
     private FlowerTemplate template;
-    private String username;
-    private int x;
-    private int y;
 
-    public int getX() {
-        return this.x;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    public long getId() {
+        return id;
     }
 
-    public void setX(int x) {
-        this.x = x;
-    }
-
-    public int getY() {
-        return this.y;
-    }
-
-    public void setY(int y) {
-        this.y = y;
-    }
-
-    public String getUsername() {
-        return this.username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public FlowerTemplate getTemplate() {
-        return this.template;
-    }
-
-    public void setTemplate(FlowerTemplate template) {
-        this.template = template;
-    }
-
-    public Integer getId() {
-        return this.id;
-    }
-
-    public void setId(Integer id) {
+    public void setId(long id) {
         this.id = id;
     }
 
     public String getCommonName() {
-        return this.commonName;
+        return commonName;
     }
 
     public void setCommonName(String commonName) {
@@ -71,7 +46,7 @@ public class DatabaseEntity {
     }
 
     public String getLatinName() {
-        return this.latinName;
+        return latinName;
     }
 
     public void setLatinName(String latinName) {
@@ -79,7 +54,7 @@ public class DatabaseEntity {
     }
 
     public String getColor() {
-        return this.color;
+        return color;
     }
 
     public void setColor(String color) {
@@ -87,11 +62,26 @@ public class DatabaseEntity {
     }
 
     public LocalDateTime getPicTaken() {
-        return this.picTaken;
+        return picTaken;
     }
 
     public void setPicTaken(LocalDateTime picTaken) {
         this.picTaken = picTaken;
     }
 
+    public FlowerTemplate getTemplate() {
+        return template;
+    }
+
+    public void setTemplate(FlowerTemplate template) {
+        this.template = template;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 }

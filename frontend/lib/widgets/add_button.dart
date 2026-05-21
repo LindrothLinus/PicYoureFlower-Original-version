@@ -4,7 +4,7 @@ import 'package:flutter_demo/widgets/pots/blue_pot.dart';
 
 class AddButton extends StatefulWidget {
   AddButton({super.key, required this.builModeActiveNotifier, required this.x, required this.y, required this.item});
-  final String imagePath = "lib/resources/images/Add.Webp";
+  final String imagePath = "lib/resources/images/Add.webp";
   final double x;
   final double y;
   final ValueNotifier<bool> builModeActiveNotifier;
