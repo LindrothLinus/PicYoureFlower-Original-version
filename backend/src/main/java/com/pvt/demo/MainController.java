@@ -65,12 +65,6 @@ public class MainController {
     }
 
     // User repository methods bellow-------------------------------
-    /*
-     * all friends
-     * add friend - mutual?
-     * delete friend - mutual
-     * 
-     */
 
     @GetMapping("/friends/{userId}")
     public Set<User> getAllFriends(@PathVariable Long userId) {
@@ -101,6 +95,19 @@ public class MainController {
         entity.setCoins(entity.getCoins() + amount);
         userRepository.save(entity);
         return entity.getCoins();
+    }
+
+    @GetMapping("/allpots/{userId}")
+    public Iterable<PotTemplate> getPots(@PathVariable Long userId) {
+        User entity = userRepository.findById(userId).orElseThrow(IllegalArgumentException::new);
+        return entity.getPots();
+    }
+
+    @PutMapping("/addpot/{userId}/{pot}")
+    public Object addPots(@PathVariable Long userId, @PathVariable PotTemplate pot) {
+        User entity = userRepository.findById(userId).orElseThrow(IllegalArgumentException::new);
+        entity.getPots().add(pot);
+        return userRepository.save(entity);
     }
 
     // User repository methods above-------------------------------

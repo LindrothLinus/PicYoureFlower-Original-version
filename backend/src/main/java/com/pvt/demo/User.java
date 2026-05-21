@@ -1,9 +1,14 @@
 package com.pvt.demo;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -20,6 +25,17 @@ public class User {
     private String email;
     private String name;
     private int coins;
+    @ElementCollection(targetClass = PotTemplate.class)
+    @Enumerated(EnumType.STRING)
+    private List<PotTemplate> pots = new ArrayList<>();
+
+    public List<PotTemplate> getPots() {
+        return this.pots;
+    }
+
+    public void setPots(List<PotTemplate> pots) {
+        this.pots = pots;
+    }
 
     public int getCoins() {
         return this.coins;
