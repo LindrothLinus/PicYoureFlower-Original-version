@@ -47,17 +47,20 @@ class MyAppState extends State<MyApp> {
   final Map<int, GlobalKey<AddButtonState>> buttonKeys = {};
 
 
+
+  ValueNotifier<PotState?> selectedPotNotifier= ValueNotifier<PotState?>(null);
   // Your branch: flowers now fetched from API instead of hardcoded
-  List<Flower> _flowers = [];
+  List<Flower> _flowers = [RoseFlower(color: Colors.red, name: "r")];
 
   final buildModeActiveNotifier = ValueNotifier<bool>(false);
+  final buildBarActiveNotifer = ValueNotifier<bool>(false);
   late BuildBar buildBar;
 
   final itemSelected = ValueNotifier<Widget?>(null);
 
   @override
   void initState() {
-    List<Pot> pots = [Pot(item: itemSelected)];
+    List<Pot> pots = [Pot(item: itemSelected,buildBarActiveNotifer: buildBarActiveNotifer,selectedPotNotifier: selectedPotNotifier,)];
 
     super.initState();
 
@@ -74,7 +77,7 @@ class MyAppState extends State<MyApp> {
     buildBar = BuildBar(
       flowers: _flowers,
       pots: pots,
-      visibilityNotifier: buildModeActiveNotifier,
+      visibilityNotifier: buildBarActiveNotifer,
       onFlowerSelected: (flower) {
         if (flower != itemSelected.value) {
           itemSelected.value = flower;
@@ -116,6 +119,7 @@ class MyAppState extends State<MyApp> {
     final key = GlobalKey<AddButtonState>();
     buttonKeys[i] = key;
     return AddButton(
+      buildBarActiveNotifer: buildBarActiveNotifer,
       key: key,
       x: addButtoncordinates[i].x,
       y: addButtoncordinates[i].y,
@@ -128,7 +132,7 @@ class MyAppState extends State<MyApp> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       List<int> potOnAddButton = [];
       for (int i in potOnAddButton) {
-        buttonKeys[i]?.currentState?.setPot(Pot(item: itemSelected));
+        buttonKeys[i]?.currentState?.setPot(Pot(item: itemSelected,buildBarActiveNotifer: buildBarActiveNotifer,selectedPotNotifier: selectedPotNotifier,));
       }
     });
 
@@ -175,8 +179,8 @@ class MyAppState extends State<MyApp> {
           // Rebuild buildBar with fresh flowers
           buildBar = BuildBar(
             flowers: _flowers,
-            pots: [Pot(item: itemSelected)],
-            visibilityNotifier: buildModeActiveNotifier,
+            pots: [Pot(item: itemSelected,buildBarActiveNotifer: buildBarActiveNotifer,selectedPotNotifier: selectedPotNotifier,)],
+            visibilityNotifier: buildBarActiveNotifer,
             onFlowerSelected: (flower) {
               itemSelected.value = flower != itemSelected.value ? flower : null;
             },
