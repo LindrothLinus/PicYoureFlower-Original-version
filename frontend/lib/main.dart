@@ -37,6 +37,8 @@ class MyApp extends StatefulWidget {
 }
 
 class MyAppState extends State<MyApp> {
+
+  ValueNotifier<PotState?> selectedPotNotifier= ValueNotifier<PotState?>(null);
   // Your branch: flowers now fetched from API instead of hardcoded
   List<Flower> _flowers = [RoseFlower(color: Colors.red, name: "r")];
 
@@ -48,7 +50,7 @@ class MyAppState extends State<MyApp> {
 
   @override
   void initState() {
-    List<Pot> pots = [Pot(item: itemSelected,buildBarActiveNotifer: buildBarActiveNotifer,)];
+    List<Pot> pots = [Pot(item: itemSelected,buildBarActiveNotifer: buildBarActiveNotifer,selectedPotNotifier: selectedPotNotifier,)];
 
     super.initState();
 
@@ -126,7 +128,7 @@ class MyAppState extends State<MyApp> {
           // Rebuild buildBar with fresh flowers
           buildBar = BuildBar(
             flowers: _flowers,
-            pots: [Pot(item: itemSelected,buildBarActiveNotifer: buildBarActiveNotifer,)],
+            pots: [Pot(item: itemSelected,buildBarActiveNotifer: buildBarActiveNotifer,selectedPotNotifier: selectedPotNotifier,)],
             visibilityNotifier: buildModeActiveNotifier,
             onFlowerSelected: (flower) {
               itemSelected.value = flower != itemSelected.value ? flower : null;

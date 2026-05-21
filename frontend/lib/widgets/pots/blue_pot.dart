@@ -2,11 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_demo/widgets/flowers/flower.dart';
 
 class Pot extends StatefulWidget {
-  Pot({super.key, required this.item, required this.buildBarActiveNotifer});
+  Pot({
+    Key? key,
+    required this.item,
+    required this.buildBarActiveNotifer,
+    required this.selectedPotNotifier,
+  }) : super(key: key ?? UniqueKey());
 
   final ValueNotifier<Widget?> item;
   final ValueNotifier<bool> buildBarActiveNotifer;
-  bool selected=false;
+  final ValueNotifier<PotState?> selectedPotNotifier;
 
   @override
   PotState createState() => PotState();
@@ -16,50 +21,53 @@ class PotState extends State<Pot> {
   bool isTaken = false;
   Widget? plantedItem;
 
+  bool get isSelected => widget.selectedPotNotifier.value == this;
+
+  void _onItemChanged() {
+    if (widget.item.value != null && widget.item.value is Flower && isSelected) {
+      if (mounted) {
+        setState(() {
+          isTaken = true;
+          plantedItem = widget.item.value;
+          widget.item.value = null;
+          widget.buildBarActiveNotifer.value = false;
+          widget.selectedPotNotifier.value = null;
+        });
+      }
+    }
+  }
+
   @override
   void initState() {
-    widget.item.addListener(
-      (){
-        if (widget.item.value != null && widget.item.value is Flower) {
-              
-                isTaken = true;
-                plantedItem = widget.item.value;
-                widget.item.value=null;
-                widget.buildBarActiveNotifer.value=false;
+    super.initState();
+    widget.item.addListener(_onItemChanged);
+  }
 
-              
-        }
-      
-    }
-  );}
+  @override
+  void dispose() {
+    widget.item.removeListener(_onItemChanged);
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return ValueListenableBuilder(
-      valueListenable: widget.item,
-      builder: (context, item, child) {
-        return GestureDetector(
-          onTap: () {
-            widget.selected=true;
-            widget.buildBarActiveNotifer.value=true;
-
-            
-          },
-          child: Stack(
-            clipBehavior: Clip.none,
-            children: [
-              
-              Image.asset("lib/resources/images/blue.webp", fit: BoxFit.fill,),
-              Positioned(
-                top:-60,
-                left: 0,
-                right: 0,
-                child: plantedItem ?? Container(),
-              ),
-            ],
-          ),
-        );
+    return GestureDetector(
+      onTap: () {
+        widget.selectedPotNotifier.value = this;
+        widget.buildBarActiveNotifer.value = true;
       },
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          Image.asset("lib/resources/images/blue.webp", fit: BoxFit.fill),
+          Positioned(
+            top: -60,
+            left: 0,
+            right: 0,
+            child: plantedItem ?? Container(),
+          ),
+        ],
+      ),
     );
   }
 }

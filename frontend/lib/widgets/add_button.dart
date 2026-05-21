@@ -40,7 +40,7 @@ class AddButtonState extends State<AddButton> {
                         lockedItem = widget.item.value;
                         widget.item.value = null;
                         widget.buildBarActiveNotifer.value = false;
-                        widget.checking = false; // Lock the current value
+                        widget.checking = false; 
                       });
             }
       }
