@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_demo/screens/flower_collection.dart';
 import 'package:flutter_demo/states/check_button_overlay.dart';
 import 'package:flutter_demo/widgets/back_btn.dart';
 import 'package:flutter_demo/widgets/coins.dart';
@@ -6,6 +9,9 @@ import '../resources/constants.dart';
 import 'package:flutter_demo/items/buyable_item_creator.dart';
 import 'package:flutter_demo/states/coins_state.dart';
 import 'package:flutter_demo/widgets/nav_bar.dart';
+import 'package:http/http.dart' as http;
+
+const String _baseUrl = 'https://group-1-75.pvt.dsv.su.se';
 
 const String brownPotPath = "lib/resources/images/brown.webp";
 //const String bluePotPath = "lib/resources/images/blue.webp";
@@ -19,23 +25,129 @@ const String addPath = "lib/resources/images/Add.webp";
 
 const String coinsPath = "lib/resources/images/coin.webp";
 //Alla items
-final buyableItems = [
-  BuyableItemCreator(cost: 5, image: brownPotPath),
-  BuyableItemCreator(cost: 5, image: bluePotPath),
+var buyableItems = [
+  //BuyableItemCreator(cost: 5, image: brownPotPath),
+  /*BuyableItemCreator(cost: 5, image: bluePotPath),
   BuyableItemCreator(cost: 5, image: greenPotPath),
   BuyableItemCreator(cost: 5, image: mintPotPath),
   BuyableItemCreator(cost: 5, image: pinkPotPath),
   BuyableItemCreator(cost: 5, image: purplePotPath),
-  BuyableItemCreator(cost: 5, image: yellowPotPath),
+  BuyableItemCreator(cost: 5, image: yellowPotPath),*/
 ];
 
-class Shop extends StatelessWidget {
-  Shop({super.key});
+class Shop extends StatefulWidget {
+  const Shop({super.key});
+
+  @override
+  State<Shop> createState() => _Shop();
+}
+
+class _Shop extends State<Shop> {
 
   final CoinsState coinsState = CoinsState();
 
+  //INIT CODE
+
+  @override
+  void initState(){
+    super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_){
+      _fetchPots();
+    });
+  }
+
+  //FETCH POTS CODE
+
+  BuyableItemCreator _buildPot(Map<String, dynamic> data) {
+    print("Inside buildPot");
+    return BuyableItemCreator(cost: 5, image: mintPotPath);
+    /*final String color = (data['template'] as String);
+    switch(color){
+      case 'BLUE':        return BuyableItemCreator(cost: 5, image: bluePotPath);
+      case 'BROWN':       return BuyableItemCreator(cost: 5, image: brownPotPath);
+      case 'GREEN':       return BuyableItemCreator(cost: 5, image: greenPotPath);
+      case 'TURQUOISE':   return BuyableItemCreator(cost: 5, image: mintPotPath);
+      case 'PINK':        return BuyableItemCreator(cost: 5, image: pinkPotPath);
+      case 'PURPLE':      return BuyableItemCreator(cost: 5, image: purplePotPath);
+      case 'YELLOW':      return BuyableItemCreator(cost: 5, image: yellowPotPath);
+      default:            return BuyableItemCreator(cost: 5, image: brownPotPath);
+    }*/
+  }
+
+  Future<void> _fetchPots() async {
+    print("Before try catch in fetchPots");
+    try{
+
+
+      /*setState(() {
+        buyableItems.add(BuyableItemCreator(cost: 5, image: brownPotPath));        
+      });*/
+      print("Before response pull");
+      final response = await http.get(
+        Uri.parse('$_baseUrl/home/allpots'), //acces to all pots path needed
+        /*headers: {
+          if (authToken != null) 'Authorization': 'Bearer $authToken',
+        },*/
+      );
+      print("Before response statusCode");
+      print(response.statusCode);
+      if(response.statusCode == 200){
+        print("Successful database load"); 
+        //This far is okay
+        final List<dynamic> data = jsonDecode(response.body);
+        print(response.body);
+        print(data.runtimeType);
+        setState(() {
+          print("inside setState");
+          buyableItems = data.cast<Map<String, dynamic>>().map(_buildPot).toList();
+        });
+      }
+
+    } catch (e){
+      //
+    }
+    
+  }
+
+  /*Future<void> _fetchPots() async {
+    if (!mounted) return;
+    setState(() { _isLoading = true; _error = null; });
+
+    if (loggedInUserId == null) {
+      if (!mounted) return;
+      setState(() { _error = 'Not logged in'; _isLoading = false; });
+      return;
+    }
+
+    try {
+      final response = await http.get(
+        Uri.parse('$_baseUrl/home/user/$loggedInUserId/flowers'),
+        headers: {
+          if (authToken != null) 'Authorization': 'Bearer $authToken',
+        },
+      );
+      if (!mounted) return;
+      if (response.statusCode == 200) {
+        final List<dynamic> data = jsonDecode(response.body);
+        setState(() {
+          _flowers = data.cast<Map<String, dynamic>>().map(_buildFlower).toList();
+          _isLoading = false;
+        });
+      } else {
+        setState(() { _error = 'Error ${response.statusCode}'; _isLoading = false; });
+      }
+    } catch (e) {
+      if (!mounted) return;
+      setState(() { _error = 'Network error'; _isLoading = false; });
+    }
+  }*/
+
+  //FETCH POTS CODE
+
   @override
   Widget build(BuildContext context) {
+    //buyableItems.add(BuyableItemCreator(cost: 5, image: brownPotPath));
     return Scaffold(
       appBar: AppBar(
         title: Text('Shop', style: TextStyles.header),
@@ -133,3 +245,51 @@ class Shop extends StatelessWidget {
     );
   }
 }
+
+////FETCHING POTS CODE
+
+/*Flower _buildFlower(Map<String, dynamic> data) {
+    final String template = (data['template'] as String?) ?? 'GENERIC';
+    final Color color = _parseColor(data['color'] as String?);
+    final String name = (data['commonName'] as String?) ?? 'Unknown';
+    switch (template) {
+      case 'ROSE':        return RoseFlower(color: color, name: name);
+      case 'SUNFLOWER':   return SunFlower(color: color, name: name);
+      case 'TULIP':       return TulipFlower(color: color, name: name);
+      case 'WOODANEMONE': return WoodanemoneFlower(color: color, name: name);
+      default:            return GenericFlower(color: color, name: name);
+    }
+  }*/
+
+  /*Future<void> _fetchPots() async {
+    if (!mounted) return;
+    setState(() { _isLoading = true; _error = null; });
+
+    if (loggedInUserId == null) {
+      if (!mounted) return;
+      setState(() { _error = 'Not logged in'; _isLoading = false; });
+      return;
+    }
+
+    try {
+      final response = await http.get(
+        Uri.parse('$_baseUrl/home/user/$loggedInUserId/flowers'),
+        headers: {
+          if (authToken != null) 'Authorization': 'Bearer $authToken',
+        },
+      );
+      if (!mounted) return;
+      if (response.statusCode == 200) {
+        final List<dynamic> data = jsonDecode(response.body);
+        setState(() {
+          _flowers = data.cast<Map<String, dynamic>>().map(_buildFlower).toList();
+          _isLoading = false;
+        });
+      } else {
+        setState(() { _error = 'Error ${response.statusCode}'; _isLoading = false; });
+      }
+    } catch (e) {
+      if (!mounted) return;
+      setState(() { _error = 'Network error'; _isLoading = false; });
+    }
+  }*/
