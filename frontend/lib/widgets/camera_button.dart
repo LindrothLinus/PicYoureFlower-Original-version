@@ -92,7 +92,13 @@ class CameraButtonBar extends StatelessWidget {
       child: Center(
         child: ElevatedButton(
           onPressed: () async {
-            await identifyTestImage();
+
+            //real camera
+            final XFile? image = await cameraKey.currentState?.takePicture();
+            if (image == null) return;
+
+            //await identifyTestImage();
+            await identifyFlower(image);
 
             final dummyItem = TemporaryFlowerItem(
               name: "Dandelion",
