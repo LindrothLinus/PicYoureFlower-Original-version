@@ -29,6 +29,7 @@ void main() async {
 }
 
 class MyApp extends StatefulWidget {
+  
   const MyApp({super.key});
   final String title = "PicYourFlower";
 
@@ -37,6 +38,10 @@ class MyApp extends StatefulWidget {
 }
 
 class MyAppState extends State<MyApp> {
+  late List<AddButton> addButtons=[];
+  final Map<int, GlobalKey<AddButtonState>> buttonKeys = {};
+
+
   // Your branch: flowers now fetched from API instead of hardcoded
   List<Flower> _flowers = [];
 
@@ -82,6 +87,46 @@ class MyAppState extends State<MyApp> {
         print(itemSelected.value);
       },
     );
+
+
+
+
+
+
+    final List<({double x, double y})> addButtoncordinates = [
+    (x: 3000, y: 1400),
+    (x: 2500, y: 1400),
+    (x: 3000, y: 2150),
+    (x: 2500, y: 2150),
+    (x: 3000, y: 2850,),
+    (x: 2500, y: 2850,),
+    (x: 2000, y: 2850,),
+    (x: 3500 ,y: 2850,),
+    (x: 4000, y: 2850,),
+    (x: 1500, y: 2850,)
+
+  ];
+
+  addButtons = List.generate(addButtoncordinates.length, (i) {
+    final key = GlobalKey<AddButtonState>();
+    buttonKeys[i] = key;
+    return AddButton(
+      key: key,
+      x: addButtoncordinates[i].x,
+      y: addButtoncordinates[i].y,
+      builModeActiveNotifier: buildModeActiveNotifier,
+      item: itemSelected,
+    );
+  });
+
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      List<int> potOnAddButton = [];
+      for (int i in potOnAddButton) {
+        buttonKeys[i]?.currentState?.setPot(Pot(item: itemSelected));
+      }
+    });
+
   }
 
   // Your branch: parse hex color string from backend
@@ -144,68 +189,9 @@ class MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     // Main branch build() preserved exactly
-    List<AddButton> addButtons = [
-      AddButton(
-        builModeActiveNotifier: buildModeActiveNotifier,
-        x: 3000,
-        y: 1400,
-        item: itemSelected,
-      ),
-      AddButton(
-        builModeActiveNotifier: buildModeActiveNotifier,
-        x: 2500,
-        y: 1400,
-        item: itemSelected,
-      ),
-      AddButton(
-        builModeActiveNotifier: buildModeActiveNotifier,
-        x: 3000,
-        y: 2150,
-        item: itemSelected,
-      ),
-      AddButton(
-        builModeActiveNotifier: buildModeActiveNotifier,
-        x: 2500,
-        y: 2150,
-        item: itemSelected,
-      ),
-      AddButton(
-        builModeActiveNotifier: buildModeActiveNotifier,
-        x: 3000,
-        y: 2850,
-        item: itemSelected,
-      ),
-      AddButton(
-        builModeActiveNotifier: buildModeActiveNotifier,
-        x: 2500,
-        y: 2850,
-        item: itemSelected,
-      ),
-      AddButton(
-        builModeActiveNotifier: buildModeActiveNotifier,
-        x: 2000,
-        y: 2850,
-        item: itemSelected,
-      ),
-      AddButton(
-        builModeActiveNotifier: buildModeActiveNotifier,
-        x: 3500,
-        y: 2850,
-        item: itemSelected,
-      ),
-      AddButton(
-        builModeActiveNotifier: buildModeActiveNotifier,
-        x: 4000,
-        y: 2850,
-        item: itemSelected,
-      ),
-      AddButton(
-        builModeActiveNotifier: buildModeActiveNotifier,
-        x: 1500,
-        y: 2850,
-        item: itemSelected,
-      ),
-    ];
+ 
+
+
 
     return Scaffold(
       appBar: AppBar(
@@ -232,5 +218,30 @@ class MyAppState extends State<MyApp> {
 
     //test du kan ta bort denna komentar
   }
+
+
+
+  void extractPots(){
+    List<({int index, Pot pot, Flower? flower})> data =[];
+    for(int i=0; i<buttonKeys.length;i++){
+      Widget? potWidget = buttonKeys[i]?.currentState?.getPot();
+      if(potWidget is Pot){
+        Pot pot =potWidget;
+
+
+
+        Widget? flowerWidgt = pot.getPlantedItem();
+        if(flowerWidgt is Flower){
+          data.add((index: i, pot: pot, flower:flowerWidgt));
+        }
+        else{
+          data.add((index: i, pot: pot, flower:null));
+        }
+      }
+
+    }
+  }
+
+
 }
 //test
