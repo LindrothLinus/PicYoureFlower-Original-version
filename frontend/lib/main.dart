@@ -43,7 +43,7 @@ class MyAppState extends State<MyApp> {
 
 
   // Your branch: flowers now fetched from API instead of hardcoded
-  List<Flower> _flowers = [RoseFlower(color: Colors.red, name: "")];
+  List<Flower> _flowers = [];
 
   final buildModeActiveNotifier = ValueNotifier<bool>(false);
   late BuildBar buildBar;
@@ -121,10 +121,9 @@ class MyAppState extends State<MyApp> {
 
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      List<int> potOnAddButton = [0, 1, 2, 3, 4, 5];
+      List<int> potOnAddButton = [];
       for (int i in potOnAddButton) {
         buttonKeys[i]?.currentState?.setPot(Pot(item: itemSelected));
-        print("kör");
       }
     });
 
