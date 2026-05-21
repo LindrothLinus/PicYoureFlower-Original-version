@@ -18,7 +18,6 @@ class Pot extends StatefulWidget {
 }
 
 class PotState extends State<Pot> {
-  bool isTaken = false;
   Widget? plantedItem;
 
   bool get isSelected => widget.selectedPotNotifier.value == this;
@@ -27,7 +26,6 @@ class PotState extends State<Pot> {
     if (widget.item.value != null && widget.item.value is Flower && isSelected) {
       if (mounted) {
         setState(() {
-          isTaken = true;
           plantedItem = widget.item.value;
           widget.item.value = null;
           widget.buildBarActiveNotifer.value = false;
