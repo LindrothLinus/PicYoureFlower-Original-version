@@ -39,6 +39,8 @@ class MyApp extends StatefulWidget {
 
 class MyAppState extends State<MyApp> {
   late List<AddButton> addButtons=[];
+  final Map<int, GlobalKey<AddButtonState>> buttonKeys = {};
+
 
   // Your branch: flowers now fetched from API instead of hardcoded
   List<Flower> _flowers = [];
@@ -90,7 +92,6 @@ class MyAppState extends State<MyApp> {
 
 
 
-        final Map<int, GlobalKey<AddButtonState>> buttonKeys = {};
 
     final List<({double x, double y})> addButtoncordinates = [
     (x: 3000, y: 1400),
@@ -119,12 +120,13 @@ class MyAppState extends State<MyApp> {
   });
 
 
-    List<int> potOnAddButton = [0,1,2,3,4,5];
-
-    for(int i in potOnAddButton){
-      buttonKeys[i]?.currentState?.setPot(Pot(item: itemSelected,));
-      print("kör");
-    }
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      List<int> potOnAddButton = [0, 1, 2, 3, 4, 5];
+      for (int i in potOnAddButton) {
+        buttonKeys[i]?.currentState?.setPot(Pot(item: itemSelected));
+        print("kör");
+      }
+    });
 
   }
 
