@@ -1,8 +1,10 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_demo/widgets/login_popup.dart';
-import '../resources/constants.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'dart:math';
+
+import '../resources/constants.dart';
 
 final List<String> avatarImages = [
   "lib/resources/images/Avatar_Blue.png",

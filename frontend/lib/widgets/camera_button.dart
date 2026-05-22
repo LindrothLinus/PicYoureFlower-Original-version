@@ -11,6 +11,8 @@ import 'package:flutter_demo/widgets/flowers/rose_flower.dart';
 import 'package:flutter_demo/widgets/flowers/sunflower.dart';
 import 'package:flutter_demo/widgets/flowers/tulip.dart';
 import 'package:flutter_demo/widgets/flowers/woodanemone.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
 
@@ -48,14 +50,57 @@ class CameraButtonBar extends StatelessWidget {
     }
   }
 
-  Future<Map<String, dynamic>?> identifyFlower(XFile image) async {
+  Future<String?> _getLocationString() async {
     try {
-      final uri = Uri.parse('https://group-1-75.pvt.dsv.su.se/home/identify');
+      bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+      if (!serviceEnabled) return null;
+
+      LocationPermission permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+        if (permission == LocationPermission.denied) return null;
+      }
+      if (permission == LocationPermission.deniedForever) return null;
+
+      Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high,
+      );
+
+      List<Placemark> placemarks = await placemarkFromCoordinates(
+        position.latitude,
+        position.longitude,
+      );
+
+      if (placemarks.isNotEmpty) {
+        Placemark place = placemarks.first;
+        List<String> parts = [
+          if (place.subLocality != null && place.subLocality!.isNotEmpty)
+            place.subLocality!,
+          if (place.locality != null && place.locality!.isNotEmpty)
+            place.locality!,
+          if (place.country != null && place.country!.isNotEmpty)
+            place.country!,
+        ];
+        return parts.isNotEmpty ? parts.join(', ') : null;
+      }
+      return null;
+    } catch (e) {
+      print('Location error: $e');
+      return null;
+    }
+  }
+
+  Future<Map<String, dynamic>?> identifyFlower(XFile image, {String? location}) async {
+    try {
+      final uri = Uri.parse('http://10.0.2.2:8080/home/identify');
       final request = http.MultipartRequest('POST', uri);
       request.files.add(await http.MultipartFile.fromPath('image', image.path));
 
       if (loggedInUserId != null) {
         request.fields['userId'] = loggedInUserId!;
+      }
+      if (location != null) {
+        request.fields['location'] = location;
       }
       if (authToken != null) {
         request.headers['Authorization'] = 'Bearer $authToken';
@@ -77,9 +122,9 @@ class CameraButtonBar extends StatelessWidget {
     }
   }
 
-  Future<Map<String, dynamic>?> identifyTestImage() async {
+  Future<Map<String, dynamic>?> identifyTestImage({String? location}) async {
     try {
-      final uri = Uri.parse('https://group-1-75.pvt.dsv.su.se/home/identify');
+      final uri = Uri.parse('http://10.0.2.2:8080/home/identify');
 
       final byteData = await rootBundle.load('lib/resources/images/testblomma.jpg');
       final tempDir = await getTemporaryDirectory();
@@ -91,6 +136,9 @@ class CameraButtonBar extends StatelessWidget {
 
       if (loggedInUserId != null) {
         request.fields['userId'] = loggedInUserId!;
+      }
+      if (location != null) {
+        request.fields['location'] = location;
       }
       if (authToken != null) {
         request.headers['Authorization'] = 'Bearer $authToken';
@@ -120,11 +168,13 @@ class CameraButtonBar extends StatelessWidget {
         child: ElevatedButton(
           onPressed: () async {
             //real camera
-            final XFile? image = await cameraKey.currentState?.takePicture();
-            if (image == null) return;
+            //final XFile? image = await cameraKey.currentState?.takePicture();
+            //if (image == null) return;
 
-            //final data = await identifyTestImage();
-            final data = await identifyFlower(image);
+            final String? location = await _getLocationString();
+            print('Location result: $location');
+            final data = await identifyTestImage(location: location);
+            //final data = await identifyFlower(image, location: location);
 
             if (!context.mounted) return;
 

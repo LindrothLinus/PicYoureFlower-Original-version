@@ -1,8 +1,6 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_demo/widgets/flowers/rose_flower.dart';
-import 'package:flutter_demo/widgets/flowers/flower.dart';
 
 class Carousel extends StatefulWidget {
   const Carousel({super.key, required this.onItemSelected,required this.items});
