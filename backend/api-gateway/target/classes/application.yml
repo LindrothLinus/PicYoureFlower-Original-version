@@ -106,6 +106,21 @@ spring:
           uri: http://localhost:8082
           predicates:
             - Path=/home/hello
+            
+        - id: user-setcoins
+          uri: http://localhost:8082
+          predicates:
+            - Path=/home/setcoins/**
+
+        - id: user-addfriend
+          uri: http://localhost:8082
+          predicates:
+            - Path=/home/addfriend/**
+
+        - id: user-removefriend
+          uri: http://localhost:8082
+          predicates:
+            - Path=/home/removefriend/**
 
         # Internal user REST API used by auth-service
         - id: users-internal

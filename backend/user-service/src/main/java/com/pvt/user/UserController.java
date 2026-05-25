@@ -3,6 +3,7 @@ package com.pvt.user;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,8 +22,6 @@ public class UserController {
     public UserController(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
-
-    // ── Internal API consumed by auth-service ─────────────────────────────────
 
     @GetMapping("/users/by-google/{googleId}")
     public ResponseEntity<User> findByGoogleId(@PathVariable String googleId) {
@@ -47,8 +46,6 @@ public class UserController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // ── Public API (same paths as the original monolith) ─────────────────────
-
     @GetMapping("/home/hello")
     public String hello() {
         return "hello";
@@ -70,6 +67,37 @@ public class UserController {
         User entity = userRepository.findById(userId)
                 .orElseThrow(IllegalArgumentException::new);
         return entity.getFriends();
+    }
+
+    @PostMapping("/home/addfriend/{userId}/{friendId}")
+    public String addFriends(@PathVariable Long userId, @PathVariable Long friendId) {
+        User entity = userRepository.findById(userId).orElseThrow(IllegalArgumentException::new);
+        User friend = userRepository.findById(friendId).orElseThrow(IllegalArgumentException::new);
+        entity.getFriends().add(friend);
+        friend.getFriends().add(entity);
+        userRepository.save(friend);
+        userRepository.save(entity);
+        return "friend added";
+    }
+
+    @DeleteMapping("/home/removefriend/{userId}/{friendId}")
+    public String removeFriends(@PathVariable Long userId, @PathVariable Long friendId) {
+        User entity = userRepository.findById(userId).orElseThrow(IllegalArgumentException::new);
+        User friend = userRepository.findById(friendId).orElseThrow(IllegalArgumentException::new);
+        if (entity.getFriends().contains(friend)) {
+            entity.getFriends().remove(friend);
+            friend.getFriends().remove(entity);
+        }
+        userRepository.save(friend);
+        userRepository.save(entity);
+        return "friend removed";
+    }
+
+    @PutMapping("/home/setcoins/{userId}/{amount}")
+    public Object setCoins(@PathVariable Long userId, @PathVariable int amount) {
+        User entity = userRepository.findById(userId).orElseThrow(IllegalArgumentException::new);
+        entity.setCoins(amount);
+        return userRepository.save(entity);
     }
 
     @GetMapping("/home/coins/{userId}")

@@ -92,7 +92,7 @@ class CameraButtonBar extends StatelessWidget {
 
   Future<Map<String, dynamic>?> identifyFlower(XFile image, {String? location}) async {
     try {
-      final uri = Uri.parse('http://10.0.2.2:8080/home/identify');
+      final uri = Uri.parse('https://group-1-75.pvt.dsv.su.se/home/identify');
       final request = http.MultipartRequest('POST', uri);
       request.files.add(await http.MultipartFile.fromPath('image', image.path));
 
@@ -124,7 +124,7 @@ class CameraButtonBar extends StatelessWidget {
 
   Future<Map<String, dynamic>?> identifyTestImage({String? location}) async {
     try {
-      final uri = Uri.parse('http://10.0.2.2:8080/home/identify');
+      final uri = Uri.parse('https://group-1-75.pvt.dsv.su.se/home/identify');
 
       final byteData = await rootBundle.load('lib/resources/images/testblomma.jpg');
       final tempDir = await getTemporaryDirectory();
@@ -168,13 +168,13 @@ class CameraButtonBar extends StatelessWidget {
         child: ElevatedButton(
           onPressed: () async {
             //real camera
-            //final XFile? image = await cameraKey.currentState?.takePicture();
-            //if (image == null) return;
+            final XFile? image = await cameraKey.currentState?.takePicture();
+            if (image == null) return;
 
             final String? location = await _getLocationString();
             print('Location result: $location');
-            final data = await identifyTestImage(location: location);
-            //final data = await identifyFlower(image, location: location);
+            //final data = await identifyTestImage(location: location);
+            final data = await identifyFlower(image, location: location);
 
             if (!context.mounted) return;
 
