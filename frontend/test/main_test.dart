@@ -1,8 +1,10 @@
+import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_demo/main.dart';
 import 'package:flutter_demo/widgets/add_button.dart';
+import 'package:flutter_demo/widgets/camera_button.dart';
 import 'package:flutter_demo/widgets/flowers/flower.dart';
 import 'package:flutter_demo/widgets/flowers/genericflower.dart';
 import 'package:flutter_demo/widgets/flowers/rose_flower.dart';
@@ -11,6 +13,12 @@ import 'package:flutter_demo/widgets/flowers/tulip.dart';
 import 'package:flutter_demo/widgets/flowers/woodanemone.dart';
 import 'package:flutter_demo/widgets/pots/blue_pot.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:http/testing.dart';
+import 'package:mocktail/mocktail.dart';
+
+import 'package:http/http.dart' as http;
+
+import 'mock.dart';
 
 Future<MyAppState> loadMain(WidgetTester tester) async {
   //Kör hela inintState och hoppar till nästa frame
@@ -23,7 +31,20 @@ Future<MyAppState> loadMain(WidgetTester tester) async {
   return state;
 }
 
+MockHttpClient createMockClientWithData(List<Map<String, String>> encoding) {
+  final MockHttpClient mockClient = MockHttpClient();
+  when(
+    () => mockClient.get(any(), headers: any(named: 'headers')),
+  ).thenAnswer((_) async => http.Response(jsonEncode(encoding), 200));
+
+  return mockClient;
+}
+
 void main() {
+  setUpAll(() {
+    registerFallbackValue(Uri.parse('http://dummy.com'));
+  });
+
   group("all mainScreen tests", () {
     group("generatAddButtons tests", () {
       testWidgets("generateAddButtons generates button on correct cordinates", (
@@ -218,5 +239,96 @@ void main() {
         },
       );
     });
-  });
+
+    group("fetchFlower tests", () {
+      testWidgets("fetchFlowers: adds flowers to flowerCollection from api", (
+        WidgetTester tester,
+      ) async {
+        final MockHttpClient mockClient = createMockClientWithData([
+          {'template': 'ROSE', 'color': '#FF0000', 'commonName': 'blomma1'},
+          {'template': 'TULIP', 'color': '#FFFF00', 'commonName': 'blomma2'},
+        ]);
+
+        await tester.pumpWidget(
+          MaterialApp(home: MyApp(httpClient: mockClient)),
+        );
+        await tester.pumpAndSettle();
+
+        MyAppState state = tester.state<MyAppState>(find.byType(MyApp));
+        loggedInUserId = "1";
+
+        await state.fetchFlowers();
+        await tester.pump();
+
+        expect(state.flowerCollection.length, 2);
+        expect(state.flowerCollection[0], isA<RoseFlower>());
+        expect(state.flowerCollection[1], isA<TulipFlower>());
+      });
+    });
+
+    testWidgets("fetchFlowers:Nothing happen if user id is null", (
+      WidgetTester tester,
+    ) async {
+      final MockHttpClient mockClient = createMockClientWithData([
+        {'template': 'ROSE', 'color': '#FF0000', 'commonName': 'blomma1'},
+        {'template': 'TULIP', 'color': '#FFFF00', 'commonName': 'blomma2'},
+      ]);
+
+      await tester.pumpWidget(MaterialApp(home: MyApp(httpClient: mockClient)));
+      await tester.pumpAndSettle();
+
+      MyAppState state = tester.state<MyAppState>(find.byType(MyApp));
+      loggedInUserId = null;
+
+      await state.fetchFlowers();
+      await tester.pump();
+
+      expect(state.flowerCollection.length, 0);
+    });
+
+    testWidgets("fetchFlowers:Nothing in Server", (
+      WidgetTester tester,
+    ) async {
+      final MockHttpClient mockClient = createMockClientWithData([]);
+
+      await tester.pumpWidget(MaterialApp(home: MyApp(httpClient: mockClient)));
+      await tester.pumpAndSettle();
+
+      MyAppState state = tester.state<MyAppState>(find.byType(MyApp));
+      loggedInUserId = "1";
+
+      await state.fetchFlowers();
+      await tester.pump();
+
+      expect(state.flowerCollection.length, 0);
+    });
+
+
+
+
+    testWidgets("fetchFlowers:Api error dose not chrash application", (
+        WidgetTester tester,
+      ) async {
+        final MockHttpClient mockClient = MockHttpClient();
+        when(
+          () => mockClient.get(any(), headers: any(named: 'headers')),
+        ).thenThrow(Exception("No Internet"));
+
+        await tester.pumpWidget(
+          MaterialApp(home: MyApp(httpClient: mockClient)),
+        );
+        await tester.pumpAndSettle();
+
+        MyAppState state = tester.state<MyAppState>(find.byType(MyApp));
+        loggedInUserId = "1";
+
+        await state.fetchFlowers();
+        await tester.pump();
+        
+        // Verifiera att anropet inte kastar vidare — appen ska överleva
+        expect(() async => await state.fetchFlowers(), returnsNormally);
+        await tester.pump();
+        expect(state.flowerCollection, isEmpty); 
+      });
+    });
 }

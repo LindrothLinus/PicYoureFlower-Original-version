@@ -29,21 +29,29 @@ void main() async {
 }
 
 class MyApp extends StatefulWidget {
-  const MyApp({super.key});
+  const MyApp({super.key, this.httpClient});
+
+  //!För mockramverk annars ska denna vara lämnas null
+  final http.Client? httpClient;
   final String title = "PicYourFlower";
 
   @override
-  State<MyApp> createState() => MyAppState();
+  State<MyApp> createState() => MyAppState(httpClient: httpClient);
 }
 
 class MyAppState extends State<MyApp> {
+
+  MyAppState({http.Client? httpClient}):_httpClient=httpClient?? http.Client();
+
+  final http.Client _httpClient;
   late List<AddButton> _addButtons = [];
   late List<Pot> _pots = [];
   @visibleForTesting
   final Map<int, GlobalKey<AddButtonState>> addButtonKeys = {};
   final ValueNotifier<PotState?> _selectedPotNotifier = ValueNotifier<PotState?>(null);
   // Your branch: flowers now fetched from API instead of hardcoded
-  List<Flower> _flowers = [RoseFlower(color: Colors.red, name: "r")];
+  @visibleForTesting
+  List<Flower> flowerCollection = [];
 
   final List<({double x, double y})> _addButtoncordinates = [
     (x: 3000, y: 1400),
@@ -72,7 +80,7 @@ class MyAppState extends State<MyApp> {
     _addButtons = generateAddButtons(_addButtoncordinates);
 
     buildBar = BuildBar(
-      flowers: _flowers,
+      flowers: flowerCollection,
       pots: _pots,
       visibilityNotifier: buildBarActiveNotifer,
       onFlowerSelected: (flower) {
@@ -122,23 +130,24 @@ class MyAppState extends State<MyApp> {
   }
 
   // Your branch: fetch the logged-in user's flowers from the backend
-  Future<void> _fetchFlowers() async {
+  @visibleForTesting
+  Future<void> fetchFlowers() async {
     if (loggedInUserId == null) return;
     try {
-      final response = await http.get(
+      final response = await _httpClient.get(
         Uri.parse('$_baseUrl/home/user/$loggedInUserId/flowers'),
         headers: {if (authToken != null) 'Authorization': 'Bearer $authToken'},
       );
       if (response.statusCode == 200 && mounted) {
         final List<dynamic> data = jsonDecode(response.body);
         setState(() {
-          _flowers = data
+          flowerCollection = data
               .cast<Map<String, dynamic>>()
               .map(buildFlower)
               .toList();
           // Rebuild buildBar with fresh flowers
           buildBar = BuildBar(
-            flowers: _flowers,
+            flowers: flowerCollection,
             pots: [
               Pot(
                 item: itemSelected,
@@ -235,11 +244,11 @@ class MyAppState extends State<MyApp> {
     ];
     // Your branch: pass onSuccess so flowers load right after login
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      login_popup(context, onSuccess: _fetchFlowers);
+      login_popup(context, onSuccess: fetchFlowers);
     });
     // Your branch: also refresh when build mode opens
     buildModeActiveNotifier.addListener(() {
-      if (buildModeActiveNotifier.value) _fetchFlowers();
+      if (buildModeActiveNotifier.value) fetchFlowers();
     });
   }
 
