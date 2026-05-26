@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,6 +13,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import jakarta.transaction.Transactional;
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -56,21 +59,38 @@ public class UserController {
         return userRepository.findAll();
     }
 
-    @GetMapping("/home/adduser")
+    @PostMapping("/home/adduser")
     public Object addUser() {
         User entity = new User();
         return userRepository.save(entity);
     }
 
+    @Transactional
+    @DeleteMapping("/home/removeuser/{userId}")
+    public Object removeUser(@PathVariable @NonNull Long userId) {
+        User entity = userRepository.findById(userId).orElseThrow(IllegalArgumentException::new);
+        List<User> users = userRepository.findAll();
+        for (User user : users) {
+            if (user.getFriends().contains(entity)) {
+                removeFriends(userId, user.getId());
+            }
+        }
+
+        entity.getPots().clear();
+        entity.getFriends().clear();
+        userRepository.deleteById(userId);
+        return "Deleted!";
+    }
+
     @GetMapping("/home/friends/{userId}")
-    public Object getAllFriends(@PathVariable Long userId) {
+    public Object getAllFriends(@PathVariable @NonNull Long userId) {
         User entity = userRepository.findById(userId)
                 .orElseThrow(IllegalArgumentException::new);
         return entity.getFriends();
     }
 
     @PostMapping("/home/addfriend/{userId}/{friendId}")
-    public String addFriends(@PathVariable Long userId, @PathVariable Long friendId) {
+    public String addFriends(@PathVariable @NonNull Long userId, @PathVariable @NonNull Long friendId) {
         User entity = userRepository.findById(userId).orElseThrow(IllegalArgumentException::new);
         User friend = userRepository.findById(friendId).orElseThrow(IllegalArgumentException::new);
         entity.getFriends().add(friend);
@@ -81,7 +101,7 @@ public class UserController {
     }
 
     @DeleteMapping("/home/removefriend/{userId}/{friendId}")
-    public String removeFriends(@PathVariable Long userId, @PathVariable Long friendId) {
+    public String removeFriends(@PathVariable @NonNull Long userId, @PathVariable @NonNull Long friendId) {
         User entity = userRepository.findById(userId).orElseThrow(IllegalArgumentException::new);
         User friend = userRepository.findById(friendId).orElseThrow(IllegalArgumentException::new);
         if (entity.getFriends().contains(friend)) {
