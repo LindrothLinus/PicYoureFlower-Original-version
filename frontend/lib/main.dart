@@ -51,6 +51,7 @@ class MyAppState extends State<MyApp> {
   ValueNotifier<PotState?> selectedPotNotifier= ValueNotifier<PotState?>(null);
   // Your branch: flowers now fetched from API instead of hardcoded
   List<Flower> _flowers = [RoseFlower(color: Colors.red, name: "r")];
+  List<Pot> pots = [];
 
   final buildModeActiveNotifier = ValueNotifier<bool>(false);
   final buildBarActiveNotifer = ValueNotifier<bool>(false);
@@ -60,18 +61,25 @@ class MyAppState extends State<MyApp> {
 
   @override
   void initState() {
-    List<Pot> pots = [Pot(item: itemSelected,buildBarActiveNotifer: buildBarActiveNotifer,selectedPotNotifier: selectedPotNotifier,)];
+    /*List<Pot> */pots = [Pot(item: itemSelected,buildBarActiveNotifer: buildBarActiveNotifer,selectedPotNotifier: selectedPotNotifier,)];
 
     super.initState();
 
     // Your branch: pass onSuccess so flowers load right after login
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      login_popup(context, onSuccess: _fetchFlowers);
+      login_popup(context, onSuccess: () async {
+        await _fetchFlowers();
+        await _fetchPots();
+        },
+      );
     });
 
     // Your branch: also refresh when build mode opens
     buildModeActiveNotifier.addListener(() {
-      if (buildModeActiveNotifier.value) _fetchFlowers();
+      if (buildModeActiveNotifier.value){
+        _fetchFlowers();
+        _fetchPots();
+      }
     });
 
     buildBar = BuildBar(
@@ -179,7 +187,8 @@ class MyAppState extends State<MyApp> {
           // Rebuild buildBar with fresh flowers
           buildBar = BuildBar(
             flowers: _flowers,
-            pots: [Pot(item: itemSelected,buildBarActiveNotifer: buildBarActiveNotifer,selectedPotNotifier: selectedPotNotifier,)],
+            pots: pots,
+            //pots: [Pot(item: itemSelected,buildBarActiveNotifer: buildBarActiveNotifer,selectedPotNotifier: selectedPotNotifier,)],
             visibilityNotifier: buildBarActiveNotifer,
             onFlowerSelected: (flower) {
               itemSelected.value = flower != itemSelected.value ? flower : null;
@@ -192,6 +201,53 @@ class MyAppState extends State<MyApp> {
       }
     } catch (e) {
       print('Error fetching flowers: $e');
+    }
+  }
+
+  Pot _buildPot(Map<String, dynamic> data){
+    //double check what field this is supposed to be
+    final String color = data['pots'] as String;
+    switch(color){
+      case 'BLUE':        return Pot(item: itemSelected, buildBarActiveNotifer: buildBarActiveNotifer, selectedPotNotifier: selectedPotNotifier);
+      case 'BROWN':       return Pot(item: itemSelected, buildBarActiveNotifer: buildBarActiveNotifer, selectedPotNotifier: selectedPotNotifier);
+      case 'GREEN':       return Pot(item: itemSelected, buildBarActiveNotifer: buildBarActiveNotifer, selectedPotNotifier: selectedPotNotifier);
+      case 'TURQUOISE':   return Pot(item: itemSelected, buildBarActiveNotifer: buildBarActiveNotifer, selectedPotNotifier: selectedPotNotifier);
+      case 'PINK':        return Pot(item: itemSelected, buildBarActiveNotifer: buildBarActiveNotifer, selectedPotNotifier: selectedPotNotifier);
+      case 'PURPLE':      return Pot(item: itemSelected, buildBarActiveNotifer: buildBarActiveNotifer, selectedPotNotifier: selectedPotNotifier);
+      case 'YELLOW':      return Pot(item: itemSelected, buildBarActiveNotifer: buildBarActiveNotifer, selectedPotNotifier: selectedPotNotifier);
+      default:            return Pot(item: itemSelected, buildBarActiveNotifer: buildBarActiveNotifer, selectedPotNotifier: selectedPotNotifier);
+    }
+  }
+
+  Future<void> _fetchPots() async {
+    if(loggedInUserId == null) return;
+    try{
+      final response = await http.get(
+        Uri.parse('$_baseUrl/home/userpots/$loggedInUserId'),
+        headers: {
+          if (authToken != null) 'Authorization': 'Bearer $authToken',
+        }
+      );
+      if(response.statusCode == 200 && mounted){
+        final List<dynamic> data = jsonDecode(response.body);
+        setState(() {
+          pots = data.cast<Map<String, dynamic>>().map(_buildPot).toList();
+          //rebuild buildBar with fresh pots
+          buildBar = BuildBar(
+            flowers: _flowers,
+            pots: pots,
+            visibilityNotifier: buildBarActiveNotifer,
+            onFlowerSelected: (flower) {
+              itemSelected.value = flower != itemSelected.value ? flower : null;
+            },
+            onPotSelected: (pot) {
+              itemSelected.value = itemSelected.value != pot ? pot : null;
+            },
+          );
+        });
+      }
+    } catch(e){
+      print('Error fetching pots: $e');
     }
   }
 

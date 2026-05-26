@@ -11,9 +11,8 @@ class CoinsState {
   final ValueNotifier<int> coinValue = ValueNotifier<int>(0);
 
   Future<void> updateCoinValue(int coins) async {
-    /*
     try{
-      final uri = Uri.parse('$_baseUrl/home/coins/$loggedInUserId/$coins');
+      final uri = Uri.parse('$_baseUrl/home/setcoins/$loggedInUserId/$coins');
       final response = await http.put(uri);
 
       print(response.statusCode);
@@ -21,7 +20,7 @@ class CoinsState {
       
     } catch(e){
       print("Error: $e");
-    }*/
+    }
   }
 
   void increaseCoinValue(int addedValue) {
@@ -33,7 +32,6 @@ class CoinsState {
   }
 
   void setCoinValue(int coin){
-    updateCoinValue(coin);
     coinValue.value = coin;
   }
 

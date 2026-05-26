@@ -163,6 +163,7 @@ class _Shop extends State<Shop> {
                             if (coinsState.getCoinValue() >= item.cost) {
                               int newValue = coinsState.getCoinValue() - item.cost as int;
                               coinsState.setCoinValue(newValue);
+                              coinsState.updateCoinValue(newValue);
                               CheckButtonPopUp.showCheckButton(context);
                             }
                           },

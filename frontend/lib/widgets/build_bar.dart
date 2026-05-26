@@ -24,8 +24,8 @@ class BuildBar extends StatefulWidget {
 class BuildBarState extends State<BuildBar> {
   @override
   Widget build(BuildContext context) {
-    const String flowerText = "  Youre Flowers:";
-    const String potText = "  Youre Pots:";
+    const String flowerText = "  Your Flowers:";
+    const String potText = "  Your Pots:";
     return ValueListenableBuilder<bool>(
       valueListenable: widget.visibilityNotifier, 
       builder: (context,isVisible,child){
