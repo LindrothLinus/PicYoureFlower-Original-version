@@ -7,8 +7,10 @@ import 'package:flutter_demo/items/buyable_item_creator.dart';
 import 'package:flutter_demo/states/check_button_overlay.dart';
 import 'package:flutter_demo/states/coins_state.dart';
 import 'package:flutter_demo/widgets/back_btn.dart';
+import 'package:flutter_demo/widgets/camera_button.dart';
 import 'package:flutter_demo/widgets/coins.dart';
 import 'package:flutter_demo/widgets/nav_bar.dart';
+import 'package:flutter_demo/widgets/pots/blue_pot.dart';
 import 'package:http/http.dart' as http;
 
 import '../resources/constants.dart';
@@ -66,14 +68,14 @@ class _Shop extends State<Shop> {
           buyableItems.clear();
           for(dynamic potColor in data){
             switch(potColor){
-              case 'BLUE':        buyableItems.add(BuyableItemCreator(cost: 5, image: bluePotPath)); break;
-              case 'BROWN':       buyableItems.add(BuyableItemCreator(cost: 5, image: brownPotPath)); break;
-              case 'GREEN':       buyableItems.add(BuyableItemCreator(cost: 5, image: greenPotPath)); break;
-              case 'TURQUOISE':   buyableItems.add(BuyableItemCreator(cost: 5, image: mintPotPath)); break;
-              case 'PINK':        buyableItems.add(BuyableItemCreator(cost: 5, image: pinkPotPath)); break;
-              case 'PURPLE':      buyableItems.add(BuyableItemCreator(cost: 5, image: purplePotPath)); break;
-              case 'YELLOW':      buyableItems.add(BuyableItemCreator(cost: 5, image: yellowPotPath)); break;
-              default:            buyableItems.add(BuyableItemCreator(cost: 5, image: brownPotPath)); break;
+              case 'BLUE':        buyableItems.add(BuyableItemCreator(cost: 5, image: bluePotPath, color: "BLUE")); break;
+              case 'BROWN':       buyableItems.add(BuyableItemCreator(cost: 5, image: brownPotPath, color: "BROWN")); break;
+              case 'GREEN':       buyableItems.add(BuyableItemCreator(cost: 5, image: greenPotPath, color: "GREEN")); break;
+              case 'TURQUOISE':   buyableItems.add(BuyableItemCreator(cost: 5, image: mintPotPath, color: "TURQUOISE")); break;
+              case 'PINK':        buyableItems.add(BuyableItemCreator(cost: 5, image: pinkPotPath, color: "PINK")); break;
+              case 'PURPLE':      buyableItems.add(BuyableItemCreator(cost: 5, image: purplePotPath, color: "PURPLE")); break;
+              case 'YELLOW':      buyableItems.add(BuyableItemCreator(cost: 5, image: yellowPotPath, color: "YELLOW")); break;
+              default:            buyableItems.add(BuyableItemCreator(cost: 5, image: brownPotPath, color: "BROWN")); break;
             }
           }
         });
@@ -85,6 +87,17 @@ class _Shop extends State<Shop> {
     
   }
   //FETCH POTS CODE
+
+  Future<void> sendPot(String potColor) async{
+    try{
+      http.put(
+        Uri.parse('$_baseUrl/home/addpot/$loggedInUserId/$potColor')
+      );
+      
+    } catch(e){
+      print('Error with sending pots: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -164,6 +177,7 @@ class _Shop extends State<Shop> {
                               int newValue = coinsState.getCoinValue() - item.cost as int;
                               coinsState.setCoinValue(newValue);
                               coinsState.updateCoinValue(newValue);
+                              sendPot(item.color);
                               CheckButtonPopUp.showCheckButton(context);
                             }
                           },

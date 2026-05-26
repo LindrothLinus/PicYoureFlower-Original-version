@@ -204,9 +204,11 @@ class MyAppState extends State<MyApp> {
     }
   }
 
-  Pot _buildPot(Map<String, dynamic> data){
-    //double check what field this is supposed to be
+  Pot? _buildPot(Map<String, dynamic> data){
+    //double check what field these are supposed to be
     final String color = data['pots'] as String;
+    final bool placedPot = data['placed'] as bool;
+    if(placedPot) return null;
     switch(color){
       case 'BLUE':        return Pot(item: itemSelected, buildBarActiveNotifer: buildBarActiveNotifer, selectedPotNotifier: selectedPotNotifier);
       case 'BROWN':       return Pot(item: itemSelected, buildBarActiveNotifer: buildBarActiveNotifer, selectedPotNotifier: selectedPotNotifier);
@@ -231,7 +233,7 @@ class MyAppState extends State<MyApp> {
       if(response.statusCode == 200 && mounted){
         final List<dynamic> data = jsonDecode(response.body);
         setState(() {
-          pots = data.cast<Map<String, dynamic>>().map(_buildPot).toList();
+          pots = data.cast<Map<String, dynamic>>().map(_buildPot).whereType<Pot>().toList();
           //rebuild buildBar with fresh pots
           buildBar = BuildBar(
             flowers: _flowers,
