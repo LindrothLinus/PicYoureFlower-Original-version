@@ -4,6 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_demo/main.dart';
 import 'package:flutter_demo/widgets/add_button.dart';
 import 'package:flutter_demo/widgets/flowers/flower.dart';
+import 'package:flutter_demo/widgets/flowers/genericflower.dart';
+import 'package:flutter_demo/widgets/flowers/rose_flower.dart';
+import 'package:flutter_demo/widgets/flowers/sunflower.dart';
+import 'package:flutter_demo/widgets/flowers/tulip.dart';
+import 'package:flutter_demo/widgets/flowers/woodanemone.dart';
 import 'package:flutter_demo/widgets/pots/blue_pot.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -103,6 +108,39 @@ void main() {
     testWidgets("parseClolor: if unparebel string reurn pink", (WidgetTester tester) async {
       final MyAppState mas = await loadMain(tester);
       expect(mas.parseColor("Test"), Colors.pink);
+    });
+  });
+
+
+  group("buildFlower tests", (){
+    testWidgets("buildFlower returns correct flower", (WidgetTester tester) async {
+      final MyAppState mas = await loadMain(tester);
+      expect(mas.buildFlower({'template':'ROSE','color':'#FFFFFF','commonName':'Test Ros'}), isA<RoseFlower>());
+      expect(mas.buildFlower({'template':'SUNFLOWER','color':'#FFFFFF','commonName':'Test Ros'}), isA<SunFlower>());
+      expect(mas.buildFlower({'template':'TULIP','color':'#FFFFFF','commonName':'Test Ros'}), isA<TulipFlower>());
+      expect(mas.buildFlower({'template':'WOODANEMONE','color':'#FFFFFF','commonName':'Test Ros'}), isA<WoodanemoneFlower>());
+    });
+
+    testWidgets("buildFlower returns generic flower if unkown flower type", (WidgetTester tester) async {
+      final MyAppState mas = await loadMain(tester);
+      expect(mas.buildFlower({'template':'Intet existerand blomma','color':'#FFFFFF','commonName':'Test Ros'}), isA<GenericFlower>());
+    });
+
+    testWidgets("buildFlower Giwes correct name an color", (WidgetTester tester) async {
+      String name="testNamn";
+      final MyAppState mas = await loadMain(tester);
+      Flower flower = mas.buildFlower({'template':'ROSE','color':'#FFFFFF','commonName':name});
+      expect(flower.color, Color(0xFFFFFFFF));
+      expect(flower.name, name);
+
+    });
+
+    testWidgets("buildFlower: null values on name and type gives unkown and generic", (WidgetTester tester) async {
+      final MyAppState mas = await loadMain(tester);
+      Flower flower = mas.buildFlower({'template':null,'color':'#FFFFFF','commonName':null});
+      expect(flower.name, "Unknown");
+      expect(flower, isA<GenericFlower>());
+
     });
   });
 }

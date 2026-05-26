@@ -101,7 +101,8 @@ class MyAppState extends State<MyApp> {
   }
 
   // Your branch: map backend JSON to the correct Flower widget
-  Flower _buildFlower(Map<String, dynamic> data) {
+  @visibleForTesting
+  Flower buildFlower(Map<String, dynamic> data) {
     final String template = (data['template'] as String?) ?? 'GENERIC';
     final Color color = parseColor(data['color'] as String?);
     final String name = (data['commonName'] as String?) ?? 'Unknown';
@@ -132,7 +133,7 @@ class MyAppState extends State<MyApp> {
         setState(() {
           _flowers = data
               .cast<Map<String, dynamic>>()
-              .map(_buildFlower)
+              .map(buildFlower)
               .toList();
           // Rebuild buildBar with fresh flowers
           buildBar = BuildBar(
