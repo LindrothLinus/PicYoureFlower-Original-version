@@ -67,7 +67,7 @@ class MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
 
-    iniPotsAndFlowerList();
+    _iniPotsAndFlowerList();
     _addButtons = generateAddButtons(_addButtoncordinates);
 
     buildBar = BuildBar(
@@ -90,7 +90,8 @@ class MyAppState extends State<MyApp> {
   }
 
   // Your branch: parse hex color string from backend
-  Color _parseColor(String? hex) {
+  @visibleForTesting
+  Color parseColor(String? hex) {
     if (hex == null || hex.isEmpty) return Colors.pink;
     try {
       return Color(int.parse('FF${hex.replaceAll('#', '')}', radix: 16));
@@ -102,7 +103,7 @@ class MyAppState extends State<MyApp> {
   // Your branch: map backend JSON to the correct Flower widget
   Flower _buildFlower(Map<String, dynamic> data) {
     final String template = (data['template'] as String?) ?? 'GENERIC';
-    final Color color = _parseColor(data['color'] as String?);
+    final Color color = parseColor(data['color'] as String?);
     final String name = (data['commonName'] as String?) ?? 'Unknown';
     switch (template) {
       case 'ROSE':
@@ -222,7 +223,7 @@ class MyAppState extends State<MyApp> {
     return data;
   }
 
-  void iniPotsAndFlowerList() {
+  void _iniPotsAndFlowerList() {
     _pots = [
       Pot(
         item: itemSelected,
@@ -240,6 +241,7 @@ class MyAppState extends State<MyApp> {
     });
   }
 
+  @visibleForTesting
   List<AddButton> generateAddButtons(final List<({double x, double y})> cordinates) {
     List<AddButton> buttons = List.generate(cordinates.length, (i) {
       final key = GlobalKey<AddButtonState>();

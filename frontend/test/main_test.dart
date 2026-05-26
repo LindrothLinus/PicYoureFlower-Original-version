@@ -82,4 +82,27 @@ void main() {
       },
     );
   });
+
+
+  group("parseClolor tests", (){
+    testWidgets("parseClolor: Hex color work with #", (WidgetTester tester) async {
+      final MyAppState mas = await loadMain(tester);
+      expect(mas.parseColor("#02f091"), Color(0xff02f091));
+
+    });
+    testWidgets("parseClolor: Hex color work without #", (WidgetTester tester) async {
+      final MyAppState mas = await loadMain(tester);
+      expect(mas.parseColor("02f091"), Color(0xff02f091));
+    });
+
+    testWidgets("parseClolor: if hex null returns pink", (WidgetTester tester) async {
+      final MyAppState mas = await loadMain(tester);
+      expect(mas.parseColor(null), Colors.pink);
+    });
+
+    testWidgets("parseClolor: if unparebel string reurn pink", (WidgetTester tester) async {
+      final MyAppState mas = await loadMain(tester);
+      expect(mas.parseColor("Test"), Colors.pink);
+    });
+  });
 }
