@@ -62,7 +62,28 @@ void main() {
       ]);
       expect(addButtons.elementAt(0).key != addButtons.elementAt(1).key, true);
     });
+
+  
   });
+
+
+  group("loadPotsOnAddButtonWithIndex tests", (){
+    testWidgets("loadPotsOnAddButtonWithIndex: empty list do not chrash", (WidgetTester tester) async {
+      MyAppState mas = await loadMain(tester);
+      mas.loadPotsOnAddButtonWithIndex([]);
+    });
+
+    testWidgets("loadPotsOnAddButtonWithIndex: Invalid index", (WidgetTester tester) async {
+      MyAppState mas = await loadMain(tester);
+      mas.loadPotsOnAddButtonWithIndex([1000000000]);
+    });
+
+  });
+
+
+
+
+
 
   group("extractPots tests", () {
     testWidgets("extractPots rettruns empty list if no pots placed", (

@@ -39,7 +39,8 @@ class MyApp extends StatefulWidget {
 class MyAppState extends State<MyApp> {
   late List<AddButton> _addButtons = [];
   late List<Pot> _pots = [];
-  final Map<int, GlobalKey<AddButtonState>> _buttonKeys = {};
+  @visibleForTesting
+  final Map<int, GlobalKey<AddButtonState>> addButtonKeys = {};
   final ValueNotifier<PotState?> _selectedPotNotifier = ValueNotifier<PotState?>(null);
   // Your branch: flowers now fetched from API instead of hardcoded
   List<Flower> _flowers = [RoseFlower(color: Colors.red, name: "r")];
@@ -194,7 +195,7 @@ class MyAppState extends State<MyApp> {
 
  void loadPotsOnAddButtonWithIndex(List<int> indexs){
   for (int i in indexs) {
-    _buttonKeys[i]?.currentState?.setPot(
+    addButtonKeys[i]?.currentState?.setPot(
       Pot(
         item: itemSelected,
         buildBarActiveNotifer: buildBarActiveNotifer,
@@ -208,8 +209,8 @@ class MyAppState extends State<MyApp> {
 
   List<({int index, Pot pot, Flower? flower})> extractPots() {
     List<({int index, Pot pot, Flower? flower})> data = [];
-    for (int i = 0; i < _buttonKeys.length; i++) {
-      Widget? potWidget = _buttonKeys[i]?.currentState?.getPot();
+    for (int i = 0; i < addButtonKeys.length; i++) {
+      Widget? potWidget = addButtonKeys[i]?.currentState?.getPot();
       if (potWidget is Pot) {
         Pot pot = potWidget;
 
@@ -246,7 +247,7 @@ class MyAppState extends State<MyApp> {
   List<AddButton> generateAddButtons(final List<({double x, double y})> cordinates) {
     List<AddButton> buttons = List.generate(cordinates.length, (i) {
       final key = GlobalKey<AddButtonState>();
-      _buttonKeys[i] = key;
+      addButtonKeys[i] = key;
       return AddButton(
         key: key,
         builModeActiveNotifier: buildModeActiveNotifier,
@@ -256,6 +257,7 @@ class MyAppState extends State<MyApp> {
         item: itemSelected,
       );
     });
+    
     return buttons;
   }
 }
