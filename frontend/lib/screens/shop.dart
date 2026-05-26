@@ -3,14 +3,15 @@ import 'dart:ffi';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_demo/screens/flower_collection.dart';
+import 'package:flutter_demo/items/buyable_item_creator.dart';
 import 'package:flutter_demo/states/check_button_overlay.dart';
+import 'package:flutter_demo/states/coins_state.dart';
 import 'package:flutter_demo/widgets/back_btn.dart';
 import 'package:flutter_demo/widgets/coins.dart';
-import '../resources/constants.dart';
-import 'package:flutter_demo/items/buyable_item_creator.dart';
-import 'package:flutter_demo/states/coins_state.dart';
 import 'package:flutter_demo/widgets/nav_bar.dart';
 import 'package:http/http.dart' as http;
+
+import '../resources/constants.dart';
 
 const String _baseUrl = 'https://group-1-75.pvt.dsv.su.se';
 

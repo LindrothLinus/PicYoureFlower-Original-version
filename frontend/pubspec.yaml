@@ -17,8 +17,9 @@ dependencies:
   path_provider: ^2.1.5
   path: ^1.9.1
   overlay_pop_up: ^1.0.6+6
-  # Added for Google Sign-In
   google_sign_in: ^6.2.1
+  geolocator: ^13.0.0
+  geocoding: ^3.0.0
 
 dev_dependencies:
   flutter_test:
@@ -64,6 +65,12 @@ flutter:
     - lib/resources/images/testblomma.jpg
     - lib/resources/images/Location_v2.png
     - lib/resources/images/BluePot_smaller.png
+    - lib/resources/images/Avatar_Blue.png
+    - lib/resources/images/Avatar_Green.png
+    - lib/resources/images/Avatar_Pink.png
+    - lib/resources/images/Avatar_Purple.png
+    - lib/resources/images/Avatar_Red.png
+    - lib/resources/images/Avatar_Yellow.png
 
 
 

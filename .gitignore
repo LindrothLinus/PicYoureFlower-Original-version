@@ -32,3 +32,4 @@ frontend/android/app/release/
 !android/debug.keystore
 ios/
 .dart_tool/
+**/target/

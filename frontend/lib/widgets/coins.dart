@@ -4,6 +4,7 @@ import 'dart:ffi';
 import 'package:flutter/material.dart';
 import 'package:flutter_demo/states/coins_state.dart';
 import 'package:flutter_demo/widgets/camera_button.dart';
+
 import '../resources/constants.dart';
 
 import 'package:http/http.dart' as http;

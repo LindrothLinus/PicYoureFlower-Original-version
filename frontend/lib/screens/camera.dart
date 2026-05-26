@@ -1,8 +1,8 @@
-import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_demo/resources/constants.dart';
 import 'package:flutter_demo/widgets/back_btn.dart';
 import 'package:flutter_demo/widgets/camera_button.dart';
+
 import '../widgets/camera_feed.dart';
 
 class Camera extends StatefulWidget {

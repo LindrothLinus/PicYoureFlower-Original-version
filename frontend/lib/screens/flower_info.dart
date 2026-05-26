@@ -84,6 +84,7 @@ class _FlowerInfoScreenState extends State<FlowerInfoScreen> {
 
     final dateStr = _formatDate(widget.data?['picTaken']);
     final latinName = (widget.data?['latinName'] as String?) ?? '—';
+    final locationStr = (widget.data?['location'] as String?) ?? '—';
 
     return Scaffold(
       backgroundColor: lightBlueBg,
@@ -150,7 +151,7 @@ class _FlowerInfoScreenState extends State<FlowerInfoScreen> {
                               children: [
                                 _buildInfoRow(dateStr, calendarIcon, infoPurple, blackBorder, standardRadius),
                                 _buildInfoRow(latinName, identityIcon, infoPurple, blackBorder, standardRadius),
-                                _buildInfoRow('—', locationIcon, infoPurple, blackBorder, standardRadius),
+                                _buildInfoRow(locationStr, locationIcon, infoPurple, blackBorder, standardRadius),
                               ],
                             ),
                           ),
