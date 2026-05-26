@@ -181,6 +181,7 @@ class MyAppState extends State<MyApp> {
       bottomNavigationBar: NavBar(
         onBuildModeButtonPressed: () {
           buildModeActiveNotifier.value = !buildModeActiveNotifier.value;
+          print(extractPots());
         },
       ),
     );
@@ -203,7 +204,7 @@ class MyAppState extends State<MyApp> {
 
 
 
-  void extractPots() {
+  List<({int index, Pot pot, Flower? flower})> extractPots() {
     List<({int index, Pot pot, Flower? flower})> data = [];
     for (int i = 0; i < _buttonKeys.length; i++) {
       Widget? potWidget = _buttonKeys[i]?.currentState?.getPot();
@@ -218,6 +219,7 @@ class MyAppState extends State<MyApp> {
         }
       }
     }
+    return data;
   }
 
   void iniPotsAndFlowerList() {
