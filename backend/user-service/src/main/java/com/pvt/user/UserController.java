@@ -86,10 +86,12 @@ public class UserController {
     }
 
     @GetMapping("/home/friends/{userId}")
-    public Object getAllFriends(@PathVariable @NonNull Long userId) {
+    public List<FriendDTO> getAllFriends(@PathVariable @NonNull Long userId) {
         User entity = userRepository.findById(userId)
                 .orElseThrow(IllegalArgumentException::new);
-        return entity.getFriends();
+        return entity.getFriends().stream().map(friend -> new FriendDTO(
+                friend.getId(),
+                friend.getName())).toList();
     }
 
     @PostMapping("/home/addfriend/{userId}/{friendId}")
