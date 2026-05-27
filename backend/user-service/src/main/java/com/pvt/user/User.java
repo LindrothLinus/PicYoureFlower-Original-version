@@ -38,9 +38,9 @@ public class User {
         this.likes = likes;
     }
 
-    @ElementCollection(targetClass = PotTemplate.class)
+    @ElementCollection(targetClass = PotEntity.class)
     @Enumerated(EnumType.STRING)
-    private List<PotTemplate> pots = new ArrayList<>();
+    private List<PotEntity> pots = new ArrayList<>();
 
     @ManyToMany
     @JoinTable(name = "user_friends", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "friend_id"))
@@ -54,11 +54,11 @@ public class User {
         this.friends = friends;
     }
 
-    public List<PotTemplate> getPots() {
+    public List<PotEntity> getPots() {
         return this.pots;
     }
 
-    public void setPots(List<PotTemplate> pots) {
+    public void setPots(List<PotEntity> pots) {
         this.pots = pots;
     }
 

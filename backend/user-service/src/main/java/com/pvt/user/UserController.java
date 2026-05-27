@@ -142,14 +142,14 @@ public class UserController {
     }
 
     @GetMapping("/home/userpots/{userId}")
-    public Iterable<PotTemplate> getUserPots(@PathVariable Long userId) {
+    public Iterable<PotEntity> getUserPots(@PathVariable Long userId) {
         User entity = userRepository.findById(userId)
                 .orElseThrow(IllegalArgumentException::new);
         return entity.getPots();
     }
 
     @PutMapping("/home/addpot/{userId}/{pot}")
-    public Object addPots(@PathVariable Long userId, @PathVariable PotTemplate pot) {
+    public Object addPots(@PathVariable Long userId, @PathVariable PotEntity pot) {
         User entity = userRepository.findById(userId)
                 .orElseThrow(IllegalArgumentException::new);
         entity.getPots().add(pot);
