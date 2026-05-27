@@ -24,13 +24,13 @@ class ViewFriendScreen extends StatelessWidget {
             bottom: 70,
             right: 30,
             child: LikeButton(
-              userId: 123,
+              friendId: friendId,
               
             ), //hämta user från databasen!
           ),
 
          Greenhouse(addButtons: addButtons),
-         LikeButton(userId: friendId)
+         LikeButton(friendId: friendId)
         ],
       ),
     );

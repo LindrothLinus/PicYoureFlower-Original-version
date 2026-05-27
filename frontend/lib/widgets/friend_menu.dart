@@ -65,10 +65,10 @@ class FriendMenuState extends State<FriendMenu> {
 
   final TextEditingController friendController = TextEditingController();
 
-  late List<Friend> friends = [];
+  late List<Friend> friends = [Friend("Linus", 6)];
 
   @override
-  void initState(){
+  void initState() {
     super.initState();
     _getFriends();
   }
@@ -76,7 +76,7 @@ class FriendMenuState extends State<FriendMenu> {
   Future<void> _getFriends() async {
     try {
       String? id = widget.userId;
-      final response = await http.get(Uri.parse('$_baseUrl/home/friends/1'));
+      final response = await http.get(Uri.parse('$_baseUrl/home/friends/$id'));
       if (!mounted) return;
       if (response.statusCode == 200) {
         final List<dynamic> raw = jsonDecode(response.body);
@@ -85,8 +85,8 @@ class FriendMenuState extends State<FriendMenu> {
         friends = maps.map((e) => Friend.fromJson(e)).toList();
       }
     } catch (e) {
-      
       friends = [Friend("Somthing whernt wrong", 10000)];
+      print(e);
     }
   }
 
@@ -167,16 +167,6 @@ class FriendMenuState extends State<FriendMenu> {
             isExpanded = false;
             panelHeigth = smallHeigth;
             openPanel(backgroundColor);
-
-            /*Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => ViewFriendScreen(
-                  friendId: 1,
-                  addButtons: widget.addButtons,
-                ),
-              ),
-            );*/
           },
           child: Text('Friends', style: menuText),
         ),
@@ -409,65 +399,78 @@ class FriendMenuState extends State<FriendMenu> {
     );
   }
 
-  Card createCard(Friend friend) {
+  Widget createCard(Friend friend) {
     bool isSelected = selectedFriend == friend;
 
-    return Card(
-      elevation: 1,
-      color: Colors.white,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-        side: BorderSide(
-          color: isSelected ? Color(0xFFFFA6A6) : Colors.black,
-          width: isSelected ? 3 : 1,
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ViewFriendScreen(
+                  friendId: friend.id,
+                  addButtons: widget.addButtons,
+                ),
+              ),
+            );
+      },
+      child: Card(
+        elevation: 1,
+        color: Colors.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+          side: BorderSide(
+            color: isSelected ? Color(0xFFFFA6A6) : Colors.black,
+            width: isSelected ? 3 : 1,
+          ),
         ),
-      ),
-      child: Stack(
-        children: [
-          Center(
-            child: Padding(
-              padding: const EdgeInsets.only(top: 5, bottom: 35),
-              child: SizedBox(
-                height: 90,
-                child: Image.asset(
-                  friend.avatar,
+        child: Stack(
+          children: [
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.only(top: 5, bottom: 35),
+                child: SizedBox(
                   height: 90,
-                  width: 90,
-                  fit: BoxFit.contain,
-                ),
-              ),
-            ),
-          ),
-
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Container(
-              width: double.infinity,
-              height: 30,
-              padding: const EdgeInsets.all(1),
-              decoration: BoxDecoration(
-                color: purpleColor,
-                borderRadius: const BorderRadius.only(
-                  bottomLeft: Radius.circular(12),
-                  bottomRight: Radius.circular(12),
-                ),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Expanded(
-                    child: Text(
-                      friend.name, //friends name
-                      style: infoText,
-                      overflow: TextOverflow.ellipsis,
-                      textAlign: TextAlign.center,
-                    ),
+                  child: Image.asset(
+                    friend.avatar,
+                    height: 90,
+                    width: 90,
+                    fit: BoxFit.contain,
                   ),
-                ],
+                ),
               ),
             ),
-          ),
-        ],
+
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Container(
+                width: double.infinity,
+                height: 30,
+                padding: const EdgeInsets.all(1),
+                decoration: BoxDecoration(
+                  color: purpleColor,
+                  borderRadius: const BorderRadius.only(
+                    bottomLeft: Radius.circular(12),
+                    bottomRight: Radius.circular(12),
+                  ),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        friend.name, //friends name
+                        style: infoText,
+                        overflow: TextOverflow.ellipsis,
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
