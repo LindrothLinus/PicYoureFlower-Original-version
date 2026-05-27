@@ -1,10 +1,18 @@
+import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_demo/screens/view_friend.dart';
+import 'package:flutter_demo/widgets/add_button.dart';
 import 'package:flutter_demo/widgets/login_popup.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../resources/constants.dart';
+
+import 'package:http/http.dart' as http;
+
+const String _baseUrl = 'http://10.0.2.2:8080';
+
 
 final List<String> avatarImages = [
   "lib/resources/images/Avatar_Blue.png",
@@ -25,12 +33,28 @@ final TextStyle menuText = GoogleFonts.nunito(
 
 class Friend {
   String name;
+  int id;
   String avatar;
-  Friend(this.name)
+
+
+  Friend(this.name,this.id)
     : avatar = avatarImages[random.nextInt(avatarImages.length)];
+
+
+    factory Friend.fromJson(Map<String, dynamic> json) {
+    return Friend(
+      json['name'],
+      json['id'],
+    );
+  }
 }
 
 class FriendMenu extends StatefulWidget {
+  const FriendMenu({super.key, required this.addButtons,required this.userId});
+  final List<AddButton> addButtons;
+  final String? userId;
+
+
   @override
   FriendMenuState createState() => FriendMenuState();
 }
@@ -48,14 +72,32 @@ class FriendMenuState extends State<FriendMenu> {
 
   final TextEditingController friendController = TextEditingController();
 
-  var friends = [
-    //NOTICE ME BACKEND!!!!
-    //add friends from the database here by the method below
-    //Friend("name from database")
-    Friend("Tom"),
-    Friend("Lin"),
-    Friend("Hamlet"),
-  ];
+  late List<Friend> friends  = [];
+   
+  @override
+  void initState() async {
+    super.initState();
+
+     try {
+      String? id = widget.userId;
+      final response = await http.get(
+        Uri.parse('$_baseUrl/home/friends/$id'),
+      );
+      if (!mounted) return;
+      if (response.statusCode == 200) {
+        final List<dynamic> raw = jsonDecode(response.body);
+        final maps = raw.cast<Map<String, dynamic>>();
+        
+        friends = maps.map((e) => Friend.fromJson(e)).toList();
+
+
+      }
+    } catch (e) {
+      friends = [Friend("Somthing whernt wrong", 10000)];
+    }
+
+  }
+
 
   @override
   void dispose() {
@@ -134,6 +176,10 @@ class FriendMenuState extends State<FriendMenu> {
             isExpanded = false;
             panelHeigth = smallHeigth;
             openPanel(backgroundColor);
+
+            Navigator.push(context, MaterialPageRoute(builder: 
+            (context) => ViewFriendScreen(friendId: 1, addButtons: widget.addButtons)));
+
           },
           child: Text('Friends', style: menuText),
         ),
@@ -282,7 +328,7 @@ class FriendMenuState extends State<FriendMenu> {
             //Send contents of textfield to backend to identity if the user exists and
             //add it to current users friend list if exists
 
-            addFriends(Friend(friendController.text));
+            addFriends(Friend(friendController.text,4));
             friendController.text = "";
             showCheck();
           },
