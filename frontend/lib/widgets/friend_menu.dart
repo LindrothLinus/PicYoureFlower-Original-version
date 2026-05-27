@@ -69,10 +69,12 @@ class FriendMenuState extends State<FriendMenu> {
   late List<Friend> friends = [];
   String _amountOfLikes = "";
   String _userName = "";
+  String _amountOfFlowers = "";
   @override
   void initState() {
     super.initState();
     _getUserName();
+    _getAmountOfFlowers();
     _getFriends();
     _getLikes();
   }
@@ -117,7 +119,7 @@ class FriendMenuState extends State<FriendMenu> {
   Future<void> _getUserName() async{
     try {
       String? id = widget.userId;
-      final response = await http.get(Uri.parse("$_baseUrl/users/1"));
+      final response = await http.get(Uri.parse("$_baseUrl/users/$id"));
 
      if (!mounted) return;
       if (response.statusCode == 200) {
@@ -128,13 +130,35 @@ class FriendMenuState extends State<FriendMenu> {
         });
     
       } else {
-        _userName = "Guesst";
+        _userName = "Guest";
       }
     } catch (e) {
       _userName = "Server error";
     }
   }
 
+
+Future<void> _getAmountOfFlowers() async {
+  String? id = widget.userId;
+  try {
+    final response = await http.get(
+      Uri.parse('$_baseUrl/home/user/$id/flowers'),
+      headers: {if (authToken != null) 'Authorization': 'Bearer $authToken'},
+    );
+    if (response.statusCode == 200 && mounted) {
+      final List<dynamic> data = jsonDecode(response.body);
+      setState(() {
+        _amountOfFlowers = data.length.toString();
+      });
+    }
+    else{
+      _amountOfFlowers="login to collect";
+    }
+
+  } catch (e) {
+      _amountOfFlowers="Server error";
+  }
+}
   @override
   void dispose() {
     friendController.dispose();
@@ -685,7 +709,7 @@ class FriendMenuState extends State<FriendMenu> {
                                             Colors.white,
                                             double.infinity,
                                             40,
-                                            '123',
+                                            _amountOfFlowers,
                                           ),
                                         ),
                                       ],
