@@ -92,34 +92,31 @@ class FriendMenuState extends State<FriendMenu> {
   }
 
   Future<void> _getLikes() async {
-
     print("Kör nu=================================");
-  try {
-    String? id = "1";
-    print("1");
-    
+    try {
+      String? id = "1";
+      print("1");
 
-    final response = await http.get(
-      Uri.parse('$_baseUrl/home/likes/1'),
-    );
-    print("2");
+      final response = await http.get(Uri.parse('$_baseUrl/home/likes/1'));
+      print("2");
 
-    if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
-    print("3");
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
 
-      setState(() {
-        amountOfLikes = data['likes'].toString();
-      });
+        setState(() {
+          // Om servern returnerar bara en siffra: 2
+          amountOfLikes = data.toString();
 
-      print("klar=================");
-    } else {
-      print("Error: ${response.statusCode}");
+          // Om servern returnerar {"likes": 2}
+          // amountOfLikes = data['likes'].toString();
+        });
+      } else {
+        print("Error: ${response.statusCode}");
+      }
+    } catch (e) {
+      print("server error: $e");
     }
-  } catch (e) {
-    print("server error: $e");
   }
-}
 
   @override
   void dispose() {
