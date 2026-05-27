@@ -599,6 +599,36 @@ class FriendMenuState extends State<FriendMenu> {
     });
   }
 
+void showDeleteUserDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          title: const Text("Delete Account?"),
+          content: const Text("Are you sure you want to permanently delete your account?"),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Stäng pop-upen
+              },
+              child: const Text("Cancel", style: TextStyle(color: Colors.black)),
+            ),
+            TextButton(
+              onPressed: () {
+                print("Användare raderad (fusk-logg tills backend är kopplat)");
+                Navigator.of(context).pop();
+              },
+              child: const Text("Delete", style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold)),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+
+
   @override
   Widget build(BuildContext context) {
     largeHeigth = (MediaQuery.of(context).size.height) * 0.4;
@@ -800,6 +830,28 @@ class FriendMenuState extends State<FriendMenu> {
                             //profileBoxText(purpleColor, double.infinity, 50, 'Manage Friends'),
                           ),
                         ),
+
+Padding(
+                          padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
+                          child: SizedBox(
+                            width: double.infinity,
+                            height: 50,
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                side: const BorderSide(color: Colors.black, width: 1),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                backgroundColor: const Color(0xFFFFA6A6), // Ljusröd/rosa varningsfärg
+                              ),
+                              onPressed: () {
+                                showDeleteUserDialog(context); // Öppnar pop-upen du skapade i Del 1
+                              },
+                              child: Text('Delete Account', style: menuText),
+                            ),
+                          ),
+                        ),
+
                       ],
                     ),
                   ],
