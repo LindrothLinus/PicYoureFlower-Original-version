@@ -154,6 +154,7 @@ public class UserController {
                 .orElseThrow(IllegalArgumentException::new);
         PotEntity potEntity = new PotEntity();
         potEntity.setTemplate(template);
+        potEntity.setUser(entity);
         potRepository.save(potEntity);
         entity.getPots().add(potEntity);
         return userRepository.save(entity);
