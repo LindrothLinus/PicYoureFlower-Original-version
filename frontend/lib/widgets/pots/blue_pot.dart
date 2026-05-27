@@ -7,11 +7,15 @@ class Pot extends StatefulWidget {
     required this.item,
     required this.buildBarActiveNotifer,
     required this.selectedPotNotifier,
+    this.onFlowerPlanted,
+    this.initialPlantedItem,
   }) : super(key: key ?? UniqueKey());
 
   final ValueNotifier<Widget?> item;
   final ValueNotifier<bool> buildBarActiveNotifer;
   final ValueNotifier<PotState?> selectedPotNotifier;
+  final Function(Flower flower)? onFlowerPlanted;
+  final Flower? initialPlantedItem;
 
   Widget? plantedItem;
   @override
@@ -30,12 +34,14 @@ class PotState extends State<Pot> {
   void _onItemChanged() {
     if (widget.item.value != null && widget.item.value is Flower && isSelected) {
       if (mounted) {
+        final flower = widget.item.value as Flower;
         setState(() {
-          plantedItem = widget.item.value;
+          plantedItem = flower;
           widget.item.value = null;
           widget.buildBarActiveNotifer.value = false;
           widget.selectedPotNotifier.value = null;
         });
+        widget.onFlowerPlanted?.call(flower);
       }
     }
   }
@@ -43,6 +49,9 @@ class PotState extends State<Pot> {
   @override
   void initState() {
     super.initState();
+    if (widget.initialPlantedItem != null) {
+      plantedItem = widget.initialPlantedItem;
+    }
     widget.item.addListener(_onItemChanged);
   }
 

@@ -61,6 +61,13 @@ public class FlowerController {
         entityRepository.delete(entity);
     }
 
+    @DeleteMapping("/deleteflowersfromuser/{userId}")
+    public Object deleteAllFlowersFromUser(@PathVariable Long userId) {
+        entityRepository.deleteByUserId(userId);
+        return "deleted!";
+
+    }
+
     @GetMapping("/user/{userId}/flowers")
     public Iterable<DatabaseEntity> getFlowersByUser(@PathVariable Long userId) {
         return entityRepository.findByUserId(userId);
@@ -109,14 +116,17 @@ public class FlowerController {
             for (JsonNode r : results) {
                 JsonNode species = r.path("species");
                 String sci = species.path("scientificNameWithoutAuthor").asText(null);
-                if (sci != null) scientificNames.add(sci);
-                for (JsonNode cn : species.path("commonNames")) commonNames.add(cn.asText());
+                if (sci != null)
+                    scientificNames.add(sci);
+                for (JsonNode cn : species.path("commonNames"))
+                    commonNames.add(cn.asText());
             }
             List<String> topSci = scientificNames.subList(0, Math.min(3, scientificNames.size()));
             List<String> topCom = commonNames.subList(0, Math.min(3, commonNames.size()));
 
             String color = findColor(topSci, topCom);
-            if (color == null) color = getColor(image);
+            if (color == null)
+                color = getColor(image);
 
             ObjectNode response = (ObjectNode) rootNode;
             response.put("color", color);
@@ -161,14 +171,16 @@ public class FlowerController {
                     int red = (pixel >> 16) & 0xff;
                     int green = (pixel >> 8) & 0xff;
                     int blue = pixel & 0xff;
-                    if (green > red && green > blue) continue;
+                    if (green > red && green > blue)
+                        continue;
                     r += red;
                     g += green;
                     b += blue;
                     count++;
                 }
             }
-            if (count == 0) return "#cccccc";
+            if (count == 0)
+                return "#cccccc";
             return boostColor(r / count, g / count, b / count);
         } catch (Exception e) {
             return "#cccccc";
@@ -184,7 +196,8 @@ public class FlowerController {
     }
 
     private String findColor(List<String> scientificNames, List<String> commonNames) {
-        if (scientificNames.isEmpty()) return null;
+        if (scientificNames.isEmpty())
+            return null;
 
         StringBuilder unions = new StringBuilder();
         for (String name : scientificNames) {
@@ -228,7 +241,11 @@ public class FlowerController {
                 return null;
             } catch (Exception e) {
                 System.out.println("SPARQL attempt " + (i + 1) + " failed: " + e.getMessage());
-                if (i < 2) try { Thread.sleep(1000); } catch (InterruptedException ignored) {}
+                if (i < 2)
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException ignored) {
+                    }
             }
         }
         return null;
@@ -238,12 +255,15 @@ public class FlowerController {
     public @ResponseBody Object getWikiInfo(@PathVariable String commonName,
             @RequestParam(required = false) String latinName) {
         String result = fetchWikiExtract(commonName);
-        if (result != null) return result;
+        if (result != null)
+            return result;
         if (latinName != null && !latinName.isBlank()) {
             result = fetchWikiExtract(latinName);
-            if (result != null) return result;
+            if (result != null)
+                return result;
             result = fetchWikiExtract(latinName.split(" ")[0]);
-            if (result != null) return result;
+            if (result != null)
+                return result;
         }
         return "Could not find information";
     }
@@ -258,10 +278,12 @@ public class FlowerController {
                     HttpMethod.GET,
                     new HttpEntity<>(h),
                     String.class);
-            if (resp.getBody() == null) return null;
+            if (resp.getBody() == null)
+                return null;
             JsonNode json = mapper.readTree(resp.getBody());
             String extract = json.path("extract").asText(null);
-            if (extract != null && !extract.isBlank()) return extract;
+            if (extract != null && !extract.isBlank())
+                return extract;
             return null;
         } catch (Exception e) {
             System.out.println("Wiki fetch failed for \"" + name + "\": " + e.getMessage());

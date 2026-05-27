@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_demo/resources/constants.dart';
+import 'package:flutter_demo/widgets/flowers/flower.dart';
 import 'package:flutter_demo/widgets/pots/blue_pot.dart';
 
 class AddButton extends StatefulWidget {
@@ -10,13 +11,19 @@ class AddButton extends StatefulWidget {
     required this.y,
     required this.item,
     required this.buildBarActiveNotifer,
+    required this.index,
+    this.onPotPlaced,
+    this.onFlowerPlanted,
   });
   final String imagePath = "lib/resources/images/Add.webp";
   final double x;
   final double y;
+  final int index;
   final ValueNotifier<bool> builModeActiveNotifier;
   final ValueNotifier<bool> buildBarActiveNotifer;
   final ValueNotifier<Widget?> item;
+  final Function(int index)? onPotPlaced;
+  final Function(int index, Flower flower)? onFlowerPlanted;
   bool checking=false;
 
   
@@ -35,13 +42,23 @@ class AddButtonState extends State<AddButton> {
     widget.item.addListener(
       (){
           if (widget.item.value != null && widget.checking && widget.item.value is Pot) {
+                      final originalPot = widget.item.value as Pot;
+                      final newPot = Pot(
+                        item: originalPot.item,
+                        buildBarActiveNotifer: originalPot.buildBarActiveNotifer,
+                        selectedPotNotifier: originalPot.selectedPotNotifier,
+                        onFlowerPlanted: widget.onFlowerPlanted != null
+                            ? (flower) => widget.onFlowerPlanted!(widget.index, flower)
+                            : null,
+                      );
                       setState(() {
                         isTaken = true;
-                        lockedItem = widget.item.value;
+                        lockedItem = newPot;
                         widget.item.value = null;
                         widget.buildBarActiveNotifer.value = false;
                         widget.checking = false; 
                       });
+                      widget.onPotPlaced?.call(widget.index);
             }
       }
     );
@@ -92,8 +109,6 @@ class AddButtonState extends State<AddButton> {
     );
   }
 
-
-
   void setPot(Widget? item){
     if (item != null && !isTaken&&item is Pot) {
                       setState(() {
@@ -101,6 +116,29 @@ class AddButtonState extends State<AddButton> {
                         lockedItem = item;
                       });
                     }
+  }
+
+  void loadPot({
+    required ValueNotifier<Widget?> item,
+    required ValueNotifier<bool> buildBarActiveNotifer,
+    required ValueNotifier<PotState?> selectedPotNotifier,
+    Flower? initialFlower,
+  }) {
+    if (!isTaken) {
+      final newPot = Pot(
+        item: item,
+        buildBarActiveNotifer: buildBarActiveNotifer,
+        selectedPotNotifier: selectedPotNotifier,
+        onFlowerPlanted: widget.onFlowerPlanted != null
+            ? (flower) => widget.onFlowerPlanted!(widget.index, flower)
+            : null,
+        initialPlantedItem: initialFlower,
+      );
+      setState(() {
+        isTaken = true;
+        lockedItem = newPot;
+      });
+    }
   }
 
   Widget? getPot(){

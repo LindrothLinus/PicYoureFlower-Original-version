@@ -15,7 +15,7 @@ import 'package:http/http.dart' as http;
 
 import '../resources/constants.dart';
 
-const String _baseUrl = 'https://group-1-75.pvt.dsv.su.se';
+const String _baseUrl = 'http://10.0.2.2:8080';
 
 class FlowerCollection extends StatefulWidget {
   const FlowerCollection({super.key});
