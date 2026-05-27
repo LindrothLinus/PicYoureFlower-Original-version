@@ -5,7 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_demo/widgets/camera_button.dart';
 
-const String _baseUrl = 'https://group-1-75.pvt.dsv.su.se';
+//const String _baseUrl = 'https://group-1-75.pvt.dsv.su.se';
+const String _baseUrl = 'http://10.0.2.2:8080';
 
 class CoinsState {
   final ValueNotifier<int> coinValue = ValueNotifier<int>(0);

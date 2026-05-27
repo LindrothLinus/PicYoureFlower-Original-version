@@ -19,6 +19,9 @@ import 'package:path_provider/path_provider.dart';
 import '../resources/constants.dart';
 import '../screens/flower_info.dart';
 
+//const String _baseUrl = 'https://group-1-75.pvt.dsv.su.se';
+const String _baseUrl = 'http://10.0.2.2:8080';
+
 String? authToken;
 String? loggedInUserId;
 
@@ -181,6 +184,14 @@ class CameraButtonBar extends StatelessWidget {
             final flower = data != null
                 ? _buildFlower(data)
                 : GenericFlower(color: Colors.pink, name: 'Unknown');
+
+            try{
+              final response = await http.get(Uri.parse('$_baseUrl/home/addcoins/$loggedInUserId/5'));
+              print(response.statusCode);
+              print(response.body);
+            }catch(e){
+              print('Add coins Error: e');
+            }
 
             Navigator.push(
               context,

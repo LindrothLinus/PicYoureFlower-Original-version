@@ -7,10 +7,12 @@ class Pot extends StatefulWidget {
     required this.item,
     required this.buildBarActiveNotifer,
     required this.selectedPotNotifier,
+    this.id,
     this.onFlowerPlanted,
     this.initialPlantedItem,
   }) : super(key: key ?? UniqueKey());
 
+  final int? id;
   final ValueNotifier<Widget?> item;
   final ValueNotifier<bool> buildBarActiveNotifer;
   final ValueNotifier<PotState?> selectedPotNotifier;
