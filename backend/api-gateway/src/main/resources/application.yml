@@ -60,6 +60,12 @@ spring:
           uri: http://localhost:8083
           predicates:
             - Path=/home/user/*/flowers
+          
+        - id: flower-deleteflowersfromuser
+          uri: http://localhost:8083
+          predicates:
+            - Path=/deleteflowersfromuser/**
+            - Method=DELETE
 
         # ── User Service (port 8082) ──────────────────────────────────────────
         - id: user-all
@@ -126,6 +132,12 @@ spring:
           uri: http://localhost:8082
           predicates:
             - Path=/home/greenhouse/**
+            
+        - id: user-removeuser
+          uri: http://localhost:8082
+          predicates:
+            - Path=/home/removeuser/**
+            - Method=DELETE
 
         # Internal user REST API used by auth-service
         - id: users-internal
