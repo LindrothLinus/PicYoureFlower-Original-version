@@ -66,11 +66,12 @@ class FriendMenuState extends State<FriendMenu> {
   final TextEditingController friendController = TextEditingController();
 
   late List<Friend> friends = [Friend("Linus", 6)];
-
+  String amountOfLikes="";
   @override
   void initState() {
     super.initState();
     _getFriends();
+    _getLikes();
   }
 
   Future<void> _getFriends() async {
@@ -91,7 +92,7 @@ class FriendMenuState extends State<FriendMenu> {
   }
 
 
-  Future<String> _getLikes() async{
+  Future<void> _getLikes() async{
     String answer="";
     try {
       String? id = widget.userId;
@@ -101,10 +102,13 @@ class FriendMenuState extends State<FriendMenu> {
     }
     catch (e) {
       print("server error: $e");
+      print(e);
     }
 
-
-    return answer;
+    setState(() {
+          amountOfLikes = answer;
+    });
+  
   }
 
   @override
@@ -615,7 +619,7 @@ class FriendMenuState extends State<FriendMenu> {
                                             Colors.white,
                                             double.infinity,
                                             40,
-                                            _getLikes().toString(),
+                                            amountOfLikes,
                                           ),
                                         ),
                                       ],
