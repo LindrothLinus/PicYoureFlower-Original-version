@@ -66,7 +66,7 @@ class FriendMenuState extends State<FriendMenu> {
   final TextEditingController friendController = TextEditingController();
 
   late List<Friend> friends = [Friend("Linus", 6)];
-  String amountOfLikes="";
+  String amountOfLikes = "";
   @override
   void initState() {
     super.initState();
@@ -91,25 +91,35 @@ class FriendMenuState extends State<FriendMenu> {
     }
   }
 
+  Future<void> _getLikes() async {
 
-  Future<void> _getLikes() async{
-    String answer="";
-    try {
-      String? id = widget.userId;
-      final response = await http.get(Uri.parse('$_baseUrl/home/likes/1'));
-      print(response.toString());
-      answer = response.toString();
-    }
-    catch (e) {
-      print("server error: $e");
-      print(e);
-    }
+    print("Kör nu=================================");
+  try {
+    String? id = "1";
+    print("1");
+    
 
-    setState(() {
-          amountOfLikes = answer;
-    });
-  
+    final response = await http.get(
+      Uri.parse('$_baseUrl/home/likes/1'),
+    );
+    print("2");
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+    print("3");
+
+      setState(() {
+        amountOfLikes = data['likes'].toString();
+      });
+
+      print("klar=================");
+    } else {
+      print("Error: ${response.statusCode}");
+    }
+  } catch (e) {
+    print("server error: $e");
   }
+}
 
   @override
   void dispose() {
@@ -426,14 +436,14 @@ class FriendMenuState extends State<FriendMenu> {
     return GestureDetector(
       onTap: () {
         Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => ViewFriendScreen(
-                  friendId: friend.id,
-                  addButtons: widget.addButtons,
-                ),
-              ),
-            );
+          context,
+          MaterialPageRoute(
+            builder: (context) => ViewFriendScreen(
+              friendId: friend.id,
+              addButtons: widget.addButtons,
+            ),
+          ),
+        );
       },
       child: Card(
         elevation: 1,
