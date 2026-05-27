@@ -20,7 +20,7 @@ import 'package:http/http.dart' as http;
 
 import '../resources/constants.dart';
 
-const String _baseUrl = 'https://group-1-75.pvt.dsv.su.se';
+const String _baseUrl = 'http://10.0.2.2:8080';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -34,7 +34,6 @@ void main() async {
 }
 
 class MyApp extends StatefulWidget {
-  
   const MyApp({super.key});
   final String title = "PicYourFlower";
 
@@ -43,12 +42,10 @@ class MyApp extends StatefulWidget {
 }
 
 class MyAppState extends State<MyApp> {
-  late List<AddButton> addButtons=[];
+  late List<AddButton> addButtons = [];
   final Map<int, GlobalKey<AddButtonState>> buttonKeys = {};
 
-
-
-  ValueNotifier<PotState?> selectedPotNotifier= ValueNotifier<PotState?>(null);
+  ValueNotifier<PotState?> selectedPotNotifier = ValueNotifier<PotState?>(null);
   // Your branch: flowers now fetched from API instead of hardcoded
   List<Flower> _flowers = [RoseFlower(color: Colors.red, name: "r")];
 
@@ -58,9 +55,14 @@ class MyAppState extends State<MyApp> {
 
   final itemSelected = ValueNotifier<Widget?>(null);
 
+  final Map<int, String> _slotPotTemplates = {};
+  final Map<int, int?> _slotFlowerIds = {};
+  final Set<int> _placedFlowerIds = {};
+  bool _greenhouseLoaded = false;
+
   @override
   void initState() {
-    List<Pot> pots = [Pot(item: itemSelected,buildBarActiveNotifer: buildBarActiveNotifer,selectedPotNotifier: selectedPotNotifier,)];
+    List<Pot> pots = [Pot(item: itemSelected, buildBarActiveNotifer: buildBarActiveNotifer, selectedPotNotifier: selectedPotNotifier)];
 
     super.initState();
 
@@ -96,46 +98,59 @@ class MyAppState extends State<MyApp> {
       },
     );
 
-
-
-
-
-
     final List<({double x, double y})> addButtoncordinates = [
-    (x: 3000, y: 1400),
-    (x: 2500, y: 1400),
-    (x: 3000, y: 2150),
-    (x: 2500, y: 2150),
-    (x: 3000, y: 2850,),
-    (x: 2500, y: 2850,),
-    (x: 2000, y: 2850,),
-    (x: 3500 ,y: 2850,),
-    (x: 4000, y: 2850,),
-    (x: 1500, y: 2850,)
+      (x: 3000, y: 1400),
+      (x: 2500, y: 1400),
+      (x: 3000, y: 2150),
+      (x: 2500, y: 2150),
+      (x: 3000, y: 2850),
+      (x: 2500, y: 2850),
+      (x: 2000, y: 2850),
+      (x: 3500, y: 2850),
+      (x: 4000, y: 2850),
+      (x: 1500, y: 2850),
+    ];
 
-  ];
-
-  addButtons = List.generate(addButtoncordinates.length, (i) {
-    final key = GlobalKey<AddButtonState>();
-    buttonKeys[i] = key;
-    return AddButton(
-      buildBarActiveNotifer: buildBarActiveNotifer,
-      key: key,
-      x: addButtoncordinates[i].x,
-      y: addButtoncordinates[i].y,
-      builModeActiveNotifier: buildModeActiveNotifier,
-      item: itemSelected,
-    );
-  });
-
+    addButtons = List.generate(addButtoncordinates.length, (i) {
+      final key = GlobalKey<AddButtonState>();
+      buttonKeys[i] = key;
+      return AddButton(
+        buildBarActiveNotifer: buildBarActiveNotifer,
+        key: key,
+        x: addButtoncordinates[i].x,
+        y: addButtoncordinates[i].y,
+        builModeActiveNotifier: buildModeActiveNotifier,
+        item: itemSelected,
+        index: i,
+        onPotPlaced: (idx) {
+          _slotPotTemplates[idx] = 'BLUE';
+          _slotFlowerIds[idx] = null;
+          _saveGreenhouse();
+        },
+        onFlowerPlanted: (idx, flower) {
+          if (!mounted) return;
+          final int? oldFlowerId = _slotFlowerIds[idx];
+          if (oldFlowerId != null) {
+            _placedFlowerIds.remove(oldFlowerId);
+          }
+          if (flower.id != null) {
+            _placedFlowerIds.add(flower.id!);
+          }
+          _slotFlowerIds[idx] = flower.id;
+          _saveGreenhouse();
+          setState(() {
+            _rebuildBuildBar();
+          });
+        },
+      );
+    });
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       List<int> potOnAddButton = [];
       for (int i in potOnAddButton) {
-        buttonKeys[i]?.currentState?.setPot(Pot(item: itemSelected,buildBarActiveNotifer: buildBarActiveNotifer,selectedPotNotifier: selectedPotNotifier,));
+        buttonKeys[i]?.currentState?.setPot(Pot(item: itemSelected, buildBarActiveNotifer: buildBarActiveNotifer, selectedPotNotifier: selectedPotNotifier));
       }
     });
-
   }
 
   // Your branch: parse hex color string from backend
@@ -153,13 +168,40 @@ class MyAppState extends State<MyApp> {
     final String template = (data['template'] as String?) ?? 'GENERIC';
     final Color color = _parseColor(data['color'] as String?);
     final String name = (data['commonName'] as String?) ?? 'Unknown';
+    final int? id = (data['id'] as num?)?.toInt();
     switch (template) {
-      case 'ROSE':        return RoseFlower(color: color, name: name);
-      case 'SUNFLOWER':   return SunFlower(color: color, name: name);
-      case 'TULIP':       return TulipFlower(color: color, name: name);
-      case 'WOODANEMONE': return WoodanemoneFlower(color: color, name: name);
-      default:            return GenericFlower(color: color, name: name);
+      case 'ROSE':        return RoseFlower(color: color, name: name, id: id);
+      case 'SUNFLOWER':   return SunFlower(color: color, name: name, id: id);
+      case 'TULIP':       return TulipFlower(color: color, name: name, id: id);
+      case 'WOODANEMONE': return WoodanemoneFlower(color: color, name: name, id: id);
+      default:            return GenericFlower(color: color, name: name, id: id);
     }
+  }
+
+  void _rebuildBuildBar() {
+    buildBar = BuildBar(
+      flowers: _flowers
+          .where((f) => f.id == null || !_placedFlowerIds.contains(f.id))
+          .toList(),
+      pots: [Pot(item: itemSelected, buildBarActiveNotifer: buildBarActiveNotifer, selectedPotNotifier: selectedPotNotifier)],
+      visibilityNotifier: buildBarActiveNotifer,
+      onFlowerSelected: (flower) {
+        if (flower != itemSelected.value) {
+          itemSelected.value = flower;
+        } else {
+          itemSelected.value = null;
+        }
+        print(itemSelected.value);
+      },
+      onPotSelected: (pot) {
+        if (itemSelected.value != pot) {
+          itemSelected.value = pot;
+        } else {
+          itemSelected.value = null;
+        }
+        print(itemSelected.value);
+      },
+    );
   }
 
   // Your branch: fetch the logged-in user's flowers from the backend
@@ -176,22 +218,79 @@ class MyAppState extends State<MyApp> {
         final List<dynamic> data = jsonDecode(response.body);
         setState(() {
           _flowers = data.cast<Map<String, dynamic>>().map(_buildFlower).toList();
-          // Rebuild buildBar with fresh flowers
-          buildBar = BuildBar(
-            flowers: _flowers,
-            pots: [Pot(item: itemSelected,buildBarActiveNotifer: buildBarActiveNotifer,selectedPotNotifier: selectedPotNotifier,)],
-            visibilityNotifier: buildBarActiveNotifer,
-            onFlowerSelected: (flower) {
-              itemSelected.value = flower != itemSelected.value ? flower : null;
-            },
-            onPotSelected: (pot) {
-              itemSelected.value = itemSelected.value != pot ? pot : null;
-            },
-          );
+          _rebuildBuildBar();
         });
+        await _loadGreenhouse();
       }
     } catch (e) {
       print('Error fetching flowers: $e');
+    }
+  }
+
+  Future<void> _loadGreenhouse() async {
+    if (_greenhouseLoaded || loggedInUserId == null || !mounted) return;
+    try {
+      final response = await http.get(
+        Uri.parse('$_baseUrl/home/greenhouse/$loggedInUserId'),
+        headers: {
+          if (authToken != null) 'Authorization': 'Bearer $authToken',
+        },
+      );
+      if (response.statusCode == 200 && mounted) {
+        final List<dynamic> data = jsonDecode(response.body);
+        for (final item in data) {
+          final int placementId = (item['placementId'] as num).toInt();
+          final int? flowerId = (item['flowerId'] as num?)?.toInt();
+          Flower? flower;
+          if (flowerId != null) {
+            final matches = _flowers.where((f) => f.id == flowerId);
+            flower = matches.isNotEmpty ? matches.first : null;
+            if (flower != null) {
+              _placedFlowerIds.add(flowerId);
+              _slotFlowerIds[placementId] = flowerId;
+            }
+          }
+          _slotPotTemplates[placementId] = (item['template'] as String?) ?? 'BLUE';
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            buttonKeys[placementId]?.currentState?.loadPot(
+              item: itemSelected,
+              buildBarActiveNotifer: buildBarActiveNotifer,
+              selectedPotNotifier: selectedPotNotifier,
+              initialFlower: flower,
+            );
+          });
+        }
+        _greenhouseLoaded = true;
+        setState(() {
+          _rebuildBuildBar();
+        });
+      }
+    } catch (e) {
+      print('Error loading greenhouse: $e');
+    }
+  }
+
+  Future<void> _saveGreenhouse() async {
+    if (loggedInUserId == null) return;
+    final List<Map<String, dynamic>> placements = [];
+    for (final entry in _slotPotTemplates.entries) {
+      placements.add({
+        'placementId': entry.key,
+        'potTemplate': entry.value,
+        'flowerId': _slotFlowerIds[entry.key],
+      });
+    }
+    try {
+      await http.post(
+        Uri.parse('$_baseUrl/home/greenhouse/$loggedInUserId'),
+        headers: {
+          'Content-Type': 'application/json',
+          if (authToken != null) 'Authorization': 'Bearer $authToken',
+        },
+        body: jsonEncode(placements),
+      );
+    } catch (e) {
+      print('Error saving greenhouse: $e');
     }
   }
 
@@ -199,9 +298,6 @@ class MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     // Main branch build() preserved exactly
  
-
-
-
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
@@ -214,10 +310,8 @@ class MyAppState extends State<MyApp> {
             SafeArea(child: FriendMenu())
           ],
         ),
-
         bottomSheet: buildBar,
       ),
-
       bottomNavigationBar: NavBar(
         onBuildModeButtonPressed: () {
           buildModeActiveNotifier.value = !buildModeActiveNotifier.value;
@@ -227,8 +321,6 @@ class MyAppState extends State<MyApp> {
 
     //test du kan ta bort denna komentar
   }
-
-
 
   void extractPots(){
     List<({int index, Pot pot, Flower? flower})> data =[];
@@ -247,10 +339,7 @@ class MyAppState extends State<MyApp> {
           data.add((index: i, pot: pot, flower:null));
         }
       }
-
     }
   }
-
-
 }
 //test

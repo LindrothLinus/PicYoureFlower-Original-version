@@ -122,6 +122,11 @@ spring:
           predicates:
             - Path=/home/removefriend/**
 
+        - id: user-greenhouse
+          uri: http://localhost:8082
+          predicates:
+            - Path=/home/greenhouse/**
+
         # Internal user REST API used by auth-service
         - id: users-internal
           uri: http://localhost:8082

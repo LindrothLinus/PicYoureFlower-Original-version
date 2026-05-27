@@ -18,7 +18,19 @@ public class PotEntity {
 
     private int placementId;
 
+    private Long flowerId;
+
     @ManyToOne
     private User user;
 
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+    public PotTemplate getTemplate() { return template; }
+    public void setTemplate(PotTemplate template) { this.template = template; }
+    public int getPlacementId() { return placementId; }
+    public void setPlacementId(int placementId) { this.placementId = placementId; }
+    public Long getFlowerId() { return flowerId; }
+    public void setFlowerId(Long flowerId) { this.flowerId = flowerId; }
+    public User getUser() { return user; }
+    public void setUser(User user) { this.user = user; }
 }

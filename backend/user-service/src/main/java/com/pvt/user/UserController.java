@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,9 +19,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
 
     private final UserRepository userRepository;
+    private final PotRepository potRepository;
 
-    public UserController(UserRepository userRepository) {
+    public UserController(UserRepository userRepository, PotRepository potRepository) {
         this.userRepository = userRepository;
+        this.potRepository = potRepository;
     }
 
     @GetMapping("/users/by-google/{googleId}")
@@ -134,5 +137,31 @@ public class UserController {
     @GetMapping("/home/allpots")
     public List<PotTemplate> getAllPots() {
         return List.of(PotTemplate.values());
+    }
+
+    @GetMapping("/home/greenhouse/{userId}")
+    public List<PotEntity> getGreenhouse(@PathVariable Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(IllegalArgumentException::new);
+        return potRepository.findByUser(user);
+    }
+
+    @PostMapping("/home/greenhouse/{userId}")
+    @Transactional
+    public ResponseEntity<?> saveGreenhouse(@PathVariable Long userId,
+            @RequestBody List<Map<String, Object>> placements) {
+        User user = userRepository.findById(userId).orElseThrow(IllegalArgumentException::new);
+        potRepository.deleteByUser(user);
+        for (Map<String, Object> p : placements) {
+            PotEntity pot = new PotEntity();
+            pot.setPlacementId(((Number) p.get("placementId")).intValue());
+            Object templateObj = p.getOrDefault("potTemplate", "BLUE");
+            pot.setTemplate(PotTemplate.valueOf(templateObj.toString()));
+            pot.setUser(user);
+            if (p.get("flowerId") != null) {
+                pot.setFlowerId(((Number) p.get("flowerId")).longValue());
+            }
+            potRepository.save(pot);
+        }
+        return ResponseEntity.ok().build();
     }
 }
