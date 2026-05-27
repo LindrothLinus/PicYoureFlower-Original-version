@@ -18,7 +18,7 @@ class _FlowerInfoScreenState extends State<FlowerInfoScreen> {
   static const String calendarIcon = "lib/resources/images/Calendar_v2.png";
   static const String identityIcon = "lib/resources/images/Identity.png";
   static const String locationIcon = "lib/resources/images/Location_v2.png";
-  static const String _baseUrl = 'http://10.0.2.2:8080';
+  static const String _baseUrl = 'https://group-1-75.pvt.dsv.su.se';
 
   String _wikiText = '';
   bool _loadingWiki = true;
