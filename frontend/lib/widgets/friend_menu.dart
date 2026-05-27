@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_demo/screens/view_friend.dart';
 import 'package:flutter_demo/widgets/add_button.dart';
+import 'package:flutter_demo/widgets/camera_button.dart';
 import 'package:flutter_demo/widgets/login_popup.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -65,7 +66,7 @@ class FriendMenuState extends State<FriendMenu> {
 
   final TextEditingController friendController = TextEditingController();
 
-  late List<Friend> friends = [Friend("Linus", 6)];
+  late List<Friend> friends = [];
   String amountOfLikes = "";
   @override
   void initState() {
@@ -92,29 +93,22 @@ class FriendMenuState extends State<FriendMenu> {
   }
 
   Future<void> _getLikes() async {
-    print("Kör nu=================================");
     try {
-      String? id = "1";
-      print("1");
+      String? id = loggedInUserId;
 
-      final response = await http.get(Uri.parse('$_baseUrl/home/likes/1'));
-      print("2");
+      final response = await http.get(Uri.parse('$_baseUrl/home/likes/id'));
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
 
         setState(() {
-          // Om servern returnerar bara en siffra: 2
           amountOfLikes = data.toString();
-
-          // Om servern returnerar {"likes": 2}
-          // amountOfLikes = data['likes'].toString();
         });
       } else {
-        print("Error: ${response.statusCode}");
+        amountOfLikes = "Loggin for likes";
       }
     } catch (e) {
-      print("server error: $e");
+      amountOfLikes = "Server error";
     }
   }
 
