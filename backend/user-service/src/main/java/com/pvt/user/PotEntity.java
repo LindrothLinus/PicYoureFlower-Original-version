@@ -20,17 +20,60 @@ public class PotEntity {
 
     private Long flowerId;
 
+    private boolean placed = false;
+
+    public boolean isPlaced() {
+        return this.placed;
+    }
+
+    public boolean getPlaced() {
+        return this.placed;
+    }
+
+    public void setPlaced(boolean placed) {
+        this.placed = placed;
+    }
+
     @ManyToOne
     private User user;
 
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
-    public PotTemplate getTemplate() { return template; }
-    public void setTemplate(PotTemplate template) { this.template = template; }
-    public int getPlacementId() { return placementId; }
-    public void setPlacementId(int placementId) { this.placementId = placementId; }
-    public Long getFlowerId() { return flowerId; }
-    public void setFlowerId(Long flowerId) { this.flowerId = flowerId; }
-    public User getUser() { return user; }
-    public void setUser(User user) { this.user = user; }
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public PotTemplate getTemplate() {
+        return template;
+    }
+
+    public void setTemplate(PotTemplate template) {
+        this.template = template;
+    }
+
+    public int getPlacementId() {
+        return placementId;
+    }
+
+    public void setPlacementId(int placementId) {
+        this.placementId = placementId;
+    }
+
+    public Long getFlowerId() {
+        return flowerId;
+    }
+
+    public void setFlowerId(Long flowerId) {
+        this.flowerId = flowerId;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 }

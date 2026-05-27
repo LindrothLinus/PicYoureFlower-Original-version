@@ -28,15 +28,22 @@ public class User {
     private String email;
     private String name;
     private int coins;
+    private int likes;
 
-    @ElementCollection(targetClass = PotTemplate.class)
+    public int getLikes() {
+        return this.likes;
+    }
+
+    public void setLikes(int likes) {
+        this.likes = likes;
+    }
+
+    @ElementCollection(targetClass = PotEntity.class)
     @Enumerated(EnumType.STRING)
-    private List<PotTemplate> pots = new ArrayList<>();
+    private List<PotEntity> pots = new ArrayList<>();
 
     @ManyToMany
-    @JoinTable(name = "user_friends",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "friend_id"))
+    @JoinTable(name = "user_friends", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "friend_id"))
     private Set<User> friends = new HashSet<>();
 
     public Set<User> getFriends() {
@@ -47,11 +54,11 @@ public class User {
         this.friends = friends;
     }
 
-    public List<PotTemplate> getPots() {
+    public List<PotEntity> getPots() {
         return this.pots;
     }
 
-    public void setPots(List<PotTemplate> pots) {
+    public void setPots(List<PotEntity> pots) {
         this.pots = pots;
     }
 

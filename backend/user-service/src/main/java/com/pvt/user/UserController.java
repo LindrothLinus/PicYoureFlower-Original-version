@@ -86,10 +86,12 @@ public class UserController {
     }
 
     @GetMapping("/home/friends/{userId}")
-    public Object getAllFriends(@PathVariable @NonNull Long userId) {
+    public List<FriendDTO> getAllFriends(@PathVariable @NonNull Long userId) {
         User entity = userRepository.findById(userId)
                 .orElseThrow(IllegalArgumentException::new);
-        return entity.getFriends();
+        return entity.getFriends().stream().map(friend -> new FriendDTO(
+                friend.getId(),
+                friend.getName())).toList();
     }
 
     @PostMapping("/home/addfriend/{userId}/{friendId}")
@@ -140,14 +142,14 @@ public class UserController {
     }
 
     @GetMapping("/home/userpots/{userId}")
-    public Iterable<PotTemplate> getUserPots(@PathVariable Long userId) {
+    public Iterable<PotEntity> getUserPots(@PathVariable Long userId) {
         User entity = userRepository.findById(userId)
                 .orElseThrow(IllegalArgumentException::new);
         return entity.getPots();
     }
 
     @PutMapping("/home/addpot/{userId}/{pot}")
-    public Object addPots(@PathVariable Long userId, @PathVariable PotTemplate pot) {
+    public Object addPots(@PathVariable Long userId, @PathVariable PotEntity pot) {
         User entity = userRepository.findById(userId)
                 .orElseThrow(IllegalArgumentException::new);
         entity.getPots().add(pot);
@@ -157,6 +159,17 @@ public class UserController {
     @GetMapping("/home/allpots")
     public List<PotTemplate> getAllPots() {
         return List.of(PotTemplate.values());
+    }
+
+    @PutMapping("/home/setpotplaced/{potId}/{trueorfalse}")
+    public String setPotPlaced(@PathVariable long potId, @PathVariable int trueorfalse) {
+        PotEntity pot = potRepository.findById(potId)
+                .orElseThrow(IllegalArgumentException::new);
+        if (trueorfalse == 0)
+            pot.setPlaced(false);
+        if (trueorfalse == 1)
+            pot.setPlaced(true);
+        return "placed";
     }
 
     @GetMapping("/home/greenhouse/{userId}")
@@ -184,4 +197,20 @@ public class UserController {
         }
         return ResponseEntity.ok().build();
     }
+
+    @GetMapping("/home/likes/{userId}")
+    public int getLikes(@PathVariable Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(IllegalArgumentException::new);
+
+        return user.getLikes();
+    }
+
+    @PutMapping("/home/addlikes/{userId}/{amount}")
+    public String addLikes(@PathVariable @NonNull Long userId, @PathVariable int amount) {
+        User user = userRepository.findById(userId).orElseThrow(IllegalArgumentException::new);
+        user.setLikes(user.getLikes() + amount);
+        userRepository.save(user);
+        return "added like";
+    }
+
 }
