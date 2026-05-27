@@ -13,7 +13,6 @@ import 'package:http/http.dart' as http;
 
 const String _baseUrl = 'http://10.0.2.2:8080';
 
-
 final List<String> avatarImages = [
   "lib/resources/images/Avatar_Blue.png",
   "lib/resources/images/Avatar_Pink.png",
@@ -36,24 +35,18 @@ class Friend {
   int id;
   String avatar;
 
-
-  Friend(this.name,this.id)
+  Friend(this.name, this.id)
     : avatar = avatarImages[random.nextInt(avatarImages.length)];
 
-
-    factory Friend.fromJson(Map<String, dynamic> json) {
-    return Friend(
-      json['name'],
-      json['id'],
-    );
+  factory Friend.fromJson(Map<String, dynamic> json) {
+    return Friend(json['name'], json['id']);
   }
 }
 
 class FriendMenu extends StatefulWidget {
-  const FriendMenu({super.key, required this.addButtons,required this.userId});
+  const FriendMenu({super.key, required this.addButtons, required this.userId});
   final List<AddButton> addButtons;
   final String? userId;
-
 
   @override
   FriendMenuState createState() => FriendMenuState();
@@ -72,32 +65,30 @@ class FriendMenuState extends State<FriendMenu> {
 
   final TextEditingController friendController = TextEditingController();
 
-  late List<Friend> friends  = [];
-   
-  @override
-  void initState() async {
-    super.initState();
+  late List<Friend> friends = [];
 
-     try {
+  @override
+  void initState(){
+    super.initState();
+    _getFriends();
+  }
+
+  Future<void> _getFriends() async {
+    try {
       String? id = widget.userId;
-      final response = await http.get(
-        Uri.parse('$_baseUrl/home/friends/$id'),
-      );
+      final response = await http.get(Uri.parse('$_baseUrl/home/friends/1'));
       if (!mounted) return;
       if (response.statusCode == 200) {
         final List<dynamic> raw = jsonDecode(response.body);
         final maps = raw.cast<Map<String, dynamic>>();
-        
+
         friends = maps.map((e) => Friend.fromJson(e)).toList();
-
-
       }
     } catch (e) {
+      
       friends = [Friend("Somthing whernt wrong", 10000)];
     }
-
   }
-
 
   @override
   void dispose() {
@@ -177,9 +168,15 @@ class FriendMenuState extends State<FriendMenu> {
             panelHeigth = smallHeigth;
             openPanel(backgroundColor);
 
-            Navigator.push(context, MaterialPageRoute(builder: 
-            (context) => ViewFriendScreen(friendId: 1, addButtons: widget.addButtons)));
-
+            /*Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ViewFriendScreen(
+                  friendId: 1,
+                  addButtons: widget.addButtons,
+                ),
+              ),
+            );*/
           },
           child: Text('Friends', style: menuText),
         ),
@@ -328,7 +325,7 @@ class FriendMenuState extends State<FriendMenu> {
             //Send contents of textfield to backend to identity if the user exists and
             //add it to current users friend list if exists
 
-            addFriends(Friend(friendController.text,4));
+            addFriends(Friend(friendController.text, 4));
             friendController.text = "";
             showCheck();
           },
