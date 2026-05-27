@@ -75,6 +75,8 @@ class MyAppState extends State<MyApp> {
   final Map<int, String> _slotPotTemplates = {};
   final Map<int, int?> _slotFlowerIds = {};
   final Set<int> _placedFlowerIds = {};
+  final Map<int, int?> _slotPotIds = {};
+  final Set<int> _placedPotIds = {};
   bool _greenhouseLoaded = false;
 
   @override
@@ -138,7 +140,9 @@ class MyAppState extends State<MyApp> {
       flowers: flowerCollection
           .where((f) => f.id == null || !_placedFlowerIds.contains(f.id))
           .toList(),
-      pots: [Pot(item: itemSelected, buildBarActiveNotifer: buildBarActiveNotifer, selectedPotNotifier: _selectedPotNotifier)],
+      //pots: [Pot(item: itemSelected, buildBarActiveNotifer: buildBarActiveNotifer, selectedPotNotifier: _selectedPotNotifier)],
+      pots: _pots
+        .where((p) => p.id == null || !_placedPotIds.contains(p.id)).toList(),
       visibilityNotifier: buildBarActiveNotifer,
       onFlowerSelected: (flower) {
         itemSelected.value = itemSelected.value != flower ? flower : null;
@@ -176,18 +180,19 @@ class MyAppState extends State<MyApp> {
 
   Pot? _buildPot(Map<String, dynamic> data){
     //double check what field these are supposed to be
+    final int? id = (data['id'] as num)?.toInt();
     final String color = data['pots'] as String;
     final bool placedPot = data['placed'] as bool;
     if(placedPot) return null;
     switch(color){
-      case 'BLUE':        return Pot(item: itemSelected, buildBarActiveNotifer: buildBarActiveNotifer, selectedPotNotifier: _selectedPotNotifier);
-      case 'BROWN':       return Pot(item: itemSelected, buildBarActiveNotifer: buildBarActiveNotifer, selectedPotNotifier: _selectedPotNotifier);
-      case 'GREEN':       return Pot(item: itemSelected, buildBarActiveNotifer: buildBarActiveNotifer, selectedPotNotifier: _selectedPotNotifier);
-      case 'TURQUOISE':   return Pot(item: itemSelected, buildBarActiveNotifer: buildBarActiveNotifer, selectedPotNotifier: _selectedPotNotifier);
-      case 'PINK':        return Pot(item: itemSelected, buildBarActiveNotifer: buildBarActiveNotifer, selectedPotNotifier: _selectedPotNotifier);
-      case 'PURPLE':      return Pot(item: itemSelected, buildBarActiveNotifer: buildBarActiveNotifer, selectedPotNotifier: _selectedPotNotifier);
-      case 'YELLOW':      return Pot(item: itemSelected, buildBarActiveNotifer: buildBarActiveNotifer, selectedPotNotifier: _selectedPotNotifier);
-      default:            return Pot(item: itemSelected, buildBarActiveNotifer: buildBarActiveNotifer, selectedPotNotifier: _selectedPotNotifier);
+      case 'BLUE':        return Pot(item: itemSelected, buildBarActiveNotifer: buildBarActiveNotifer, selectedPotNotifier: _selectedPotNotifier, id: id);
+      case 'BROWN':       return Pot(item: itemSelected, buildBarActiveNotifer: buildBarActiveNotifer, selectedPotNotifier: _selectedPotNotifier, id: id);
+      case 'GREEN':       return Pot(item: itemSelected, buildBarActiveNotifer: buildBarActiveNotifer, selectedPotNotifier: _selectedPotNotifier, id: id);
+      case 'TURQUOISE':   return Pot(item: itemSelected, buildBarActiveNotifer: buildBarActiveNotifer, selectedPotNotifier: _selectedPotNotifier, id: id);
+      case 'PINK':        return Pot(item: itemSelected, buildBarActiveNotifer: buildBarActiveNotifer, selectedPotNotifier: _selectedPotNotifier, id: id);
+      case 'PURPLE':      return Pot(item: itemSelected, buildBarActiveNotifer: buildBarActiveNotifer, selectedPotNotifier: _selectedPotNotifier, id: id);
+      case 'YELLOW':      return Pot(item: itemSelected, buildBarActiveNotifer: buildBarActiveNotifer, selectedPotNotifier: _selectedPotNotifier, id: id);
+      default:            return Pot(item: itemSelected, buildBarActiveNotifer: buildBarActiveNotifer, selectedPotNotifier: _selectedPotNotifier, id: id);
     }
   }
 
@@ -203,19 +208,13 @@ class MyAppState extends State<MyApp> {
       if(response.statusCode == 200 && mounted){
         final List<dynamic> data = jsonDecode(response.body);
         setState(() {
-          _pots = data.cast<Map<String, dynamic>>().map(_buildPot).whereType<Pot>().toList();
-          //rebuild buildBar with fresh pots
-          buildBar = BuildBar(
-            flowers: flowerCollection,
-            pots: _pots,
-            visibilityNotifier: buildBarActiveNotifer,
-            onFlowerSelected: (flower) {
-              itemSelected.value = flower != itemSelected.value ? flower : null;
-            },
-            onPotSelected: (pot) {
-              itemSelected.value = itemSelected.value != pot ? pot : null;
-            },
-          );
+          _pots = data
+            .cast<Map<String, dynamic>>()
+            .map(_buildPot)
+            .whereType<Pot>()
+            .toList();
+
+          _rebuildBuildBar();
         });
       }
     } catch(e){
@@ -234,6 +233,11 @@ class MyAppState extends State<MyApp> {
         final List<dynamic> data = jsonDecode(response.body);
         for (final item in data) {
           final int placementId = (item['placementId'] as num).toInt();
+          final int? potId = (item['potId'] as num?)?.toInt();
+          if(potId != null){
+            _placedPotIds.add(potId);
+            _slotPotIds[placementId] = potId;
+          }
           final int? flowerId = (item['flowerId'] as num?)?.toInt();
           Flower? flower;
           if (flowerId != null) {
@@ -271,6 +275,7 @@ class MyAppState extends State<MyApp> {
       placements.add({
         'placementId': entry.key,
         'potTemplate': entry.value,
+        'potId': _slotPotIds[entry.key],
         'flowerId': _slotFlowerIds[entry.key],
       });
     }
@@ -357,11 +362,17 @@ class MyAppState extends State<MyApp> {
     ];
     // Your branch: pass onSuccess so flowers load right after login
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      login_popup(context, onSuccess: fetchFlowers);
+      login_popup(context, onSuccess: () async {
+        await fetchFlowers();
+        await _fetchPots();
+      });
     });
     // Your branch: also refresh when build mode opens
     buildModeActiveNotifier.addListener(() {
-      if (buildModeActiveNotifier.value) fetchFlowers();
+      if (buildModeActiveNotifier.value){
+        fetchFlowers();
+        _fetchPots();
+      } 
     });
   }
 
@@ -379,9 +390,19 @@ class MyAppState extends State<MyApp> {
         item: itemSelected,
         index: i,
         onPotPlaced: (idx) {
+          final pot = itemSelected.value;
+
+          if(pot is Pot && pot.id != null){
+            _placedPotIds.add(pot.id!);
+            _slotPotIds[idx] = pot.id;
+          }
           _slotPotTemplates[idx] = 'BLUE';
           _slotFlowerIds[idx] = null;
           _saveGreenhouse();
+
+          setState(() {
+            _rebuildBuildBar();
+          });
         },
         onFlowerPlanted: (idx, flower) {
           if (!mounted) return;
