@@ -161,6 +161,17 @@ public class UserController {
         return List.of(PotTemplate.values());
     }
 
+    @PutMapping("/home/setpotplaced/{potId}/{trueorfalse}")
+    public String setPotPlaced(@PathVariable long potId, @PathVariable int trueorfalse) {
+        PotEntity pot = potRepository.findById(potId)
+                .orElseThrow(IllegalArgumentException::new);
+        if (trueorfalse == 0)
+            pot.setPlaced(false);
+        if (trueorfalse == 1)
+            pot.setPlaced(true);
+        return "placed";
+    }
+
     @GetMapping("/home/greenhouse/{userId}")
     public List<PotEntity> getGreenhouse(@PathVariable Long userId) {
         User user = userRepository.findById(userId).orElseThrow(IllegalArgumentException::new);
@@ -194,7 +205,7 @@ public class UserController {
         return user.getLikes();
     }
 
-    @PostMapping("/home/addlikes/{userId}/{amount}")
+    @PutMapping("/home/addlikes/{userId}/{amount}")
     public String addLikes(@PathVariable @NonNull Long userId, @PathVariable int amount) {
         User user = userRepository.findById(userId).orElseThrow(IllegalArgumentException::new);
         user.setLikes(user.getLikes() + amount);
