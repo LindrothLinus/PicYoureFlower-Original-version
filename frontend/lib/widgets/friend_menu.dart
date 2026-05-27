@@ -67,10 +67,12 @@ class FriendMenuState extends State<FriendMenu> {
   final TextEditingController friendController = TextEditingController();
 
   late List<Friend> friends = [];
-  String amountOfLikes = "";
+  String _amountOfLikes = "";
+  String _userName = "";
   @override
   void initState() {
     super.initState();
+    _getUserName();
     _getFriends();
     _getLikes();
   }
@@ -94,21 +96,42 @@ class FriendMenuState extends State<FriendMenu> {
 
   Future<void> _getLikes() async {
     try {
-      String? id = loggedInUserId;
+      String? id = widget.userId;
 
-      final response = await http.get(Uri.parse('$_baseUrl/home/likes/id'));
+      final response = await http.get(Uri.parse('$_baseUrl/home/likes/$id'));
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
 
         setState(() {
-          amountOfLikes = data.toString();
+          _amountOfLikes = data.toString();
         });
       } else {
-        amountOfLikes = "Loggin for likes";
+        _amountOfLikes = "Loggin for likes";
       }
     } catch (e) {
-      amountOfLikes = "Server error";
+      _amountOfLikes = "Server error";
+    }
+  }
+
+  Future<void> _getUserName() async{
+    try {
+      String? id = widget.userId;
+      final response = await http.get(Uri.parse("$_baseUrl/users/1"));
+
+     if (!mounted) return;
+      if (response.statusCode == 200) {
+        final dynamic raw = jsonDecode(response.body);
+
+        setState(() {
+          _userName = raw['name'];        
+        });
+    
+      } else {
+        _userName = "Guesst";
+      }
+    } catch (e) {
+      _userName = "Server error";
     }
   }
 
@@ -620,7 +643,7 @@ class FriendMenuState extends State<FriendMenu> {
                                             Colors.white,
                                             double.infinity,
                                             40,
-                                            amountOfLikes,
+                                            _amountOfLikes,
                                           ),
                                         ),
                                       ],
@@ -641,7 +664,7 @@ class FriendMenuState extends State<FriendMenu> {
                                             Colors.white,
                                             double.infinity,
                                             40,
-                                            'FlowerManiac',
+                                            _userName,
                                           ),
                                         ),
                                       ],
