@@ -90,6 +90,23 @@ class FriendMenuState extends State<FriendMenu> {
     }
   }
 
+
+  Future<String> _getLikes() async{
+    String answer="";
+    try {
+      String? id = widget.userId;
+      final response = await http.get(Uri.parse('$_baseUrl/home/likes/1'));
+      print(response.toString());
+      answer = response.toString();
+    }
+    catch (e) {
+      print("server error: $e");
+    }
+
+
+    return answer;
+  }
+
   @override
   void dispose() {
     friendController.dispose();
@@ -590,7 +607,7 @@ class FriendMenuState extends State<FriendMenu> {
                                           purpleColor,
                                           40,
                                           40,
-                                          'lib/resources/images/Calendar_v2.png',
+                                          'lib/resources/images/Like.png',
                                         ),
                                         const SizedBox(width: 8),
                                         Expanded(
@@ -598,7 +615,7 @@ class FriendMenuState extends State<FriendMenu> {
                                             Colors.white,
                                             double.infinity,
                                             40,
-                                            '26-05-15',
+                                            _getLikes().toString(),
                                           ),
                                         ),
                                       ],
