@@ -28,15 +28,22 @@ public class User {
     private String email;
     private String name;
     private int coins;
+    private int likes;
+
+    public int getLikes() {
+        return this.likes;
+    }
+
+    public void setLikes(int likes) {
+        this.likes = likes;
+    }
 
     @ElementCollection(targetClass = PotTemplate.class)
     @Enumerated(EnumType.STRING)
     private List<PotTemplate> pots = new ArrayList<>();
 
     @ManyToMany
-    @JoinTable(name = "user_friends",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "friend_id"))
+    @JoinTable(name = "user_friends", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "friend_id"))
     private Set<User> friends = new HashSet<>();
 
     public Set<User> getFriends() {
