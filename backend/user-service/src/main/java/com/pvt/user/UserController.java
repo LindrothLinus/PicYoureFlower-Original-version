@@ -86,10 +86,12 @@ public class UserController {
     }
 
     @GetMapping("/home/friends/{userId}")
-    public Object getAllFriends(@PathVariable @NonNull Long userId) {
+    public List<FriendDTO> getAllFriends(@PathVariable @NonNull Long userId) {
         User entity = userRepository.findById(userId)
                 .orElseThrow(IllegalArgumentException::new);
-        return entity.getFriends();
+        return entity.getFriends().stream().map(friend -> new FriendDTO(
+                friend.getId(),
+                friend.getName())).toList();
     }
 
     @PostMapping("/home/addfriend/{userId}/{friendId}")
@@ -184,4 +186,20 @@ public class UserController {
         }
         return ResponseEntity.ok().build();
     }
+
+    @GetMapping("/home/likes/{userId}")
+    public int getLikes(@PathVariable Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(IllegalArgumentException::new);
+
+        return user.getLikes();
+    }
+
+    @PostMapping("/home/addlikes/{userId}/{amount}")
+    public String addLikes(@PathVariable @NonNull Long userId, @PathVariable int amount) {
+        User user = userRepository.findById(userId).orElseThrow(IllegalArgumentException::new);
+        user.setLikes(user.getLikes() + amount);
+        userRepository.save(user);
+        return "added like";
+    }
+
 }
