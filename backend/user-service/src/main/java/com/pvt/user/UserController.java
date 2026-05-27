@@ -148,17 +148,20 @@ public class UserController {
         return entity.getPots();
     }
 
-    @PutMapping("/home/addpot/{userId}/{pot}")
-    public Object addPots(@PathVariable Long userId, @PathVariable PotEntity pot) {
+    @PutMapping("/home/addpot/{userId}/{template}")
+    public Object addPots(@PathVariable Long userId, @PathVariable PotTemplate template) {
         User entity = userRepository.findById(userId)
                 .orElseThrow(IllegalArgumentException::new);
-        entity.getPots().add(pot);
+        PotEntity potEntity = new PotEntity();
+        potEntity.setTemplate(template);
+        potRepository.save(potEntity);
+        entity.getPots().add(potEntity);
         return userRepository.save(entity);
     }
 
     @GetMapping("/home/allpots")
-    public List<PotTemplate> getAllPots() {
-        return List.of(PotTemplate.values());
+    public List<PotEntity> getAllPots() {
+        return potRepository.findAll();
     }
 
     @PutMapping("/home/setpotplaced/{potId}/{trueorfalse}")
