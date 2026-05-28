@@ -1,5 +1,3 @@
-//import 'dart:ui_web';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_demo/resources/constants.dart';
 import 'package:flutter_demo/widgets/carousel.dart';
