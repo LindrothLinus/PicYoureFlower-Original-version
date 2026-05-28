@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_demo/widgets/flowers/flower.dart';
+import 'package:flutter_demo/widgets/flowers/rose_flower.dart';
+import 'package:flutter_demo/widgets/flowers/sunflower.dart';
 
 class Pot extends StatefulWidget {
   Pot({
@@ -90,7 +92,7 @@ class PotState extends State<Pot> {
           Image.asset(_potImagePath, fit: BoxFit.fill),
           Positioned(
             top: -60,
-            left: 0,
+            left: plantedItem is RoseFlower ? 0 : 15,
             right: 0,
             child: plantedItem ?? Container(),
           ),
