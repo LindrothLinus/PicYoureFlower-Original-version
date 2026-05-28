@@ -12,8 +12,6 @@ import '../resources/constants.dart';
 
 import 'package:http/http.dart' as http;
 
-const String _baseUrl = 'http://10.0.2.2:8080';
-
 final List<String> avatarImages = [
   "lib/resources/images/Avatar_Blue.png",
   "lib/resources/images/Avatar_Pink.png",
@@ -82,7 +80,7 @@ class FriendMenuState extends State<FriendMenu> {
   Future<void> _getFriends() async {
     try {
       String? id = widget.userId;
-      final response = await http.get(Uri.parse('$_baseUrl/home/friends/$id'));
+      final response = await http.get(Uri.parse('$userServiceUrl/home/friends/$id'));
       if (!mounted) return;
       if (response.statusCode == 200) {
         final List<dynamic> raw = jsonDecode(response.body);
@@ -100,7 +98,7 @@ class FriendMenuState extends State<FriendMenu> {
     try {
       String? id = widget.userId;
 
-      final response = await http.get(Uri.parse('$_baseUrl/home/likes/$id'));
+      final response = await http.get(Uri.parse('$userServiceUrl/home/likes/$id'));
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
@@ -119,7 +117,7 @@ class FriendMenuState extends State<FriendMenu> {
   Future<void> _getUserName() async{
     try {
       String? id = widget.userId;
-      final response = await http.get(Uri.parse("$_baseUrl/users/$id"));
+      final response = await http.get(Uri.parse("$userServiceUrl/users/$id"));
 
      if (!mounted) return;
       if (response.statusCode == 200) {
@@ -142,7 +140,7 @@ Future<void> _getAmountOfFlowers() async {
   String? id = widget.userId;
   try {
     final response = await http.get(
-      Uri.parse('$_baseUrl/home/user/$id/flowers'),
+      Uri.parse('$userServiceUrl/home/user/$id/flowers'),
       headers: {if (authToken != null) 'Authorization': 'Bearer $authToken'},
     );
     if (response.statusCode == 200 && mounted) {
