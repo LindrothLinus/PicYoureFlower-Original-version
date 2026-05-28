@@ -24,7 +24,6 @@ const String purplePotPath = "lib/resources/images/purple_smaller.png";
 const String yellowPotPath = "lib/resources/images/yellow_smaller.png";
 const String addPath = "lib/resources/images/add_smaller.PNG";
 
-
 const String coinsPath = "lib/resources/images/coin.webp";
 
 //Alla items
@@ -176,9 +175,8 @@ class _Shop extends State<Shop> {
                                   const SizedBox(width: 4),
                                   Image.asset(
                                     coinsPath,
-                                    height: 20,
-                                    width: 20,
-                                    //fit: BoxFit.contain,
+                                    height: 30,
+                                    width: 30,
                                   ),
                                 ],
                               ),
@@ -211,14 +209,16 @@ class _Shop extends State<Shop> {
                                         );
                                       },
                                     );
-                                    await Future.delayed(const Duration(seconds: 1));
+                                    await Future.delayed(
+                                      const Duration(seconds: 1),
+                                    );
                                     Navigator.of(context).pop();
                                   }
                                 },
                                 icon: Image.asset(
                                   addPath,
-                                  height: 20,
-                                  width: 20,
+                                  height: 30,
+                                  width: 30,
                                   //fit: BoxFit.contain,
                                 ),
                               ),
