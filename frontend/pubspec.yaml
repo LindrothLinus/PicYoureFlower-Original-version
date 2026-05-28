@@ -80,7 +80,7 @@ flutter:
     - lib/resources/images/pink_smaller.png
     - lib/resources/images/purple_smaller.png
     - lib/resources/images/yellow_smaller.png
-
+    - lib/resources/images/add_smaller.PNG
 
 
   uses-material-design: true

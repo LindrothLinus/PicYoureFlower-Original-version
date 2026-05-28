@@ -15,7 +15,7 @@ class AddButton extends StatefulWidget {
     this.onPotPlaced,
     this.onFlowerPlanted,
   });
-  final String imagePath = "lib/resources/images/Add.webp";
+  final String imagePath = "lib/resources/images/add_smaller.PNG";
   final double x;
   final double y;
   final int index;
@@ -24,9 +24,7 @@ class AddButton extends StatefulWidget {
   final ValueNotifier<Widget?> item;
   final Function(int index, String template)? onPotPlaced;
   final Function(int index, Flower flower)? onFlowerPlanted;
-  bool checking=false;
-
-  
+  bool checking = false;
 
   @override
   AddButtonState createState() => AddButtonState();
@@ -39,30 +37,30 @@ class AddButtonState extends State<AddButton> {
   @override
   void initState() {
     super.initState();
-    widget.item.addListener(
-      (){
-          if (widget.item.value != null && widget.checking && widget.item.value is Pot) {
-                      final originalPot = widget.item.value as Pot;
-                      final newPot = Pot(
-                        item: originalPot.item,
-                        buildBarActiveNotifer: originalPot.buildBarActiveNotifer,
-                        selectedPotNotifier: originalPot.selectedPotNotifier,
-                        potTemplate: originalPot.potTemplate,
-                        onFlowerPlanted: widget.onFlowerPlanted != null
-                            ? (flower) => widget.onFlowerPlanted!(widget.index, flower)
-                            : null,
-                      );
-                      setState(() {
-                        isTaken = true;
-                        lockedItem = newPot;
-                        widget.item.value = null;
-                        widget.buildBarActiveNotifer.value = false;
-                        widget.checking = false; 
-                      });
-                      widget.onPotPlaced?.call(widget.index, originalPot.potTemplate);
-            }
+    widget.item.addListener(() {
+      if (widget.item.value != null &&
+          widget.checking &&
+          widget.item.value is Pot) {
+        final originalPot = widget.item.value as Pot;
+        final newPot = Pot(
+          item: originalPot.item,
+          buildBarActiveNotifer: originalPot.buildBarActiveNotifer,
+          selectedPotNotifier: originalPot.selectedPotNotifier,
+          potTemplate: originalPot.potTemplate,
+          onFlowerPlanted: widget.onFlowerPlanted != null
+              ? (flower) => widget.onFlowerPlanted!(widget.index, flower)
+              : null,
+        );
+        setState(() {
+          isTaken = true;
+          lockedItem = newPot;
+          widget.item.value = null;
+          widget.buildBarActiveNotifer.value = false;
+          widget.checking = false;
+        });
+        widget.onPotPlaced?.call(widget.index, originalPot.potTemplate);
       }
-    );
+    });
   }
 
   @override
@@ -81,8 +79,9 @@ class AddButtonState extends State<AddButton> {
               builder: (context, item, child) {
                 return GestureDetector(
                   onTap: () {
-                    widget.checking=true;
-                    widget.buildBarActiveNotifer.value=!widget.buildBarActiveNotifer.value;
+                    widget.checking = true;
+                    widget.buildBarActiveNotifer.value =
+                        !widget.buildBarActiveNotifer.value;
                     /*if (item != null && !isTaken && item is Pot) {
                       setState(() {
                         isTaken = true;
@@ -110,13 +109,13 @@ class AddButtonState extends State<AddButton> {
     );
   }
 
-  void setPot(Widget? item){
-    if (item != null && !isTaken&&item is Pot) {
-                      setState(() {
-                        isTaken = true;
-                        lockedItem = item;
-                      });
-                    }
+  void setPot(Widget? item) {
+    if (item != null && !isTaken && item is Pot) {
+      setState(() {
+        isTaken = true;
+        lockedItem = item;
+      });
+    }
   }
 
   void loadPot({
@@ -144,7 +143,7 @@ class AddButtonState extends State<AddButton> {
     }
   }
 
-  Widget? getPot(){
+  Widget? getPot() {
     return lockedItem;
   }
 }
