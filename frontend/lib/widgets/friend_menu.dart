@@ -868,25 +868,25 @@ void showDeleteUserDialog(BuildContext context) {
                         ),
 
 Padding(
-                          padding: const EdgeInsets.fromLTRB(16, 4, 16, 16), // Flyttar upp knappen (från 12 till 4)
-                          child: Align(
-                            alignment: Alignment.centerLeft, // Vänsterjusterar knappen
+                          padding: const EdgeInsets.fromLTRB(16, 4, 16, 16), 
+                          child: SizedBox(
+                            width: double.infinity, 
                             child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
                                 side: const BorderSide(color: Colors.black, width: 1),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(8),
                                 ),
-                                backgroundColor: const Color(0xFFFFA6A6),
-                                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12), // Gör knappen lagom stor runt texten
+                                backgroundColor: const Color(0xFFFFA6A6), 
+                                padding: const EdgeInsets.symmetric(vertical: 15), 
                               ),
                               onPressed: () {
                                 showDeleteUserDialog(context);
                               },
                               child: Text('Delete Account', style: menuText),
-                            ),
-                          ),
-                        ),
+                            ), 
+                          ), 
+                        ), 
 
                       ],
                     ),
