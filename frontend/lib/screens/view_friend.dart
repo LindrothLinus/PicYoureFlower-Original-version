@@ -145,7 +145,9 @@ class ViewFriendScreenState extends State<ViewFriendScreen> {
 ),
       body: Stack(
         children: [
-          Greenhouse(addButtons: _addButtons),
+          Greenhouse(
+            addButtons: _addButtons,
+            onBuildModeButtonPressed: (){}),
           FriendMenu(addButtonsCordinates: widget.addButtonsCordinats, userId: widget.userId),
           Positioned(
             bottom: 20,
