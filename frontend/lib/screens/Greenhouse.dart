@@ -20,6 +20,7 @@ class _Greenhouse extends State<Greenhouse> {
   final double imageWidth = 5906;
   final double imageHeight = 4725;
   final double scale = 0.17;
+  bool buildMode = false;
 
   @override
   void initState() {
@@ -30,8 +31,6 @@ class _Greenhouse extends State<Greenhouse> {
 
   @override
   Widget build(BuildContext context) {
-
-
     return Scaffold(
       body: Stack(
         children: [
@@ -57,7 +56,7 @@ class _Greenhouse extends State<Greenhouse> {
                       "lib/resources/images/Greenhouse.svg",
                     ),
                   ),
-                  ...widget.addButtons,
+                  if(buildMode)...widget.addButtons,
 
                   //FriendMenu(),
                 ],
@@ -65,11 +64,12 @@ class _Greenhouse extends State<Greenhouse> {
             ),
           ),
           Positioned(
-            bottom: 80,
-            right: 10,
+            bottom: 30,
+            right: 30,
             child: NewAddButton(
               onBuildModeButtonPressed: () {
                 setState(() {
+                  buildMode = !buildMode;
                   
                 });
               }
