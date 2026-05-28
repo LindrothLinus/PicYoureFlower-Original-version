@@ -82,10 +82,12 @@ class ViewFriendScreenState extends State<ViewFriendScreen> {
 
       final List<dynamic> data = jsonDecode(response.body);
 
-      final Map<int, int?> slotFlowers = {
+      final Map<int, ({int? flowerId,String template})> slotFlowers = {
         for (final item in data)
-          (item['placementId'] as num).toInt(): (item['flowerId'] as num?)
-              ?.toInt(),
+          (item['placementId'] as num).toInt(): (
+          flowerId: (item['flowerId'] as num?)?.toInt(),
+          template: item['template'] as String? ?? 'BLUE',
+          )
       };
 
       final List<AddButton> buttons = generateAddButtons(coordinates);
@@ -93,7 +95,8 @@ class ViewFriendScreenState extends State<ViewFriendScreen> {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         for (final entry in slotFlowers.entries) {
           final int placementId = entry.key;
-          final int? flowerId = entry.value;
+          final int? flowerId = entry.value.flowerId;
+          final String template = entry.value.template;
 
           final matches = flowerCollection.where((f) => f.id == flowerId);
           final flower = flowerId != null && matches.isNotEmpty
@@ -105,6 +108,7 @@ class ViewFriendScreenState extends State<ViewFriendScreen> {
             buildBarActiveNotifer: dummyNotifierBool,
             selectedPotNotifier: dummyPotNotifier,
             initialFlower: flower,
+            potTemplate: template
           );
         }
       });
