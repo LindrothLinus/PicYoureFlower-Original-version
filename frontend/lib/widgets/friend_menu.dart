@@ -643,6 +643,12 @@ void showDeleteUserDialog(BuildContext context) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text('Account successfully deleted.')),
                     );
+
+                    Navigator.pushNamedAndRemoveUntil(
+                      context,
+                      '/',
+                      (route) => false,
+                    );
                   }
                 }
               } catch (e) {
