@@ -15,15 +15,15 @@ import '../resources/constants.dart';
 //const String _baseUrl = 'https://group-1-75.pvt.dsv.su.se';
 const String _baseUrl = 'http://10.0.2.2:8080';
 
-const String brownPotPath = "lib/resources/images/brown.webp";
-//const String bluePotPath = "lib/resources/images/blue.webp";
+const String brownPotPath = "lib/resources/images/brown_smaller.png";
 const String bluePotPath = "lib/resources/images/BluePot_smaller.png";
-const String greenPotPath = "lib/resources/images/green.webp";
-const String mintPotPath = "lib/resources/images/mint.webp";
-const String pinkPotPath = "lib/resources/images/pink.webp";
-const String purplePotPath = "lib/resources/images/purple.webp";
-const String yellowPotPath = "lib/resources/images/yellow.webp";
-const String addPath = "lib/resources/images/Add.webp";
+const String greenPotPath = "lib/resources/images/green_smaller.png";
+const String mintPotPath = "lib/resources/images/mint_smaller.png";
+const String pinkPotPath = "lib/resources/images/pink_smaller.png";
+const String purplePotPath = "lib/resources/images/purple_smaller.png";
+const String yellowPotPath = "lib/resources/images/yellow_smaller.png";
+const String addPath = "lib/resources/images/add_smaller.PNG";
+
 
 const String coinsPath = "lib/resources/images/coin.webp";
 
@@ -186,7 +186,7 @@ class _Shop extends State<Shop> {
                               IconButton(
                                 padding: EdgeInsets.zero,
                                 constraints: const BoxConstraints(),
-                                onPressed: () {
+                                onPressed: () async {
                                   if (coinsState.getCoinValue() >= item.cost) {
                                     int newValue =
                                         coinsState.getCoinValue() - item.cost
@@ -194,7 +194,25 @@ class _Shop extends State<Shop> {
                                     coinsState.setCoinValue(newValue);
                                     coinsState.updateCoinValue(newValue);
                                     sendPot(item.color);
-                                    CheckButtonPopUp.showCheckButton(context);
+                                    //CheckButtonPopUp.showCheckButton(context);
+                                    showDialog(
+                                      context: context,
+                                      barrierDismissible: false,
+                                      builder: (context) {
+                                        return Center(
+                                          child: SizedBox(
+                                            width: 100,
+                                            height: 100,
+                                            child: Image.asset(
+                                              'lib/resources/images/Confirmed.png',
+                                              fit: BoxFit.contain,
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    );
+                                    await Future.delayed(const Duration(seconds: 1));
+                                    Navigator.of(context).pop();
                                   }
                                 },
                                 icon: Image.asset(
