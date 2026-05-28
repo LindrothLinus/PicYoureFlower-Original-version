@@ -73,6 +73,7 @@ flutter:
     - lib/resources/images/Avatar_Purple.png
     - lib/resources/images/Avatar_Red.png
     - lib/resources/images/Avatar_Yellow.png
+    - lib/resources/images/home.png
 
 
 

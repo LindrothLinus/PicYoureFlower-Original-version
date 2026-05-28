@@ -6,7 +6,7 @@ import '../resources/constants.dart';
 import '../screens/shop.dart';
 
 const String shopIconPath = "lib/resources/images/cart_icon.png";
-const String buildmodeIconPath = "lib/resources/images/showel_icon.png";
+const String buildmodeIconPath = "lib/resources/images/home.png";
 const String cameraIconPath = "lib/resources/images/camera_icon.png";
 const String flowerCollectionIconPath = "lib/resources/images/flower_icon.png";
 
@@ -55,6 +55,7 @@ class NavBarState extends State<NavBar> {
             IconButton(
               icon: Image.asset(buildmodeIconPath),
               onPressed: () {
+                widget.onBuildModeButtonPressed();
                 Navigator.popUntil(context,ModalRoute.withName('/'));
               } 
 

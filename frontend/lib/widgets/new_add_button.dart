@@ -15,25 +15,19 @@ class NewAddButtonState extends State<NewAddButton> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 45,
-      height: 45,
-      child: ElevatedButton(
-        onPressed: () {
-          widget.onBuildModeButtonPressed();
-        },
-        style: ElevatedButton.styleFrom(
-          padding: EdgeInsets.zero,
-          backgroundColor: Colors.white,
-          foregroundColor: Colors.black,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
-          ),
+      width: 60,
+      height: 60,
+      child: IconButton(
+        padding: EdgeInsets.zero,
+        onPressed: widget.onBuildModeButtonPressed,
+        icon: Image.asset(
+          buildmodeIconPath,
+          width: 50,
+          height: 50,
+          fit: BoxFit.contain,
         ),
-        child: Image.asset(buildmodeIconPath)
-        
       ),
     );
-
   }
 /** 
   IconButton(
