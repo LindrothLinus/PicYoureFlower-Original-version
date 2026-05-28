@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
+const String buildmodeIconPath = "lib/resources/images/showel_icon.png";
+
 
 class NewAddButton extends StatefulWidget {
-  const NewAddButton({super.key,required this.onPressed});
-  final VoidCallback onPressed;
+  const NewAddButton({super.key, required this.onBuildModeButtonPressed});
+
+  final Function() onBuildModeButtonPressed;
 
   @override
-  State<NewAddButton> createState() =>
-      _NewAddButtonState();
+  NewAddButtonState createState() => NewAddButtonState();
 }
-class _NewAddButtonState extends State<NewAddButton> {
+class NewAddButtonState extends State<NewAddButton> {
   
   @override
   Widget build(BuildContext context) {
@@ -16,7 +18,9 @@ class _NewAddButtonState extends State<NewAddButton> {
       width: 45,
       height: 45,
       child: ElevatedButton(
-        onPressed: widget.onPressed,
+        onPressed: () {
+          widget.onBuildModeButtonPressed();
+        },
         style: ElevatedButton.styleFrom(
           padding: EdgeInsets.zero,
           backgroundColor: Colors.white,
@@ -26,7 +30,7 @@ class _NewAddButtonState extends State<NewAddButton> {
           ),
         ),
         child: const Icon(Icons.tune),
-
+        
       ),
     );
 
