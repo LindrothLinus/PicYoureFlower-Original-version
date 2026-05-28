@@ -283,7 +283,7 @@ class MyAppState extends State<MyApp> {
         body: Stack(
           children: [
             Greenhouse(addButtons: _addButtons),
-            SafeArea(child: FriendMenu()),
+            SafeArea(child: FriendMenu(addButtons: _addButtons,userId: loggedInUserId,)),
           ],
         ),
         bottomSheet: buildBar,

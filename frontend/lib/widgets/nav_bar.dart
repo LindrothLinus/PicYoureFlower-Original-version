@@ -24,6 +24,7 @@ class NavBarState extends State<NavBar> {
 
   @override
   Widget build(BuildContext context) {
+    final isHome = ModalRoute.of(context)?.settings.name == '/';
     final isCamera = ModalRoute.of(context)?.settings.name == '/camera';
     final isShop = ModalRoute.of(context)?.settings.name == '/shop';
     final isFlowerCollection =
@@ -54,11 +55,16 @@ class NavBarState extends State<NavBar> {
             IconButton(
               icon: Image.asset(buildmodeIconPath),
               onPressed: () {
-                setState(() {
-                  visible = false;
-                });
-                widget.onBuildModeButtonPressed();
-              },
+                if(isHome){
+                  setState(() {
+                    visible = false;
+                  });
+                  widget.onBuildModeButtonPressed();
+                } else {
+                  Navigator.popUntil(context,ModalRoute.withName('/'));
+                }
+              } 
+
             ),
             IconButton(
               icon: Image.asset(cameraIconPath),
