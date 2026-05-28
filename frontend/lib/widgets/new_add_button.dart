@@ -29,7 +29,7 @@ class NewAddButtonState extends State<NewAddButton> {
             borderRadius: BorderRadius.circular(20),
           ),
         ),
-        child: const Icon(Icons.tune),
+        child: Image.asset(buildmodeIconPath)
         
       ),
     );
