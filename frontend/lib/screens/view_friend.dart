@@ -29,7 +29,11 @@ class ViewFriendScreen extends StatelessWidget {
             ), //hämta user från databasen!
           ),
 
-         Greenhouse(addButtons: addButtons),
+         Greenhouse(addButtons: addButtons,
+         onBuildModeButtonPressed: () {
+          // gör inget i friend view
+         },
+         ),
          LikeButton(friendId: friendId)
         ],
       ),
