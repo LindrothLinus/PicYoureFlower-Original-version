@@ -290,9 +290,17 @@ class MyAppState extends State<MyApp> {
       ),
       bottomNavigationBar: NavBar(
         onBuildModeButtonPressed: () {
-          buildModeActiveNotifier.value = !buildModeActiveNotifier.value;
-          if(!buildModeActiveNotifier.value) {
+          if(buildModeActiveNotifier.value == false && buildBarActiveNotifer.value == true){
             buildBarActiveNotifer.value = false;
+            _selectedPotNotifier.value = null;
+            itemSelected.value = null;
+          } else{
+            buildModeActiveNotifier.value = !buildModeActiveNotifier.value;
+            if(!buildModeActiveNotifier.value) {
+              buildBarActiveNotifer.value = false;
+              _selectedPotNotifier.value = null;
+              itemSelected.value = null;
+            }
           }
           print(extractPots());
         },
