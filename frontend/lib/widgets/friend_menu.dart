@@ -875,22 +875,35 @@ Padding(
                           padding: const EdgeInsets.fromLTRB(16, 4, 16, 16), 
                           child: SizedBox(
                             width: double.infinity, 
-                            child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                side: const BorderSide(color: Colors.black, width: 1),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                backgroundColor: const Color(0xFFFFA6A6), 
-                                padding: const EdgeInsets.symmetric(vertical: 15), 
-                              ),
-                              onPressed: () {
+                            child: GestureDetector(
+                              onTap: () {
                                 showDeleteUserDialog(context);
                               },
-                              child: Text('Delete Account', style: menuText),
+                              child: Container(
+                                width: double.infinity,
+                                height: 50,
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFFFFA6A6), // Din röda färg
+                                  borderRadius: BorderRadius.circular(8),
+                                  border: Border.all(
+                                    color: Colors.black,
+                                    width: 1,
+                                  ),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.only(left: 10),
+                                  child: Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Text(
+                                      'Delete Account', 
+                                      style: menuText,
+                                    ),
+                                  ),
+                                ),
+                              ),
                             ), 
                           ), 
-                        ), 
+                        ),
 
                       ],
                     ),
