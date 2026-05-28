@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_demo/states/like_sent_overlay.dart';
 import 'package:http/http.dart' as http;
 const String _baseUrl = 'http://10.0.2.2:8080';
 
@@ -13,7 +14,11 @@ class LikeButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: sendLike,
+      onTap: (){
+        sendLike();
+        LikedPopUp.showLikeSent(context);
+      }
+      ,
       child: Image.asset(likePath, height: 60, width: 60),
     );
   }
