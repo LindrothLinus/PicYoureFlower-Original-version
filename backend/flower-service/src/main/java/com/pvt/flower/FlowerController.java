@@ -316,17 +316,14 @@ public class FlowerController {
     @GetMapping(path = "wikiinfo/{commonName}")
     public @ResponseBody Object getWikiInfo(@PathVariable String commonName,
             @RequestParam(required = false) String latinName) {
-        String result = fetchWikiExtract(commonName);
-        if (result != null)
-            return result;
         if (latinName != null && !latinName.isBlank()) {
-            result = fetchWikiExtract(latinName);
-            if (result != null)
-                return result;
+            String result = fetchWikiExtract(latinName);
+            if (result != null) return result;
             result = fetchWikiExtract(latinName.split(" ")[0]);
-            if (result != null)
-                return result;
+            if (result != null) return result;
         }
+        String result = fetchWikiExtract(commonName);
+        if (result != null) return result;
         return "Could not find information";
     }
 
@@ -343,6 +340,9 @@ public class FlowerController {
             if (resp.getBody() == null)
                 return null;
             JsonNode json = mapper.readTree(resp.getBody());
+            String type = json.path("type").asText(null);
+            if ("disambiguation".equals(type))
+                return null;
             String extract = json.path("extract").asText(null);
             if (extract != null && !extract.isBlank())
                 return extract;
