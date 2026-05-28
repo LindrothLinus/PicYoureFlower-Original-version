@@ -25,6 +25,8 @@ class _Greenhouse extends State<Greenhouse> {
   final double imageWidth = 5906;
   final double imageHeight = 4725;
   final double scale = 0.17;
+  double bottomValue = 30;
+  double rightValue = 30;
 
   @override
   void initState() {
@@ -68,8 +70,9 @@ class _Greenhouse extends State<Greenhouse> {
             ),
           ),
           Positioned(
-            bottom: 30,
-            right: 30,
+
+            bottom: bottomValue = 30,
+            right: rightValue = 30,
             child: NewAddButton(
               onBuildModeButtonPressed: widget.onBuildModeButtonPressed,
             ),

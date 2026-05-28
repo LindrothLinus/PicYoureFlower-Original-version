@@ -286,7 +286,7 @@ class MyAppState extends State<MyApp> {
               addButtons: _addButtons,
               onBuildModeButtonPressed: () {
                 buildModeActiveNotifier.value = !buildModeActiveNotifier.value;
-                buildBarActiveNotifer.value = !buildBarActiveNotifer.value;
+                //buildBarActiveNotifer.value = !buildBarActiveNotifer.value;
                 print(extractPots());
               },
               ),
@@ -297,7 +297,8 @@ class MyAppState extends State<MyApp> {
       ),
       bottomNavigationBar: NavBar(
         onBuildModeButtonPressed: () {
-          buildModeActiveNotifier.value = !buildModeActiveNotifier.value;
+          buildModeActiveNotifier.value = false;
+          buildBarActiveNotifer.value = false;
           print(extractPots());
         },
       ),
