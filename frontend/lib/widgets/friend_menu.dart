@@ -64,7 +64,7 @@ class FriendMenuState extends State<FriendMenu> {
 
   final TextEditingController friendController = TextEditingController();
 
-  late List<Friend> friends = [Friend("temp", 0)];
+  late List<Friend> friends = [Friend("temp", 1)];
   String _amountOfLikes = "";
   String _userName = "";
   String _amountOfFlowers = "";
@@ -479,7 +479,8 @@ Future<void> _getAmountOfFlowers() async {
           context,
           MaterialPageRoute(
             builder: (context) => ViewFriendScreen(
-              //friendId: friend.id,
+              userId: widget.userId,
+              friend: friend,
               addButtonsCordinats: widget.addButtonsCordinates,
             ),
           ),

@@ -5,14 +5,17 @@ import 'package:flutter_demo/resources/constants.dart';
 import 'package:flutter_demo/screens/Greenhouse.dart';
 import 'package:flutter_demo/states/like_sent_overlay.dart';
 import 'package:flutter_demo/widgets/add_button.dart';
+import 'package:flutter_demo/widgets/back_btn.dart';
 import 'package:flutter_demo/widgets/flowers/flower.dart';
 import 'package:flutter_demo/widgets/flowers/genericflower.dart';
 import 'package:flutter_demo/widgets/flowers/rose_flower.dart';
 import 'package:flutter_demo/widgets/flowers/sunflower.dart';
 import 'package:flutter_demo/widgets/flowers/tulip.dart';
 import 'package:flutter_demo/widgets/flowers/woodanemone.dart';
+import 'package:flutter_demo/widgets/friend_menu.dart';
 import 'package:flutter_demo/widgets/like_button.dart';
 import 'package:flutter_demo/widgets/like_sent.dart';
+import 'package:flutter_demo/widgets/nav_bar.dart';
 import 'package:flutter_demo/widgets/pots/blue_pot.dart';
 
 import 'package:http/http.dart' as http;
@@ -20,11 +23,13 @@ import 'package:http/http.dart' as http;
 class ViewFriendScreen extends StatefulWidget {
   const ViewFriendScreen({
     super.key,
-    //required this.friendId,
+    required this.userId,
+    required this.friend,
     required this.addButtonsCordinats,
   });
 
-  final int friendId = 1;
+  final String? userId;
+  final Friend friend;
   final List<({double x, double y})> addButtonsCordinats;
 
   @override
@@ -59,7 +64,7 @@ class ViewFriendScreenState extends State<ViewFriendScreen> {
   Future<List<AddButton>> loadGreenhouseButtons(List<({double x, double y})> coordinates,) async {
     try {
       final flowerResponse = await http.get(
-        Uri.parse('$flowerServiceUrl/home/user/${widget.friendId}/flowers'),
+        Uri.parse('$flowerServiceUrl/home/user/${widget.friend.id}/flowers'),
       );
       if (flowerResponse.statusCode == 200) {
         final List<dynamic> flowerData = jsonDecode(flowerResponse.body);
@@ -70,7 +75,7 @@ class ViewFriendScreenState extends State<ViewFriendScreen> {
       }
 
       final response = await http.get(
-        Uri.parse('$userServiceUrl/home/greenhouse/${widget.friendId}'),
+        Uri.parse('$userServiceUrl/home/greenhouse/${widget.friend.id}'),
       );
 
       if (response.statusCode != 200) return [];
@@ -132,17 +137,20 @@ class ViewFriendScreenState extends State<ViewFriendScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(title: Text("${widget.friend.name}'s greenhouse",style: TextStyles.header),backgroundColor:Theme.of(context).colorScheme.inversePrimary,leading: CustomBackButton(toHome: true),
+),
       body: Stack(
-        
         children: [
           Greenhouse(addButtons: _addButtons),
+          FriendMenu(addButtonsCordinates: widget.addButtonsCordinats, userId: widget.userId),
           Positioned(
-            bottom: 70,
-            right: 30,
-            child: LikeButton(friendId: widget.friendId),
+            bottom: 20,
+            right: 20,
+            child: LikeButton(friendId: widget.friend.id),
           ),
         ],
       ),
+    bottomNavigationBar: NavBar(onBuildModeButtonPressed: (){}),
     );
   }
 }
