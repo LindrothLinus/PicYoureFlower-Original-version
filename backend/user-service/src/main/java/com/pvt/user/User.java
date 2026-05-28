@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Set;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.CollectionTable;
+import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -46,6 +48,20 @@ public class User {
     @ManyToMany
     @JoinTable(name = "user_friends", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "friend_id"))
     private Set<User> friends = new HashSet<>();
+
+    @ElementCollection
+    @CollectionTable(name = "user_owned_pots", joinColumns = @JoinColumn(name = "user_id"))
+    @Enumerated(EnumType.STRING)
+    @Column(name = "template")
+    private Set<PotTemplate> ownedPotTemplates = new HashSet<>(Set.of(PotTemplate.BLUE));
+
+    public Set<PotTemplate> getOwnedPotTemplates() {
+        return ownedPotTemplates;
+    }
+
+    public void setOwnedPotTemplates(Set<PotTemplate> ownedPotTemplates) {
+        this.ownedPotTemplates = ownedPotTemplates;
+    }
 
     public Set<User> getFriends() {
         return this.friends;

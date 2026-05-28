@@ -2,6 +2,7 @@ package com.pvt.user;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.http.ResponseEntity;
@@ -149,23 +150,30 @@ public class UserController {
     }
 
     @PutMapping("/home/addpot/{userId}/{template}")
-    public PotDTO addPots(@PathVariable Long userId, @PathVariable PotTemplate template) {
+    public ResponseEntity<?> addPots(@PathVariable Long userId, @PathVariable PotTemplate template) {
         User entity = userRepository.findById(userId)
                 .orElseThrow(IllegalArgumentException::new);
-        PotEntity potEntity = new PotEntity();
-        potEntity.setTemplate(template);
-        potEntity.setUser(entity);
-        potRepository.save(potEntity);
-        entity.getPots().add(potEntity);
-        PotEntity saved = potRepository.save(potEntity);
+        if (entity.getOwnedPotTemplates().contains(template)) {
+            return ResponseEntity.status(409).body("Already owned");
+        }
+        entity.getOwnedPotTemplates().add(template);
+        userRepository.save(entity);
+        return ResponseEntity.ok(
+            entity.getOwnedPotTemplates().stream()
+                .map(PotTemplate::name)
+                .collect(Collectors.toList())
+        );
+    }
 
-        return new PotDTO(
-            saved.getId(),
-            saved.getTemplate(),
-            saved.getPlacementId(),
-            saved.getFlowerId(),
-            saved.isPlaced()
-    );
+    @GetMapping("/home/ownedpottemplates/{userId}")
+    public ResponseEntity<List<String>> getOwnedPotTemplates(@PathVariable Long userId) {
+        User entity = userRepository.findById(userId)
+                .orElseThrow(IllegalArgumentException::new);
+        return ResponseEntity.ok(
+            entity.getOwnedPotTemplates().stream()
+                .map(PotTemplate::name)
+                .collect(Collectors.toList())
+        );
     }
 
     @GetMapping("/home/allpots")

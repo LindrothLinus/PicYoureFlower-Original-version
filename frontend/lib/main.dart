@@ -53,6 +53,8 @@ class MyAppState extends State<MyApp> {
   @visibleForTesting
   List<Flower> flowerCollection = [];
 
+  List<String> _ownedPotTemplates = ['BLUE'];
+
   final List<({double x, double y})> _addButtoncordinates = [
     (x: 3000, y: 1400),
     (x: 2500, y: 1400),
@@ -138,7 +140,14 @@ class MyAppState extends State<MyApp> {
       flowers: flowerCollection
           .where((f) => f.id == null || !_placedFlowerIds.contains(f.id))
           .toList(),
-      pots: [Pot(item: itemSelected, buildBarActiveNotifer: buildBarActiveNotifer, selectedPotNotifier: _selectedPotNotifier)],
+      pots: _ownedPotTemplates
+          .map((t) => Pot(
+                item: itemSelected,
+                buildBarActiveNotifer: buildBarActiveNotifer,
+                selectedPotNotifier: _selectedPotNotifier,
+                potTemplate: t,
+              ))
+          .toList(),
       visibilityNotifier: buildBarActiveNotifer,
       onFlowerSelected: (flower) {
         itemSelected.value = itemSelected.value != flower ? flower : null;
@@ -153,6 +162,7 @@ class MyAppState extends State<MyApp> {
   @visibleForTesting
   Future<void> fetchFlowers() async {
     if (loggedInUserId == null) return;
+    await fetchOwnedPots();
     try {
       final response = await _httpClient.get(
         Uri.parse('$flowerServiceUrl/home/user/$loggedInUserId/flowers'),
@@ -171,6 +181,26 @@ class MyAppState extends State<MyApp> {
       }
     } catch (e) {
       print('Error fetching flowers: $e');
+    }
+  }
+
+  @visibleForTesting
+  Future<void> fetchOwnedPots() async {
+    if (loggedInUserId == null) return;
+    try {
+      final response = await _httpClient.get(
+        Uri.parse('$userServiceUrl/home/ownedpottemplates/$loggedInUserId'),
+        headers: {if (authToken != null) 'Authorization': 'Bearer $authToken'},
+      );
+      if (response.statusCode == 200 && mounted) {
+        final List<dynamic> data = jsonDecode(response.body);
+        setState(() {
+          _ownedPotTemplates = data.cast<String>();
+          _rebuildBuildBar();
+        });
+      }
+    } catch (e) {
+      print('Error fetching owned pots: $e');
     }
   }
 
@@ -202,6 +232,7 @@ class MyAppState extends State<MyApp> {
               buildBarActiveNotifer: buildBarActiveNotifer,
               selectedPotNotifier: _selectedPotNotifier,
               initialFlower: flower,
+              potTemplate: (item['template'] as String?) ?? 'BLUE',
             );
           });
         }
@@ -299,13 +330,14 @@ class MyAppState extends State<MyApp> {
   }
 
   void _iniPotsAndFlowerList() {
-    _pots = [
-      Pot(
-        item: itemSelected,
-        buildBarActiveNotifer: buildBarActiveNotifer,
-        selectedPotNotifier: _selectedPotNotifier,
-      ),
-    ];
+    _pots = _ownedPotTemplates
+        .map((t) => Pot(
+              item: itemSelected,
+              buildBarActiveNotifer: buildBarActiveNotifer,
+              selectedPotNotifier: _selectedPotNotifier,
+              potTemplate: t,
+            ))
+        .toList();
     // Your branch: pass onSuccess so flowers load right after login
     WidgetsBinding.instance.addPostFrameCallback((_) {
       login_popup(context, onSuccess: fetchFlowers);
@@ -329,8 +361,8 @@ class MyAppState extends State<MyApp> {
         y: cordinates[i].y,
         item: itemSelected,
         index: i,
-        onPotPlaced: (idx) {
-          _slotPotTemplates[idx] = 'BLUE';
+        onPotPlaced: (idx, template) {
+          _slotPotTemplates[idx] = template;
           _slotFlowerIds[idx] = null;
           _saveGreenhouse();
         },

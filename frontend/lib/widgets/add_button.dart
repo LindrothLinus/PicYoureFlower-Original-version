@@ -22,7 +22,7 @@ class AddButton extends StatefulWidget {
   final ValueNotifier<bool> builModeActiveNotifier;
   final ValueNotifier<bool> buildBarActiveNotifer;
   final ValueNotifier<Widget?> item;
-  final Function(int index)? onPotPlaced;
+  final Function(int index, String template)? onPotPlaced;
   final Function(int index, Flower flower)? onFlowerPlanted;
   bool checking=false;
 
@@ -47,6 +47,7 @@ class AddButtonState extends State<AddButton> {
                         item: originalPot.item,
                         buildBarActiveNotifer: originalPot.buildBarActiveNotifer,
                         selectedPotNotifier: originalPot.selectedPotNotifier,
+                        potTemplate: originalPot.potTemplate,
                         onFlowerPlanted: widget.onFlowerPlanted != null
                             ? (flower) => widget.onFlowerPlanted!(widget.index, flower)
                             : null,
@@ -58,7 +59,7 @@ class AddButtonState extends State<AddButton> {
                         widget.buildBarActiveNotifer.value = false;
                         widget.checking = false; 
                       });
-                      widget.onPotPlaced?.call(widget.index);
+                      widget.onPotPlaced?.call(widget.index, originalPot.potTemplate);
             }
       }
     );
@@ -123,12 +124,14 @@ class AddButtonState extends State<AddButton> {
     required ValueNotifier<bool> buildBarActiveNotifer,
     required ValueNotifier<PotState?> selectedPotNotifier,
     Flower? initialFlower,
+    String potTemplate = 'BLUE',
   }) {
     if (!isTaken) {
       final newPot = Pot(
         item: item,
         buildBarActiveNotifer: buildBarActiveNotifer,
         selectedPotNotifier: selectedPotNotifier,
+        potTemplate: potTemplate,
         onFlowerPlanted: widget.onFlowerPlanted != null
             ? (flower) => widget.onFlowerPlanted!(widget.index, flower)
             : null,

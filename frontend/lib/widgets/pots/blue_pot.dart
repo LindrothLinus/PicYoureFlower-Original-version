@@ -10,9 +10,11 @@ class Pot extends StatefulWidget {
     this.id,
     this.onFlowerPlanted,
     this.initialPlantedItem,
+    this.potTemplate = 'BLUE',
   }) : super(key: key ?? UniqueKey());
 
   final int? id;
+  final String potTemplate;
   final ValueNotifier<Widget?> item;
   final ValueNotifier<bool> buildBarActiveNotifer;
   final ValueNotifier<PotState?> selectedPotNotifier;
@@ -32,6 +34,18 @@ class PotState extends State<Pot> {
   Widget? plantedItem;
 
   bool get isSelected => widget.selectedPotNotifier.value == this;
+
+  String get _potImagePath {
+    switch (widget.potTemplate) {
+      case 'BROWN':     return "lib/resources/images/brown.webp";
+      case 'GREEN':     return "lib/resources/images/green.webp";
+      case 'TURQUOISE': return "lib/resources/images/mint.webp";
+      case 'PINK':      return "lib/resources/images/pink.webp";
+      case 'PURPLE':    return "lib/resources/images/purple.webp";
+      case 'YELLOW':    return "lib/resources/images/yellow.webp";
+      default:          return "lib/resources/images/blue.webp";
+    }
+  }
 
   void _onItemChanged() {
     if (widget.item.value != null && widget.item.value is Flower && isSelected) {
@@ -73,7 +87,7 @@ class PotState extends State<Pot> {
       child: Stack(
         clipBehavior: Clip.none,
         children: [
-          Image.asset("lib/resources/images/blue.webp", fit: BoxFit.fill),
+          Image.asset(_potImagePath, fit: BoxFit.fill),
           Positioned(
             top: -60,
             left: 0,
