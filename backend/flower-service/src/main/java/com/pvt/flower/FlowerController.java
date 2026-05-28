@@ -281,7 +281,7 @@ public class FlowerController {
     }
 
     private String querySparql(String sparql) {
-        for (int i = 0; i < 3; i++) {
+        //for (int i = 0; i < 3; i++) {
             try {
                 HttpHeaders h = new HttpHeaders();
                 h.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
@@ -302,14 +302,14 @@ public class FlowerController {
                 }
                 return null;
             } catch (Exception e) {
-                System.out.println("SPARQL attempt " + (i + 1) + " failed: " + e.getMessage());
-                if (i < 2)
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException ignored) {
-                    }
+                System.out.println("SPARQL attempt " + (1 + 1) + " failed: " + e.getMessage());
+                //if (i < 2)
+                    //try {
+                        //Thread.sleep(1000);
+                    //} catch (InterruptedException ignored) {
+                    //}
             }
-        }
+        //}
         return null;
     }
 

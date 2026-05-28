@@ -11,25 +11,42 @@ class Camera extends StatefulWidget {
 }
 
 class CameraState extends State<Camera> {
+  final ValueNotifier<bool> _isLoading = ValueNotifier(false);
+
+  @override
+  void dispose() {
+    _isLoading.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final GlobalKey<CameraFeedState> cameraKey = GlobalKey<CameraFeedState>();
     CameraFeed cameraFeed = CameraFeed(key: cameraKey);
 
-    return Scaffold(
-      extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leading: CustomBackButton(toHome: true),
-      ),
-      body: Center(child: cameraFeed),
+    return ValueListenableBuilder<bool>(
+      valueListenable: _isLoading,
+      builder: (context, isLoading, child) {
+        return PopScope(
+          canPop: !isLoading,
+          child: Scaffold(
+            extendBodyBehindAppBar: true,
+            appBar: AppBar(
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+              leading: CustomBackButton(toHome: true),
+            ),
+            body: Center(child: cameraFeed),
 
-      backgroundColor: mainColor,
-      bottomNavigationBar: CameraButtonBar(
-        cameraFeed: cameraFeed,
-        cameraKey: cameraKey,
-      ),
+            backgroundColor: mainColor,
+            bottomNavigationBar: CameraButtonBar(
+              cameraFeed: cameraFeed,
+              cameraKey: cameraKey,
+              isLoading: _isLoading,
+            ),
+          ),
+        );
+      },
     );
   }
 }
