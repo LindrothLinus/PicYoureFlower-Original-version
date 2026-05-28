@@ -634,17 +634,15 @@ void showDeleteUserDialog(BuildContext context) {
                     Uri.parse('$baseUrl/removeuser/$loggedInUserId'),
                   );
 
-                  if (userResponse.statusCode == 200 || userResponse.statusCode == 204) {
-                    loggedInUserId = null; 
-                    authToken = null;
+                  loggedInUserId = null; 
+                  authToken = null;
 
-                    if (context.mounted) {
-                      Navigator.of(context).pop();
-                      
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Account successfully deleted.')),
-                      );
-                    }
+                  if (context.mounted) {
+                    Navigator.of(context).pop();
+                    
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Account successfully deleted.')),
+                    );
                   }
                 }
               } catch (e) {
