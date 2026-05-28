@@ -1,8 +1,6 @@
 import 'dart:convert';
-import 'dart:ffi';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_demo/screens/flower_collection.dart';
 import 'package:flutter_demo/items/buyable_item_creator.dart';
 import 'package:flutter_demo/states/check_button_overlay.dart';
 import 'package:flutter_demo/states/coins_state.dart';
@@ -10,7 +8,6 @@ import 'package:flutter_demo/widgets/back_btn.dart';
 import 'package:flutter_demo/widgets/camera_button.dart';
 import 'package:flutter_demo/widgets/coins.dart';
 import 'package:flutter_demo/widgets/nav_bar.dart';
-import 'package:flutter_demo/widgets/pots/blue_pot.dart';
 import 'package:http/http.dart' as http;
 
 import '../resources/constants.dart';
@@ -60,7 +57,7 @@ class _Shop extends State<Shop> {
   Future<void> _fetchPots() async {
     try{
       final response = await http.get(
-        Uri.parse('$_baseUrl/home/allpots'), 
+        Uri.parse('$userServiceUrl/home/allpots'), 
       );
       if(response.statusCode == 200){
         
@@ -92,7 +89,7 @@ class _Shop extends State<Shop> {
   Future<void> sendPot(String potColor) async{
     try{
       http.put(
-        Uri.parse('$_baseUrl/home/addpot/$loggedInUserId/$potColor')
+        Uri.parse('$userServiceUrl/home/addpot/$loggedInUserId/$potColor')
       );
       
     } catch(e){

@@ -38,3 +38,6 @@ const Color blueColor = Color(0xFFB8E9FF);
 const Color buildBarColor = Color(0xFFFFF4F4);
 
 const double addButtonSize = 300;
+
+const String flowerServiceUrl = 'https://group-1-75.pvt.dsv.su.se/flower';
+const String userServiceUrl = 'https://group-1-75.pvt.dsv.su.se/user';

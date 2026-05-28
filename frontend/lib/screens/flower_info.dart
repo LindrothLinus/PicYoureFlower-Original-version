@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_demo/resources/constants.dart';
 import 'package:flutter_demo/widgets/back_btn.dart';
 import 'package:http/http.dart' as http;
 
@@ -36,7 +37,7 @@ class _FlowerInfoScreenState extends State<FlowerInfoScreen> {
     final latinName = (widget.data?['latinName'] as String?) ?? '';
     try {
       final uri = Uri.parse(
-        '$_baseUrl/home/wikiinfo/${Uri.encodeComponent(commonName)}',
+        '$flowerServiceUrl/home/wikiinfo/${Uri.encodeComponent(commonName)}',
       ).replace(
         queryParameters:
             latinName.isNotEmpty

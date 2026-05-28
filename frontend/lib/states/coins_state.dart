@@ -1,9 +1,8 @@
 //Den här klassen håller bara status för hur mycket pengar som finns, kan öka och minska det värdet
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
+import 'package:flutter_demo/resources/constants.dart';
 import 'package:flutter_demo/widgets/camera_button.dart';
+import 'package:http/http.dart' as http;
 
 //const String _baseUrl = 'https://group-1-75.pvt.dsv.su.se';
 const String _baseUrl = 'http://10.0.2.2:8080';
@@ -13,7 +12,7 @@ class CoinsState {
 
   Future<void> updateCoinValue(int coins) async {
     try{
-      final uri = Uri.parse('$_baseUrl/home/setcoins/$loggedInUserId/$coins');
+      final uri = Uri.parse('$userServiceUrl/home/setcoins/$loggedInUserId/$coins');
       final response = await http.put(uri);
 
       print(response.statusCode);

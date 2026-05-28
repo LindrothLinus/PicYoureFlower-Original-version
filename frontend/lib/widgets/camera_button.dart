@@ -95,7 +95,7 @@ class CameraButtonBar extends StatelessWidget {
 
   Future<Map<String, dynamic>?> identifyFlower(XFile image, {String? location}) async {
     try {
-      final uri = Uri.parse('http://10.0.2.2:8080/home/identify');
+      final uri = Uri.parse('$flowerServiceUrl/home/identify');
       final request = http.MultipartRequest('POST', uri);
       request.files.add(await http.MultipartFile.fromPath('image', image.path));
 
@@ -127,7 +127,7 @@ class CameraButtonBar extends StatelessWidget {
 
   Future<Map<String, dynamic>?> identifyTestImage({String? location}) async {
     try {
-      final uri = Uri.parse('http://10.0.2.2:8080/home/identify');
+      final uri = Uri.parse('$flowerServiceUrl/home/identify');
 
       final byteData = await rootBundle.load('lib/resources/images/testblomma.jpg');
       final tempDir = await getTemporaryDirectory();
@@ -186,7 +186,7 @@ class CameraButtonBar extends StatelessWidget {
                 : GenericFlower(color: Colors.pink, name: 'Unknown');
 
             try{
-              final response = await http.get(Uri.parse('$_baseUrl/home/addcoins/$loggedInUserId/5'));
+              final response = await http.get(Uri.parse('$userServiceUrl/home/addcoins/$loggedInUserId/5'));
               print(response.statusCode);
               print(response.body);
             }catch(e){

@@ -1,13 +1,11 @@
 import 'dart:convert';
-import 'dart:ffi';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_demo/states/coins_state.dart';
 import 'package:flutter_demo/widgets/camera_button.dart';
+import 'package:http/http.dart' as http;
 
 import '../resources/constants.dart';
-
-import 'package:http/http.dart' as http;
 
 const String _baseUrl = 'https://group-1-75.pvt.dsv.su.se';
 
@@ -35,7 +33,7 @@ class _Coins extends State<Coins> {
   Future<void> getCoins() async {
     try{
       final response = await http.get(
-        Uri.parse('$_baseUrl/home/coins/$loggedInUserId'),
+        Uri.parse('$userServiceUrl/home/coins/$loggedInUserId'),
         headers: {
           if (authToken != null) 'Authorization': 'Bearer $authToken',
         }

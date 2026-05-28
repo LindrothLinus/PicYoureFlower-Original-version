@@ -155,7 +155,7 @@ class MyAppState extends State<MyApp> {
     if (loggedInUserId == null) return;
     try {
       final response = await _httpClient.get(
-        Uri.parse('$_baseUrl/home/user/$loggedInUserId/flowers'),
+        Uri.parse('$flowerServiceUrl/home/user/$loggedInUserId/flowers'),
         headers: {if (authToken != null) 'Authorization': 'Bearer $authToken'},
       );
       if (response.statusCode == 200 && mounted) {
@@ -178,7 +178,7 @@ class MyAppState extends State<MyApp> {
     if (_greenhouseLoaded || loggedInUserId == null || !mounted) return;
     try {
       final response = await _httpClient.get(
-        Uri.parse('$_baseUrl/home/greenhouse/$loggedInUserId'),
+        Uri.parse('$userServiceUrl/home/greenhouse/$loggedInUserId'),
         headers: {if (authToken != null) 'Authorization': 'Bearer $authToken'},
       );
       if (response.statusCode == 200 && mounted) {
@@ -227,7 +227,7 @@ class MyAppState extends State<MyApp> {
     }
     try {
       await _httpClient.post(
-        Uri.parse('$_baseUrl/home/greenhouse/$loggedInUserId'),
+        Uri.parse('$userServiceUrl/home/greenhouse/$loggedInUserId'),
         headers: {
           'Content-Type': 'application/json',
           if (authToken != null) 'Authorization': 'Bearer $authToken',
