@@ -26,7 +26,29 @@ class _NewAddButtonState extends State<NewAddButton> {
           ),
         ),
         child: const Icon(Icons.tune),
+
       ),
     );
+
   }
+/** 
+  IconButton(
+              icon: Image.asset(buildmodeIconPath),
+              onPressed: () {
+               
+              setState(() {
+                  visible = false;
+                });
+                widget.onBuildModeButtonPressed();
+                /* 
+                if(isHome){
+                  
+                } else {
+                  Navigator.popUntil(context,ModalRoute.withName('/'));
+                }
+                */
+              } 
+
+            )
+*/
 }

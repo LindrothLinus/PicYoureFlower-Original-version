@@ -55,14 +55,18 @@ class NavBarState extends State<NavBar> {
             IconButton(
               icon: Image.asset(buildmodeIconPath),
               onPressed: () {
+               
+              setState(() {
+                  visible = false;
+                });
+                widget.onBuildModeButtonPressed();
+                /* 
                 if(isHome){
-                  setState(() {
-                    visible = false;
-                  });
-                  widget.onBuildModeButtonPressed();
+                  
                 } else {
                   Navigator.popUntil(context,ModalRoute.withName('/'));
                 }
+                */
               } 
 
             ),
