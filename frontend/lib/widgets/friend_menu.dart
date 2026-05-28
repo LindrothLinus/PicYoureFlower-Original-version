@@ -8,9 +8,11 @@ import 'package:flutter_demo/widgets/camera_button.dart';
 import 'package:flutter_demo/widgets/login_popup.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import 'package:http/http.dart' as http;
+
 import '../resources/constants.dart';
 
-import 'package:http/http.dart' as http;
+import 'package:flutter_demo/widgets/camera_button.dart';
 
 final List<String> avatarImages = [
   "lib/resources/images/Avatar_Blue.png",
@@ -600,32 +602,62 @@ class FriendMenuState extends State<FriendMenu> {
   }
 
 void showDeleteUserDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-          title: const Text("Delete Account?"),
-          content: const Text("Are you sure you want to permanently delete your account?"),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(); // Stäng pop-upen
-              },
-              child: const Text("Cancel", style: TextStyle(color: Colors.black)),
-            ),
-            TextButton(
-              onPressed: () {
-                print("Användare raderad (fusk-logg tills backend är kopplat)");
-                Navigator.of(context).pop();
-              },
-              child: const Text("Delete", style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold)),
-            ),
-          ],
-        );
-      },
-    );
-  }
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        title: const Text("Delete Account?"),
+        content: const Text("Are you sure you want to permanently delete your account?"),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: const Text("Cancel", style: TextStyle(color: Colors.black)),
+          ),
+          TextButton(
+            onPressed: () async {
+              if (loggedInUserId == null || loggedInUserId!.isEmpty) {
+                return;
+              }
+
+              final String baseUrl = "https://group-1-75.pvt.dsv.su.se/api";
+              
+              try {
+                final flowerResponse = await http.delete(
+                  Uri.parse('$baseUrl/deleteflowersfromuser/$loggedInUserId'),
+                );
+
+                if (flowerResponse.statusCode == 200 || flowerResponse.statusCode == 204) {
+                  final userResponse = await http.delete(
+                    Uri.parse('$baseUrl/removeuser/$loggedInUserId'),
+                  );
+
+                  if (userResponse.statusCode == 200 || userResponse.statusCode == 204) {
+                    loggedInUserId = null; 
+                    authToken = null;
+
+                    if (context.mounted) {
+                      Navigator.of(context).pop();
+                      
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Account successfully deleted.')),
+                      );
+                    }
+                  }
+                }
+              } catch (e) {
+                print("Error: $e");
+              }
+            },
+            child: const Text("Delete", style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold)),
+          ),
+        ],
+      );
+    },
+  );
+}
 
 
 
