@@ -68,7 +68,7 @@ class _Greenhouse extends State<Greenhouse> {
             bottom: 80,
             right: 10,
             child: NewAddButton(
-              onPressed: () {
+              onBuildModeButtonPressed: () {
                 setState(() {
                   
                 });
