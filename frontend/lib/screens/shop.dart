@@ -123,7 +123,7 @@ class _Shop extends State<Shop> {
           : GridView.builder(
               padding: const EdgeInsets.all(20),
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3,
+                crossAxisCount: 2,
                 crossAxisSpacing: 10,
                 mainAxisSpacing: 10,
                 childAspectRatio: 0.7,
@@ -177,8 +177,8 @@ class _Shop extends State<Shop> {
                                     const SizedBox(width: 4),
                                     Image.asset(
                                       coinsPath,
-                                      height: 20,
-                                      width: 20,
+                                      height: 16,
+                                      width: 16,
                                       //fit: BoxFit.contain,
                                     ),
                                   ],

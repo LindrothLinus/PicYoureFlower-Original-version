@@ -52,30 +52,39 @@ class _FlowerCollectionState extends State<FlowerCollection> {
     final Color color = _parseColor(data['color'] as String?);
     final String name = (data['commonName'] as String?) ?? 'Unknown';
     switch (template) {
-      case 'ROSE':        return RoseFlower(color: color, name: name);
-      case 'SUNFLOWER':   return SunFlower(color: color, name: name);
-      case 'TULIP':       return TulipFlower(color: color, name: name);
-      case 'WOODANEMONE': return WoodanemoneFlower(color: color, name: name);
-      default:            return GenericFlower(color: color, name: name);
+      case 'ROSE':
+        return RoseFlower(color: color, name: name);
+      case 'SUNFLOWER':
+        return SunFlower(color: color, name: name);
+      case 'TULIP':
+        return TulipFlower(color: color, name: name);
+      case 'WOODANEMONE':
+        return WoodanemoneFlower(color: color, name: name);
+      default:
+        return GenericFlower(color: color, name: name);
     }
   }
 
   Future<void> _fetchFlowers() async {
     if (!mounted) return;
-    setState(() { _isLoading = true; _error = null; });
+    setState(() {
+      _isLoading = true;
+      _error = null;
+    });
 
     if (loggedInUserId == null) {
       if (!mounted) return;
-      setState(() { _error = 'Not logged in'; _isLoading = false; });
+      setState(() {
+        _error = 'Not logged in';
+        _isLoading = false;
+      });
       return;
     }
 
     try {
       final response = await http.get(
         Uri.parse('$flowerServiceUrl/home/user/$loggedInUserId/flowers'),
-        headers: {
-          if (authToken != null) 'Authorization': 'Bearer $authToken',
-        },
+        headers: {if (authToken != null) 'Authorization': 'Bearer $authToken'},
       );
       if (!mounted) return;
       if (response.statusCode == 200) {
@@ -87,11 +96,17 @@ class _FlowerCollectionState extends State<FlowerCollection> {
           _isLoading = false;
         });
       } else {
-        setState(() { _error = 'Error ${response.statusCode}'; _isLoading = false; });
+        setState(() {
+          _error = 'Error ${response.statusCode}';
+          _isLoading = false;
+        });
       }
     } catch (e) {
       if (!mounted) return;
-      setState(() { _error = 'Network error'; _isLoading = false; });
+      setState(() {
+        _error = 'Network error';
+        _isLoading = false;
+      });
     }
   }
 
@@ -108,122 +123,122 @@ class _FlowerCollectionState extends State<FlowerCollection> {
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : _error != null
-              ? Center(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(_error!, style: TextStyles.infoText),
-                      const SizedBox(height: 12),
-                      ElevatedButton(
-                        onPressed: _fetchFlowers,
-                        child: const Text('Try again'),
-                      ),
-                    ],
+          ? Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(_error!, style: TextStyles.infoText),
+                  const SizedBox(height: 12),
+                  ElevatedButton(
+                    onPressed: _fetchFlowers,
+                    child: const Text('Try again'),
                   ),
-                )
-              : _flowers.isEmpty
-                  ? Center(
-                      child: Text(
-                        'No flowers yet!\nGo take some pictures 📸',
-                        style: TextStyles.infoText,
-                        textAlign: TextAlign.center,
-                      ),
-                    )
-                  : RefreshIndicator(
-                      onRefresh: _fetchFlowers,
-                      child: GridView.builder(
-                        padding: const EdgeInsets.all(20),
-                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 3,
-                          crossAxisSpacing: 10,
-                          mainAxisSpacing: 10,
+                ],
+              ),
+            )
+          : _flowers.isEmpty
+          ? Center(
+              child: Text(
+                'No flowers yet!\nGo take some pictures 📸',
+                style: TextStyles.infoText,
+                textAlign: TextAlign.center,
+              ),
+            )
+          : RefreshIndicator(
+              onRefresh: _fetchFlowers,
+              child: GridView.builder(
+                padding: const EdgeInsets.all(20),
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 10,
+                  mainAxisSpacing: 10,
+                ),
+                itemCount: _flowers.length,
+                itemBuilder: (BuildContext context, int index) {
+                  final item = _flowers[index];
+
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => FlowerInfoScreen(
+                            flowerItem: item,
+                            data: _flowerData[index],
+                          ),
                         ),
-                        itemCount: _flowers.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          final item = _flowers[index];
-
-                          return GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => FlowerInfoScreen(
-                                    flowerItem: item,
-                                    data: _flowerData[index],
-                                  ),
+                      );
+                    },
+                    child: Card(
+                      elevation: 5,
+                      child: Stack(
+                        children: [
+                          Center(
+                            child: Padding(
+                              padding: const EdgeInsets.only(bottom: 25),
+                              child: SizedBox(
+                                height: 90,
+                                child: Image.asset(
+                                  item.backGround,
+                                  color: item.color,
+                                  height: 90,
+                                  width: 90,
+                                  fit: BoxFit.contain,
                                 ),
-                              );
-                            },
-                            child: Card(
-                              elevation: 5,
-                              child: Stack(
+                              ),
+                            ),
+                          ),
+
+                          Center(
+                            child: Padding(
+                              padding: const EdgeInsets.only(bottom: 25),
+                              child: SizedBox(
+                                height: 90,
+                                child: Image.asset(
+                                  item.frontImage,
+                                  height: 90,
+                                  width: 90,
+                                  fit: BoxFit.contain,
+                                ),
+                              ),
+                            ),
+                          ),
+
+                          Align(
+                            alignment: Alignment.bottomCenter,
+                            child: Container(
+                              width: double.infinity,
+                              height: 30,
+                              padding: const EdgeInsets.all(1),
+                              decoration: BoxDecoration(
+                                color: purpleColor,
+                                borderRadius: const BorderRadius.only(
+                                  bottomLeft: Radius.circular(12),
+                                  bottomRight: Radius.circular(12),
+                                ),
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Center(
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(bottom: 25),
-                                      child: SizedBox(
-                                        height: 90,
-                                        child: Image.asset(
-                                          item.backGround,
-                                          color: item.color,
-                                          height: 90,
-                                          width: 90,
-                                          fit: BoxFit.contain,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-
-                                  Center(
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(bottom: 25),
-                                      child: SizedBox(
-                                        height: 90,
-                                        child: Image.asset(
-                                          item.frontImage,
-                                          height: 90,
-                                          width: 90,
-                                          fit: BoxFit.contain,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-
-                                  Align(
-                                    alignment: Alignment.bottomCenter,
-                                    child: Container(
-                                      width: double.infinity,
-                                      height: 30,
-                                      padding: const EdgeInsets.all(1),
-                                      decoration: BoxDecoration(
-                                        color: purpleColor,
-                                        borderRadius: const BorderRadius.only(
-                                          bottomLeft: Radius.circular(12),
-                                          bottomRight: Radius.circular(12),
-                                        ),
-                                      ),
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        children: [
-                                          Expanded(
-                                            child: Text(
-                                              item.name,
-                                              style: TextStyles.infoText,
-                                              overflow: TextOverflow.ellipsis,
-                                              textAlign: TextAlign.center,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
+                                  Expanded(
+                                    child: Text(
+                                      item.name,
+                                      style: TextStyles.infoText,
+                                      overflow: TextOverflow.ellipsis,
+                                      textAlign: TextAlign.center,
                                     ),
                                   ),
                                 ],
                               ),
                             ),
-                          );
-                        },
+                          ),
+                        ],
                       ),
                     ),
+                  );
+                },
+              ),
+            ),
 
       bottomNavigationBar: NavBar(onBuildModeButtonPressed: () {}),
     );
