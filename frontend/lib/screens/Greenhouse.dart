@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_demo/states/like_sent_overlay.dart';
 import 'package:flutter_demo/widgets/add_button.dart';
-import 'package:flutter_demo/widgets/like.dart';
+import 'package:flutter_demo/widgets/like_button.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 const String likedPath = "lib/resources/images/SentLike.png";
@@ -29,11 +29,7 @@ class _Greenhouse extends State<Greenhouse> {
 
   @override
   Widget build(BuildContext context) {
-    final String greenhouseOwnerId = "myID";
-    final String currentUserId =
-        "myID"; //OBS Nu satt som samma eftersom det inte ska visas, behövas kopplas med backend
 
-    final bool isOtherUsersGreenhouse = greenhouseOwnerId != currentUserId;
 
     return Scaffold(
       body: Stack(
@@ -67,21 +63,12 @@ class _Greenhouse extends State<Greenhouse> {
               ),
             ),
           ),
-          if (isOtherUsersGreenhouse)
-            Positioned(
-              bottom: 70,
-              right: 30,
-              child: LikeButton(
-                userId: "123",
-                liked: showLikeButton,
-              ), //hämta user från databasen!
-            ),
+          
+            
         ],
       ),
     );
   }
 
-  void showLikeButton() {
-    LikedPopUp.showLikeSent(context);
-  }
+
 }

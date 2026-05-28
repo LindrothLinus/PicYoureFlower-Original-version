@@ -1,10 +1,18 @@
+import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_demo/screens/view_friend.dart';
+import 'package:flutter_demo/widgets/add_button.dart';
+import 'package:flutter_demo/widgets/camera_button.dart';
 import 'package:flutter_demo/widgets/login_popup.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../resources/constants.dart';
+
+import 'package:http/http.dart' as http;
+
+const String _baseUrl = 'http://10.0.2.2:8080';
 
 final List<String> avatarImages = [
   "lib/resources/images/Avatar_Blue.png",
@@ -25,12 +33,22 @@ final TextStyle menuText = GoogleFonts.nunito(
 
 class Friend {
   String name;
+  int id;
   String avatar;
-  Friend(this.name)
+
+  Friend(this.name, this.id)
     : avatar = avatarImages[random.nextInt(avatarImages.length)];
+
+  factory Friend.fromJson(Map<String, dynamic> json) {
+    return Friend(json['name'], json['id']);
+  }
 }
 
 class FriendMenu extends StatefulWidget {
+  const FriendMenu({super.key, required this.addButtons, required this.userId});
+  final List<AddButton> addButtons;
+  final String? userId;
+
   @override
   FriendMenuState createState() => FriendMenuState();
 }
@@ -48,15 +66,99 @@ class FriendMenuState extends State<FriendMenu> {
 
   final TextEditingController friendController = TextEditingController();
 
-  var friends = [
-    //NOTICE ME BACKEND!!!!
-    //add friends from the database here by the method below
-    //Friend("name from database")
-    Friend("Tom"),
-    Friend("Lin"),
-    Friend("Hamlet"),
-  ];
+  late List<Friend> friends = [];
+  String _amountOfLikes = "";
+  String _userName = "";
+  String _amountOfFlowers = "";
+  @override
+  void initState() {
+    super.initState();
+    _getUserName();
+    _getAmountOfFlowers();
+    _getFriends();
+    _getLikes();
+  }
 
+  Future<void> _getFriends() async {
+    try {
+      String? id = widget.userId;
+      final response = await http.get(Uri.parse('$_baseUrl/home/friends/$id'));
+      if (!mounted) return;
+      if (response.statusCode == 200) {
+        final List<dynamic> raw = jsonDecode(response.body);
+        final maps = raw.cast<Map<String, dynamic>>();
+
+        friends = maps.map((e) => Friend.fromJson(e)).toList();
+      }
+    } catch (e) {
+      friends = [Friend("Somthing whernt wrong", 10000)];
+      print(e);
+    }
+  }
+
+  Future<void> _getLikes() async {
+    try {
+      String? id = widget.userId;
+
+      final response = await http.get(Uri.parse('$_baseUrl/home/likes/$id'));
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+
+        setState(() {
+          _amountOfLikes = data.toString();
+        });
+      } else {
+        _amountOfLikes = "Loggin for likes";
+      }
+    } catch (e) {
+      _amountOfLikes = "Server error";
+    }
+  }
+
+  Future<void> _getUserName() async{
+    try {
+      String? id = widget.userId;
+      final response = await http.get(Uri.parse("$_baseUrl/users/$id"));
+
+     if (!mounted) return;
+      if (response.statusCode == 200) {
+        final dynamic raw = jsonDecode(response.body);
+
+        setState(() {
+          _userName = raw['name'];        
+        });
+    
+      } else {
+        _userName = "Guest";
+      }
+    } catch (e) {
+      _userName = "Server error";
+    }
+  }
+
+
+Future<void> _getAmountOfFlowers() async {
+  String? id = widget.userId;
+  try {
+    final response = await http.get(
+      Uri.parse('$_baseUrl/home/user/$id/flowers'),
+      headers: {if (authToken != null) 'Authorization': 'Bearer $authToken'},
+    );
+    if (response.statusCode == 200 && mounted) {
+      final List<dynamic> data = jsonDecode(response.body);
+      setState(() {
+        _amountOfFlowers = data.length.toString();
+      });
+    }
+    else{
+      _amountOfFlowers="login to collect";
+    }
+
+  } catch (e) {
+      _amountOfFlowers="Server error";
+  }
+}
   @override
   void dispose() {
     friendController.dispose();
@@ -282,7 +384,7 @@ class FriendMenuState extends State<FriendMenu> {
             //Send contents of textfield to backend to identity if the user exists and
             //add it to current users friend list if exists
 
-            addFriends(Friend(friendController.text));
+            addFriends(Friend(friendController.text, 4));
             friendController.text = "";
             showCheck();
           },
@@ -366,65 +468,78 @@ class FriendMenuState extends State<FriendMenu> {
     );
   }
 
-  Card createCard(Friend friend) {
+  Widget createCard(Friend friend) {
     bool isSelected = selectedFriend == friend;
 
-    return Card(
-      elevation: 1,
-      color: Colors.white,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-        side: BorderSide(
-          color: isSelected ? Color(0xFFFFA6A6) : Colors.black,
-          width: isSelected ? 3 : 1,
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ViewFriendScreen(
+              friendId: friend.id,
+              addButtons: widget.addButtons,
+            ),
+          ),
+        );
+      },
+      child: Card(
+        elevation: 1,
+        color: Colors.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+          side: BorderSide(
+            color: isSelected ? Color(0xFFFFA6A6) : Colors.black,
+            width: isSelected ? 3 : 1,
+          ),
         ),
-      ),
-      child: Stack(
-        children: [
-          Center(
-            child: Padding(
-              padding: const EdgeInsets.only(top: 5, bottom: 35),
-              child: SizedBox(
-                height: 90,
-                child: Image.asset(
-                  friend.avatar,
+        child: Stack(
+          children: [
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.only(top: 5, bottom: 35),
+                child: SizedBox(
                   height: 90,
-                  width: 90,
-                  fit: BoxFit.contain,
-                ),
-              ),
-            ),
-          ),
-
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Container(
-              width: double.infinity,
-              height: 30,
-              padding: const EdgeInsets.all(1),
-              decoration: BoxDecoration(
-                color: purpleColor,
-                borderRadius: const BorderRadius.only(
-                  bottomLeft: Radius.circular(12),
-                  bottomRight: Radius.circular(12),
-                ),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Expanded(
-                    child: Text(
-                      friend.name, //friends name
-                      style: infoText,
-                      overflow: TextOverflow.ellipsis,
-                      textAlign: TextAlign.center,
-                    ),
+                  child: Image.asset(
+                    friend.avatar,
+                    height: 90,
+                    width: 90,
+                    fit: BoxFit.contain,
                   ),
-                ],
+                ),
               ),
             ),
-          ),
-        ],
+
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Container(
+                width: double.infinity,
+                height: 30,
+                padding: const EdgeInsets.all(1),
+                decoration: BoxDecoration(
+                  color: purpleColor,
+                  borderRadius: const BorderRadius.only(
+                    bottomLeft: Radius.circular(12),
+                    bottomRight: Radius.circular(12),
+                  ),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        friend.name, //friends name
+                        style: infoText,
+                        overflow: TextOverflow.ellipsis,
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -544,7 +659,7 @@ class FriendMenuState extends State<FriendMenu> {
                                           purpleColor,
                                           40,
                                           40,
-                                          'lib/resources/images/Calendar_v2.png',
+                                          'lib/resources/images/Like.png',
                                         ),
                                         const SizedBox(width: 8),
                                         Expanded(
@@ -552,7 +667,7 @@ class FriendMenuState extends State<FriendMenu> {
                                             Colors.white,
                                             double.infinity,
                                             40,
-                                            '26-05-15',
+                                            _amountOfLikes,
                                           ),
                                         ),
                                       ],
@@ -573,7 +688,7 @@ class FriendMenuState extends State<FriendMenu> {
                                             Colors.white,
                                             double.infinity,
                                             40,
-                                            'FlowerManiac',
+                                            _userName,
                                           ),
                                         ),
                                       ],
@@ -594,7 +709,7 @@ class FriendMenuState extends State<FriendMenu> {
                                             Colors.white,
                                             double.infinity,
                                             40,
-                                            '123',
+                                            _amountOfFlowers,
                                           ),
                                         ),
                                       ],
