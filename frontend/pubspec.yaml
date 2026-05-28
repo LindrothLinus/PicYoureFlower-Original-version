@@ -81,6 +81,8 @@ flutter:
     - lib/resources/images/purple_smaller.png
     - lib/resources/images/yellow_smaller.png
     - lib/resources/images/add_smaller.PNG
+    - lib/resources/images/home.png
+
 
 
   uses-material-design: true

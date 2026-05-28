@@ -253,26 +253,23 @@ class MyAppState extends State<MyApp> {
       body: Scaffold(
         body: Stack(
           children: [
-            Greenhouse(addButtons: _addButtons),
-            SafeArea(child: FriendMenu(addButtonsCordinates: _addButtoncordinates,userId: loggedInUserId,)),
+            Greenhouse(
+              addButtons: _addButtons,
+              onBuildModeButtonPressed: () {
+                buildModeActiveNotifier.value = !buildModeActiveNotifier.value;
+                //buildBarActiveNotifer.value = !buildBarActiveNotifer.value;
+                print(extractPots());
+              },
+              ),
+            SafeArea(child: FriendMenu(addButtons: _addButtons,userId: loggedInUserId,)),
           ],
         ),
         bottomSheet: buildBar,
       ),
       bottomNavigationBar: NavBar(
         onBuildModeButtonPressed: () {
-          if(buildModeActiveNotifier.value == false && buildBarActiveNotifer.value == true){
-            buildBarActiveNotifer.value = false;
-            _selectedPotNotifier.value = null;
-            itemSelected.value = null;
-          } else{
-            buildModeActiveNotifier.value = !buildModeActiveNotifier.value;
-            if(!buildModeActiveNotifier.value) {
-              buildBarActiveNotifer.value = false;
-              _selectedPotNotifier.value = null;
-              itemSelected.value = null;
-            }
-          }
+          buildModeActiveNotifier.value = false;
+          buildBarActiveNotifer.value = false;
           print(extractPots());
         },
       ),

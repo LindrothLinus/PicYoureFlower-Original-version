@@ -1,12 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_demo/widgets/add_button.dart';
+import 'package:flutter_demo/widgets/like_button.dart';
+import 'package:flutter_demo/widgets/new_add_button.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 const String likedPath = "lib/resources/images/SentLike.png";
 
 class Greenhouse extends StatefulWidget {
-  const Greenhouse({super.key, required this.addButtons});
+  const Greenhouse({
+    super.key, 
+    required this.addButtons,
+    required this.onBuildModeButtonPressed,
+    });
   final List<AddButton> addButtons;
+  final Function() onBuildModeButtonPressed;
 
   @override
   State<Greenhouse> createState() => _Greenhouse();
@@ -66,11 +73,18 @@ class _Greenhouse extends State<Greenhouse> {
                             ),
                             ...widget.addButtons,
 
-                            //FriendMenu(),
+                        
                           ],
                         ),
                       ),
                     ),
+                  ),
+                ),
+                Positioned(
+                  bottom: 30,
+                  right: 30,
+                  child: NewAddButton(
+                    onBuildModeButtonPressed: widget.onBuildModeButtonPressed,
                   ),
                 ),
               ],
