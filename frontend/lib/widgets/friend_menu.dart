@@ -68,7 +68,7 @@ class FriendMenuState extends State<FriendMenu> {
 
   final TextEditingController friendController = TextEditingController();
 
-  late List<Friend> friends = [Friend("temp", 1)];
+  late List<Friend> friends = [];
   String _amountOfLikes = "";
   String _userName = "";
   String _amountOfFlowers = "";
@@ -664,7 +664,8 @@ class FriendMenuState extends State<FriendMenu> {
                       mainAxisAlignment: MainAxisAlignment.center, // center children vertically
                       mainAxisSize: MainAxisSize.max,
                       children: [
-                        Text("Youre ID: ${widget.userId}"),
+                        
+                        Text("Youre ID: ${widget.userId??"loggin to get an ID"}"),
                         SizedBox(width: 350, child: searchTextField()),
                       ],
                     ),
