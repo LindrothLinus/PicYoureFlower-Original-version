@@ -104,36 +104,7 @@ class MyAppState extends State<MyApp> {
   }
 
   // Your branch: parse hex color string from backend
-  @visibleForTesting
-  Color parseColor(String? hex) {
-    if (hex == null || hex.isEmpty) return Colors.pink;
-    try {
-      return Color(int.parse('FF${hex.replaceAll('#', '')}', radix: 16));
-    } catch (_) {
-      return Colors.pink;
-    }
-  }
 
-  // Your branch: map backend JSON to the correct Flower widget
-  @visibleForTesting
-  Flower buildFlower(Map<String, dynamic> data) {
-    final String template = (data['template'] as String?) ?? 'GENERIC';
-    final Color color = parseColor(data['color'] as String?);
-    final String name = (data['commonName'] as String?) ?? 'Unknown';
-    final int? id = (data['id'] as num?)?.toInt();
-    switch (template) {
-      case 'ROSE':
-        return RoseFlower(color: color, name: name, id: id);
-      case 'SUNFLOWER':
-        return SunFlower(color: color, name: name, id: id);
-      case 'TULIP':
-        return TulipFlower(color: color, name: name, id: id);
-      case 'WOODANEMONE':
-        return WoodanemoneFlower(color: color, name: name, id: id);
-      default:
-        return GenericFlower(color: color, name: name, id: id);
-    }
-  }
 
   void _rebuildBuildBar() {
     buildBar = BuildBar(
@@ -173,7 +144,7 @@ class MyAppState extends State<MyApp> {
         setState(() {
           flowerCollection = data
               .cast<Map<String, dynamic>>()
-              .map(buildFlower)
+              .map(Flower.buildFlower)
               .toList();
           _rebuildBuildBar();
         });
@@ -283,7 +254,7 @@ class MyAppState extends State<MyApp> {
         body: Stack(
           children: [
             Greenhouse(addButtons: _addButtons),
-            SafeArea(child: FriendMenu(addButtons: _addButtons,userId: loggedInUserId,)),
+            SafeArea(child: FriendMenu(addButtonsCordinates: _addButtoncordinates,userId: loggedInUserId,)),
           ],
         ),
         bottomSheet: buildBar,

@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_demo/states/like_sent_overlay.dart';
 import 'package:flutter_demo/widgets/add_button.dart';
-import 'package:flutter_demo/widgets/like_button.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 const String likedPath = "lib/resources/images/SentLike.png";
@@ -15,60 +13,71 @@ class Greenhouse extends StatefulWidget {
 }
 
 class _Greenhouse extends State<Greenhouse> {
-  final TransformationController controller = TransformationController();
   final double imageWidth = 5906;
   final double imageHeight = 4725;
   final double scale = 0.17;
+  Offset _offset = Offset.zero;
 
-  @override
-  void initState() {
-    super.initState();
-
-    controller.value = Matrix4.diagonal3Values(scale, scale, 1.0);
+  Offset _clamp(Offset offset, Size screenSize) {
+    final double scaledWidth = imageWidth * scale;
+    final double scaledHeight = imageHeight * scale;
+    final double minX = (screenSize.width - scaledWidth).clamp(double.negativeInfinity, 0.0);
+    final double minY = (screenSize.height - scaledHeight).clamp(double.negativeInfinity, 0.0);
+    return Offset(
+      offset.dx.clamp(minX, 0.0),
+      offset.dy.clamp(minY, 0.0),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-
+    final screenSize = MediaQuery.of(context).size;
 
     return Scaffold(
-      body: Stack(
-        children: [
-          InteractiveViewer(
-            alignment: Alignment.topLeft,
-            constrained: false,
-            boundaryMargin: EdgeInsets.zero,
-            clipBehavior: Clip.none,
-            panEnabled: true,
-            scaleEnabled: false,
-            panAxis: PanAxis.free,
-            interactionEndFrictionCoefficient: 0.00001,
+      body: ClipRect(
+        child: SizedBox.expand(
+          child: GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onPanUpdate: (details) {
+              setState(() {
+                _offset = _clamp(_offset + details.delta, screenSize);
+              });
+            },
+            child: Stack(
+              children: [
+                Positioned(
+                  left: _offset.dx,
+                  top: _offset.dy,
+                  child: SizedBox(
+                    width: imageWidth * scale,
+                    height: imageHeight * scale,
+                    child: FittedBox(
+                      fit: BoxFit.fill,
+                      child: SizedBox(
+                        width: imageWidth,
+                        height: imageHeight,
+                        child: Stack(
+                          fit: StackFit.expand,
+                          children: [
+                            Positioned.fill(
+                              child: SvgPicture.asset(
+                                "lib/resources/images/Greenhouse.svg",
+                              ),
+                            ),
+                            ...widget.addButtons,
 
-            transformationController: controller,
-            child: SizedBox(
-              width: imageWidth,
-              height: imageHeight,
-              child: Stack(
-                fit: StackFit.expand,
-                children: [
-                  Positioned.fill(
-                    child: SvgPicture.asset(
-                      "lib/resources/images/Greenhouse.svg",
+                            //FriendMenu(),
+                          ],
+                        ),
+                      ),
                     ),
                   ),
-                  ...widget.addButtons,
-
-                  //FriendMenu(),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
-          
-            
-        ],
+        ),
       ),
     );
   }
-
-
 }

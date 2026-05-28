@@ -71,7 +71,7 @@ Future<void> signInWithGoogle(BuildContext context, {VoidCallback? onSuccess}) a
                 width: 100,
                 height: 100,
                 child: Image.asset(
-                  'lib/resources/images/Check.webp',
+                  'lib/resources/images/Confirmed.png',
                   fit: BoxFit.contain,
                 ),
               ),
