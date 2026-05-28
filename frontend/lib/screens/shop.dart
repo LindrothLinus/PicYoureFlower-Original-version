@@ -29,13 +29,13 @@ const String coinsPath = "lib/resources/images/coin.webp";
 
 //Alla items
 const List<Map<String, dynamic>> _allPotConfigs = [
-  {'color': 'BLUE',      'image': bluePotPath,   'cost': 5},
-  {'color': 'BROWN',     'image': brownPotPath,  'cost': 5},
-  {'color': 'GREEN',     'image': greenPotPath,  'cost': 5},
-  {'color': 'TURQUOISE', 'image': mintPotPath,   'cost': 5},
-  {'color': 'PINK',      'image': pinkPotPath,   'cost': 5},
-  {'color': 'PURPLE',    'image': purplePotPath, 'cost': 5},
-  {'color': 'YELLOW',    'image': yellowPotPath, 'cost': 5},
+  {'color': 'BLUE', 'image': bluePotPath, 'cost': 5},
+  {'color': 'BROWN', 'image': brownPotPath, 'cost': 5},
+  {'color': 'GREEN', 'image': greenPotPath, 'cost': 5},
+  {'color': 'TURQUOISE', 'image': mintPotPath, 'cost': 5},
+  {'color': 'PINK', 'image': pinkPotPath, 'cost': 5},
+  {'color': 'PURPLE', 'image': purplePotPath, 'cost': 5},
+  {'color': 'YELLOW', 'image': yellowPotPath, 'cost': 5},
 ];
 
 class Shop extends StatefulWidget {
@@ -46,18 +46,16 @@ class Shop extends StatefulWidget {
 }
 
 class _Shop extends State<Shop> {
-
   final CoinsState coinsState = CoinsState();
   List<BuyableItemCreator> _buyableItems = [];
   Set<String> _ownedTemplates = {};
 
   @override
-  void initState(){
+  void initState() {
     super.initState();
 
-    WidgetsBinding.instance.addPostFrameCallback((_){
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       _fetchPots();
-      
     });
   }
 
@@ -75,11 +73,13 @@ class _Shop extends State<Shop> {
           _ownedTemplates = owned.map((e) => e.toString()).toSet();
           _buyableItems = _allPotConfigs
               .where((c) => !_ownedTemplates.contains(c['color']))
-              .map((c) => BuyableItemCreator(
-                    cost: c['cost'] as int,
-                    image: c['image'] as String,
-                    color: c['color'] as String,
-                  ))
+              .map(
+                (c) => BuyableItemCreator(
+                  cost: c['cost'] as int,
+                  image: c['image'] as String,
+                  color: c['color'] as String,
+                ),
+              )
               .toList();
         });
       }
@@ -90,15 +90,15 @@ class _Shop extends State<Shop> {
 
   //FETCH POTS CODE
 
-  Future<void> sendPot(String potColor) async{
-    try{
+  Future<void> sendPot(String potColor) async {
+    try {
       final response = await http.put(
-        Uri.parse('$userServiceUrl/home/addpot/$loggedInUserId/$potColor')
+        Uri.parse('$userServiceUrl/home/addpot/$loggedInUserId/$potColor'),
       );
       if (response.statusCode == 200 && mounted) {
         await _fetchPots();
       }
-    } catch(e){
+    } catch (e) {
       print('Error with sending pots: $e');
     }
   }
@@ -168,7 +168,10 @@ class _Shop extends State<Shop> {
                               Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  Text(item.cost.toString(), style: TextStyles.body),
+                                  Text(
+                                    item.cost.toString(),
+                                    style: TextStyles.body,
+                                  ),
 
                                   const SizedBox(width: 4),
                                   Image.asset(
@@ -185,7 +188,9 @@ class _Shop extends State<Shop> {
                                 constraints: const BoxConstraints(),
                                 onPressed: () {
                                   if (coinsState.getCoinValue() >= item.cost) {
-                                    int newValue = coinsState.getCoinValue() - item.cost as int;
+                                    int newValue =
+                                        coinsState.getCoinValue() - item.cost
+                                            as int;
                                     coinsState.setCoinValue(newValue);
                                     coinsState.updateCoinValue(newValue);
                                     sendPot(item.color);
