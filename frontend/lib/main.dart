@@ -282,7 +282,14 @@ class MyAppState extends State<MyApp> {
       body: Scaffold(
         body: Stack(
           children: [
-            Greenhouse(addButtons: _addButtons),
+            Greenhouse(
+              addButtons: _addButtons,
+              onBuildModeButtonPressed: () {
+                buildModeActiveNotifier.value = !buildModeActiveNotifier.value;
+                buildBarActiveNotifer.value = !buildBarActiveNotifer.value;
+                print(extractPots());
+              },
+              ),
             SafeArea(child: FriendMenu(addButtons: _addButtons,userId: loggedInUserId,)),
           ],
         ),

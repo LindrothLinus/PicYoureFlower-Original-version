@@ -8,8 +8,13 @@ import 'package:flutter_svg/flutter_svg.dart';
 const String likedPath = "lib/resources/images/SentLike.png";
 
 class Greenhouse extends StatefulWidget {
-  const Greenhouse({super.key, required this.addButtons});
+  const Greenhouse({
+    super.key, 
+    required this.addButtons,
+    required this.onBuildModeButtonPressed,
+    });
   final List<AddButton> addButtons;
+  final Function() onBuildModeButtonPressed;
 
   @override
   State<Greenhouse> createState() => _Greenhouse();
@@ -20,7 +25,6 @@ class _Greenhouse extends State<Greenhouse> {
   final double imageWidth = 5906;
   final double imageHeight = 4725;
   final double scale = 0.17;
-  bool buildMode = false;
 
   @override
   void initState() {
@@ -56,7 +60,7 @@ class _Greenhouse extends State<Greenhouse> {
                       "lib/resources/images/Greenhouse.svg",
                     ),
                   ),
-                  if(buildMode)...widget.addButtons,
+                  ...widget.addButtons,
 
                   //FriendMenu(),
                 ],
@@ -67,12 +71,7 @@ class _Greenhouse extends State<Greenhouse> {
             bottom: 30,
             right: 30,
             child: NewAddButton(
-              onBuildModeButtonPressed: () {
-                setState(() {
-                  buildMode = !buildMode;
-                  
-                });
-              }
+              onBuildModeButtonPressed: widget.onBuildModeButtonPressed,
             ),
           ),
         ],
