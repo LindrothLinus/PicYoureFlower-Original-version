@@ -3,11 +3,13 @@ package com.pvt.flower;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
 import javax.imageio.ImageIO;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -45,6 +47,10 @@ public class FlowerController {
     private final String PLANTNET_API_KEY = "2b106hcgFkGyy2wiJf9y0Huhwu";
     private final String PLANTNET_URL = "https://my-api.plantnet.org/v2/identify/all?api-key=";
     private final String WIKIDATA_URL = "https://query.wikidata.org/sparql";
+    private final String VISION_URL = "https://vision.googleapis.com/v1/images:annotate?key=";
+
+    @Value("${google.vision.api-key}")
+    private String visionApiKey;
 
     private final ObjectMapper mapper = new ObjectMapper();
     private final RestTemplate restTemplate = new RestTemplate();
@@ -126,7 +132,9 @@ public class FlowerController {
 
             String color = findColor(topSci, topCom);
             if (color == null)
-                color = getColor(image);
+                color = getColorFromVision(image);
+            if (color == null)
+                color = "#cccccc";
 
             ObjectNode response = (ObjectNode) rootNode;
             response.put("color", color);
@@ -152,6 +160,60 @@ public class FlowerController {
             return ResponseEntity.ok(mapper.writeValueAsString(response));
         } catch (Exception e) {
             return ResponseEntity.status(500).body("Error: " + e.getMessage());
+        }
+    }
+
+    private String getColorFromVision(MultipartFile image) {
+        try {
+            String base64Image = Base64.getEncoder().encodeToString(image.getBytes());
+
+            String requestBody = "{\"requests\":[{\"image\":{\"content\":\"" + base64Image + "\"}," +
+                    "\"features\":[{\"type\":\"IMAGE_PROPERTIES\",\"maxResults\":10}]}]}";
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+
+            ResponseEntity<String> response = restTemplate.exchange(
+                    VISION_URL + visionApiKey,
+                    HttpMethod.POST,
+                    new HttpEntity<>(requestBody, headers),
+                    String.class);
+
+            JsonNode colors = mapper.readTree(response.getBody())
+                    .path("responses").path(0)
+                    .path("imagePropertiesAnnotation")
+                    .path("dominantColors")
+                    .path("colors");
+
+            for (JsonNode colorNode : colors) {
+                int r = colorNode.path("color").path("red").asInt(0);
+                int g = colorNode.path("color").path("green").asInt(0);
+                int b = colorNode.path("color").path("blue").asInt(0);
+
+                float[] hsb = Color.RGBtoHSB(r, g, b, null);
+                float saturation  = hsb[1];
+                float brightness  = hsb[2];
+                float hueDegrees  = hsb[0] * 360f;
+
+                // Skip grey, white, black pixels
+                if (saturation < 0.25f || brightness < 0.15f)
+                    continue;
+
+                // Skip green hues (leaves and background)
+                if (hueDegrees >= 80f && hueDegrees <= 170f)
+                    continue;
+
+                // Skip muted browns (stems, soil, background)
+                if (hueDegrees >= 20f && hueDegrees <= 40f && saturation < 0.6f)
+                    continue;
+
+                return String.format("#%02x%02x%02x", r, g, b);
+            }
+
+            return null;
+        } catch (Exception e) {
+            System.out.println("Vision API failed: " + e.getMessage());
+            return null;
         }
     }
 
