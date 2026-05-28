@@ -130,28 +130,24 @@ void main() {
       testWidgets("parseClolor: Hex color work with #", (
         WidgetTester tester,
       ) async {
-        final MyAppState mas = await loadMain(tester);
-        expect(mas.parseColor("#02f091"), Color(0xff02f091));
+        expect(Flower.parseColor("#02f091"), Color(0xff02f091));
       });
       testWidgets("parseClolor: Hex color work without #", (
         WidgetTester tester,
       ) async {
-        final MyAppState mas = await loadMain(tester);
-        expect(mas.parseColor("02f091"), Color(0xff02f091));
+        expect(Flower.parseColor("02f091"), Color(0xff02f091));
       });
 
       testWidgets("parseClolor: if hex null returns pink", (
         WidgetTester tester,
       ) async {
-        final MyAppState mas = await loadMain(tester);
-        expect(mas.parseColor(null), Colors.pink);
+        expect(Flower.parseColor(null), Colors.pink);
       });
 
       testWidgets("parseClolor: if unparebel string reurn pink", (
         WidgetTester tester,
       ) async {
-        final MyAppState mas = await loadMain(tester);
-        expect(mas.parseColor("Test"), Colors.pink);
+        expect(Flower.parseColor("Test"), Colors.pink);
       });
     });
 
@@ -159,9 +155,8 @@ void main() {
       testWidgets("buildFlower returns correct flower", (
         WidgetTester tester,
       ) async {
-        final MyAppState mas = await loadMain(tester);
         expect(
-          mas.buildFlower({
+          Flower.buildFlower({
             'template': 'ROSE',
             'color': '#FFFFFF',
             'commonName': 'Test Ros',
@@ -169,7 +164,7 @@ void main() {
           isA<RoseFlower>(),
         );
         expect(
-          mas.buildFlower({
+          Flower.buildFlower({
             'template': 'SUNFLOWER',
             'color': '#FFFFFF',
             'commonName': 'Test Ros',
@@ -177,7 +172,7 @@ void main() {
           isA<SunFlower>(),
         );
         expect(
-          mas.buildFlower({
+          Flower.buildFlower({
             'template': 'TULIP',
             'color': '#FFFFFF',
             'commonName': 'Test Ros',
@@ -185,7 +180,7 @@ void main() {
           isA<TulipFlower>(),
         );
         expect(
-          mas.buildFlower({
+          Flower.buildFlower({
             'template': 'WOODANEMONE',
             'color': '#FFFFFF',
             'commonName': 'Test Ros',
@@ -197,9 +192,8 @@ void main() {
       testWidgets("buildFlower returns generic flower if unkown flower type", (
         WidgetTester tester,
       ) async {
-        final MyAppState mas = await loadMain(tester);
         expect(
-          mas.buildFlower({
+          Flower.buildFlower({
             'template': 'Intet existerand blomma',
             'color': '#FFFFFF',
             'commonName': 'Test Ros',
@@ -212,8 +206,7 @@ void main() {
         WidgetTester tester,
       ) async {
         String name = "testNamn";
-        final MyAppState mas = await loadMain(tester);
-        Flower flower = mas.buildFlower({
+        Flower flower = Flower.buildFlower({
           'template': 'ROSE',
           'color': '#FFFFFF',
           'commonName': name,
@@ -225,8 +218,7 @@ void main() {
       testWidgets(
         "buildFlower: null values on name and type gives unkown and generic",
         (WidgetTester tester) async {
-          final MyAppState mas = await loadMain(tester);
-          Flower flower = mas.buildFlower({
+          Flower flower = Flower.buildFlower({
             'template': null,
             'color': '#FFFFFF',
             'commonName': null,

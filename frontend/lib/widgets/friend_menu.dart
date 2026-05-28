@@ -43,8 +43,8 @@ class Friend {
 }
 
 class FriendMenu extends StatefulWidget {
-  const FriendMenu({super.key, required this.addButtons, required this.userId});
-  final List<AddButton> addButtons;
+  const FriendMenu({super.key, required this.addButtonsCordinates, required this.userId});
+  final List<({double x, double y})> addButtonsCordinates;
   final String? userId;
 
   @override
@@ -64,7 +64,7 @@ class FriendMenuState extends State<FriendMenu> {
 
   final TextEditingController friendController = TextEditingController();
 
-  late List<Friend> friends = [];
+  late List<Friend> friends = [Friend("temp", 0)];
   String _amountOfLikes = "";
   String _userName = "";
   String _amountOfFlowers = "";
@@ -206,6 +206,10 @@ Future<void> _getAmountOfFlowers() async {
       child: GestureDetector(
         onTap: () {
           setState(() {
+                _getUserName();
+                _getAmountOfFlowers();
+                _getFriends();
+                 _getLikes();
             showButtons = true;
           });
         },
@@ -475,8 +479,8 @@ Future<void> _getAmountOfFlowers() async {
           context,
           MaterialPageRoute(
             builder: (context) => ViewFriendScreen(
-              friendId: friend.id,
-              addButtons: widget.addButtons,
+              //friendId: friend.id,
+              addButtonsCordinats: widget.addButtonsCordinates,
             ),
           ),
         );
