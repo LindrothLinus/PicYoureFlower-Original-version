@@ -73,6 +73,13 @@ flutter:
     - lib/resources/images/Avatar_Purple.png
     - lib/resources/images/Avatar_Red.png
     - lib/resources/images/Avatar_Yellow.png
+    - lib/resources/images/blue_smaller.png
+    - lib/resources/images/brown_smaller.png
+    - lib/resources/images/green_smaller.png
+    - lib/resources/images/mint_smaller.png
+    - lib/resources/images/pink_smaller.png
+    - lib/resources/images/purple_smaller.png
+    - lib/resources/images/yellow_smaller.png
 
 
 
