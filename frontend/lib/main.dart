@@ -261,7 +261,7 @@ class MyAppState extends State<MyApp> {
                 print(extractPots());
               },
               ),
-            SafeArea(child: FriendMenu(addButtons: _addButtons,userId: loggedInUserId,)),
+            SafeArea(child: FriendMenu(addButtonsCordinates: _addButtoncordinates,userId: loggedInUserId,)),
           ],
         ),
         bottomSheet: buildBar,
