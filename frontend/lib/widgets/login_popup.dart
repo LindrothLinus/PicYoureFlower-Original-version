@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_demo/widgets/camera_button.dart';
@@ -22,9 +23,19 @@ final TextStyle loginText = GoogleFonts.nunito(
   color: Colors.black,
 );
 
+/*
 final GoogleSignIn _googleSignIn = GoogleSignIn(
   serverClientId: '167485843554-b82rj6jet7kr9rt81r0qm20jv40okesd.apps.googleusercontent.com',
   clientId: '167485843554-7drapkqia61ksol45iu6cl9oobj3s0t6.apps.googleusercontent.com',
+  scopes: ['email', 'profile'],
+);
+*/
+
+final GoogleSignIn _googleSignIn = GoogleSignIn(
+  serverClientId: '167485843554-b82rj6jet7kr9rt81r0qm20jv40okesd.apps.googleusercontent.com',
+  clientId: Platform.isIOS 
+      ? '167485843554-2evckuk7fa0k7a2v8u67u1afijqqe0vr.apps.googleusercontent.com'
+      : null, 
   scopes: ['email', 'profile'],
 );
 
