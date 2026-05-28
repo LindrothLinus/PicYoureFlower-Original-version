@@ -38,7 +38,7 @@ Future<void> signInWithGoogle(BuildContext context, {VoidCallback? onSuccess}) a
     if (idToken == null) throw Exception('No ID token received');
 
     final response = await http.post( 
-      Uri.parse('http://10.0.2.2:8080/api/auth/google'),
+      Uri.parse('https://group-1-75.pvt.dsv.su.se/auth/api/auth/google'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({'idToken': idToken}),
     );
