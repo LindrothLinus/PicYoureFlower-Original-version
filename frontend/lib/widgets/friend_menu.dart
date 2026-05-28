@@ -12,8 +12,6 @@ import '../resources/constants.dart';
 
 import 'package:http/http.dart' as http;
 
-const String _baseUrl = 'http://10.0.2.2:8080';
-
 final List<String> avatarImages = [
   "lib/resources/images/Avatar_Blue.png",
   "lib/resources/images/Avatar_Pink.png",
@@ -45,8 +43,12 @@ class Friend {
 }
 
 class FriendMenu extends StatefulWidget {
-  const FriendMenu({super.key, required this.addButtons, required this.userId});
-  final List<AddButton> addButtons;
+  const FriendMenu({
+    super.key,
+    required this.addButtonsCordinates,
+    required this.userId,
+  });
+  final List<({double x, double y})> addButtonsCordinates;
   final String? userId;
 
   @override
@@ -66,7 +68,7 @@ class FriendMenuState extends State<FriendMenu> {
 
   final TextEditingController friendController = TextEditingController();
 
-  late List<Friend> friends = [];
+  late List<Friend> friends = [Friend("temp", 1)];
   String _amountOfLikes = "";
   String _userName = "";
   String _amountOfFlowers = "";
@@ -82,7 +84,9 @@ class FriendMenuState extends State<FriendMenu> {
   Future<void> _getFriends() async {
     try {
       String? id = widget.userId;
-      final response = await http.get(Uri.parse('$_baseUrl/home/friends/$id'));
+      final response = await http.get(
+        Uri.parse('$userServiceUrl/home/friends/$id'),
+      );
       if (!mounted) return;
       if (response.statusCode == 200) {
         final List<dynamic> raw = jsonDecode(response.body);
@@ -100,7 +104,9 @@ class FriendMenuState extends State<FriendMenu> {
     try {
       String? id = widget.userId;
 
-      final response = await http.get(Uri.parse('$_baseUrl/home/likes/$id'));
+      final response = await http.get(
+        Uri.parse('$userServiceUrl/home/likes/$id'),
+      );
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
@@ -116,19 +122,18 @@ class FriendMenuState extends State<FriendMenu> {
     }
   }
 
-  Future<void> _getUserName() async{
+  Future<void> _getUserName() async {
     try {
       String? id = widget.userId;
-      final response = await http.get(Uri.parse("$_baseUrl/users/$id"));
+      final response = await http.get(Uri.parse("$userServiceUrl/users/$id"));
 
-     if (!mounted) return;
+      if (!mounted) return;
       if (response.statusCode == 200) {
         final dynamic raw = jsonDecode(response.body);
 
         setState(() {
-          _userName = raw['name'];        
+          _userName = raw['name'];
         });
-    
       } else {
         _userName = "Guest";
       }
@@ -137,28 +142,41 @@ class FriendMenuState extends State<FriendMenu> {
     }
   }
 
-
-Future<void> _getAmountOfFlowers() async {
-  String? id = widget.userId;
-  try {
-    final response = await http.get(
-      Uri.parse('$_baseUrl/home/user/$id/flowers'),
-      headers: {if (authToken != null) 'Authorization': 'Bearer $authToken'},
-    );
-    if (response.statusCode == 200 && mounted) {
-      final List<dynamic> data = jsonDecode(response.body);
-      setState(() {
-        _amountOfFlowers = data.length.toString();
-      });
+  Future<void> _getAmountOfFlowers() async {
+    String? id = widget.userId;
+    try {
+      final response = await http.get(
+        Uri.parse('$flowerServiceUrl/home/user/$id/flowers'),
+        headers: {if (authToken != null) 'Authorization': 'Bearer $authToken'},
+      );
+      if (response.statusCode == 200 && mounted) {
+        final List<dynamic> data = jsonDecode(response.body);
+        setState(() {
+          _amountOfFlowers = data.length.toString();
+        });
+      } else {
+        _amountOfFlowers = "login to collect";
+      }
+    } catch (e) {
+      _amountOfFlowers = "Server error";
     }
-    else{
-      _amountOfFlowers="login to collect";
-    }
-
-  } catch (e) {
-      _amountOfFlowers="Server error";
   }
-}
+
+  Future<bool> _sendFrienRequest(String friendId) async {
+    if(friendId==widget.userId){
+      return false;
+    }
+    try {
+      final respose = await http.post(
+        Uri.parse("$userServiceUrl/home/addfriend/${widget.userId}/$friendId"),
+      );
+      return true;
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
   @override
   void dispose() {
     friendController.dispose();
@@ -208,6 +226,10 @@ Future<void> _getAmountOfFlowers() async {
       child: GestureDetector(
         onTap: () {
           setState(() {
+            _getUserName();
+            _getAmountOfFlowers();
+            _getFriends();
+            _getLikes();
             showButtons = true;
           });
         },
@@ -230,6 +252,7 @@ Future<void> _getAmountOfFlowers() async {
             backgroundColor: backgroundColor,
           ),
           onPressed: () {
+            _getFriends();
             setState(() {
               selectedFriend = null;
             });
@@ -370,7 +393,7 @@ Future<void> _getAmountOfFlowers() async {
     return TextField(
       controller: friendController,
       decoration: InputDecoration(
-        hintText: "Add a Friend Here!",
+        hintText: "Enter a friend ID!",
         filled: true,
         fillColor: Colors.white,
         enabledBorder: OutlineInputBorder(
@@ -380,13 +403,22 @@ Future<void> _getAmountOfFlowers() async {
           borderSide: BorderSide(color: Colors.black, width: 1),
         ),
         suffixIcon: GestureDetector(
-          onTap: () {
+          onTap: () async {
+            bool sentFriendRequest = await _sendFrienRequest(
+              friendController.text,
+            );
+            if(friendController.text==widget.userId){
+              friendController.text="can't be frien with yourself";
+            }
+            else if (sentFriendRequest && widget.userId != null) {
+              friendController.text = "";
+              showCheck();
+            } else {
+              friendController.text = "Login to add friends";
+            }
+
             //Send contents of textfield to backend to identity if the user exists and
             //add it to current users friend list if exists
-
-            addFriends(Friend(friendController.text, 4));
-            friendController.text = "";
-            showCheck();
           },
           child: SizedBox(width: 60, height: 60, child: searchConfirmButton()),
         ),
@@ -477,8 +509,9 @@ Future<void> _getAmountOfFlowers() async {
           context,
           MaterialPageRoute(
             builder: (context) => ViewFriendScreen(
-              friendId: friend.id,
-              addButtons: widget.addButtons,
+              userId: widget.userId,
+              friend: friend,
+              addButtonsCordinats: widget.addButtonsCordinates,
             ),
           ),
         );
@@ -626,7 +659,16 @@ Future<void> _getAmountOfFlowers() async {
                   expandButton(),
                 ],
                 if (activePanelColor == mainColor) ...[
-                  Center(child: SizedBox(width: 350, child: searchTextField())),
+                  Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center, // center children vertically
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        Text("Youre ID: ${widget.userId}"),
+                        SizedBox(width: 350, child: searchTextField()),
+                      ],
+                    ),
+                  ),
                 ],
                 if (activePanelColor == greenColor) ...[
                   if (panelHeigth == mediumHeight) ...[
@@ -653,27 +695,6 @@ Future<void> _getAmountOfFlowers() async {
                                 flex: 3,
                                 child: Column(
                                   children: [
-                                    Row(
-                                      children: [
-                                        profileBoxPic(
-                                          purpleColor,
-                                          40,
-                                          40,
-                                          'lib/resources/images/Like.png',
-                                        ),
-                                        const SizedBox(width: 8),
-                                        Expanded(
-                                          child: profileBoxText(
-                                            Colors.white,
-                                            double.infinity,
-                                            40,
-                                            _amountOfLikes,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 15),
-
                                     Row(
                                       children: [
                                         profileBoxPic(
@@ -714,6 +735,28 @@ Future<void> _getAmountOfFlowers() async {
                                         ),
                                       ],
                                     ),
+                                    const SizedBox(height: 15),
+                                    Row(
+                                      children: [
+                                        profileBoxPic(
+                                          purpleColor,
+                                          40,
+                                          40,
+                                          'lib/resources/images/Like.png',
+                                        ),
+                                        const SizedBox(width: 8),
+                                        Expanded(
+                                          child: profileBoxText(
+                                            Colors.white,
+                                            double.infinity,
+                                            40,
+                                            _amountOfLikes,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    
+
                                   ],
                                 ),
                               ),

@@ -10,8 +10,8 @@ class LikeSent extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: SizedBox(
-        width: 100,
-        height: 100,
+        width: 300,
+        height: 300,
         child: Image.asset(likedPath, fit: BoxFit.contain),
       ),
     );
