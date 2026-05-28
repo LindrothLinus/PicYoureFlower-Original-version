@@ -33,7 +33,7 @@ class MyApp extends StatefulWidget {
 
   //!För mockramverk annars ska denna vara lämnas null
   final http.Client? httpClient;
-  final String title = "PicYourFlower";
+  final String title = "PicYourFlowers";
 
   @override
   State<MyApp> createState() => MyAppState(httpClient: httpClient);

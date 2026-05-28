@@ -28,6 +28,17 @@
 	<true/>
 	<key>NSCameraUsageDescription</key>
 	<string>This app uses the camera to take photos of flowers.</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+  		<dict>
+    	<key>CFBundleTypeRole</key>
+    	<string>Editor</string>
+    	<key>CFBundleURLSchemes</key>
+    	<array>
+      		<string>com.googleusercontent.apps.167485843554-2evckuk7fa0k7a2v8u67u1afijqqe0vr</string>
+    	</array>
+  		</dict>
+	</array>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>This app uses the microphone to record nature sounds.</string>
 	<key>UIApplicationSceneManifest</key>
