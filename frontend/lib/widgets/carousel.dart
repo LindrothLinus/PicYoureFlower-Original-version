@@ -39,7 +39,6 @@ class CarouselState extends State<Carousel> {
                       boxShadow: [
                         BoxShadow(
                           color: Colors.grey.withValues(alpha: 1),
-
                           blurRadius: 1,
                           offset: Offset(1, 3),
                         ),

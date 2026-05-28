@@ -162,49 +162,52 @@ class _Shop extends State<Shop> {
                               bottomRight: Radius.circular(12),
                             ),
                           ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Text(
-                                    item.cost.toString(),
-                                    style: TextStyles.body,
-                                  ),
+                          child: Expanded(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text(
+                                      item.cost.toString(),
+                                      style: TextStyles.body,
+                                    ),
 
-                                  const SizedBox(width: 4),
-                                  Image.asset(
-                                    coinsPath,
+                                    const SizedBox(width: 4),
+                                    Image.asset(
+                                      coinsPath,
+                                      height: 20,
+                                      width: 20,
+                                      //fit: BoxFit.contain,
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(width: 6),
+                                IconButton(
+                                  padding: EdgeInsets.zero,
+                                  constraints: const BoxConstraints(),
+                                  onPressed: () {
+                                    if (coinsState.getCoinValue() >=
+                                        item.cost) {
+                                      int newValue =
+                                          coinsState.getCoinValue() - item.cost
+                                              as int;
+                                      coinsState.setCoinValue(newValue);
+                                      coinsState.updateCoinValue(newValue);
+                                      sendPot(item.color);
+                                      CheckButtonPopUp.showCheckButton(context);
+                                    }
+                                  },
+                                  icon: Image.asset(
+                                    addPath,
                                     height: 20,
                                     width: 20,
                                     //fit: BoxFit.contain,
                                   ),
-                                ],
-                              ),
-                              const SizedBox(width: 6),
-                              IconButton(
-                                padding: EdgeInsets.zero,
-                                constraints: const BoxConstraints(),
-                                onPressed: () {
-                                  if (coinsState.getCoinValue() >= item.cost) {
-                                    int newValue =
-                                        coinsState.getCoinValue() - item.cost
-                                            as int;
-                                    coinsState.setCoinValue(newValue);
-                                    coinsState.updateCoinValue(newValue);
-                                    sendPot(item.color);
-                                    CheckButtonPopUp.showCheckButton(context);
-                                  }
-                                },
-                                icon: Image.asset(
-                                  addPath,
-                                  height: 20,
-                                  width: 20,
-                                  //fit: BoxFit.contain,
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
                       ),
