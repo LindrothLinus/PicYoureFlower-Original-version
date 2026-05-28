@@ -291,6 +291,9 @@ class MyAppState extends State<MyApp> {
       bottomNavigationBar: NavBar(
         onBuildModeButtonPressed: () {
           buildModeActiveNotifier.value = !buildModeActiveNotifier.value;
+          if(!buildModeActiveNotifier.value) {
+            buildBarActiveNotifer.value = false;
+          }
           print(extractPots());
         },
       ),
