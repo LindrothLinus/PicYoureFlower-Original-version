@@ -60,7 +60,7 @@ class FriendMenuState extends State<FriendMenu> {
   bool isProfileExpanded = false;
   bool isExpanded = false;
   double smallHeigth = 150;
-  double mediumHeight = 300;
+  double mediumHeight = 360;
   double largeHeigth = 0;
   double panelHeigth = 0;
   Color? activePanelColor;
