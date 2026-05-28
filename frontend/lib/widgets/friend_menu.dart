@@ -606,8 +606,12 @@ void showDeleteUserDialog(BuildContext context) {
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        title: const Text("Delete Account?"),
+        backgroundColor: const Color(0xFFAEF7A1),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+          side: const BorderSide(color: Colors.black, width: 2), 
+        ),
+        title: Text("Delete Account?", style: headerText),
         content: const Text("Are you sure you want to permanently delete your account?"),
         actions: [
           TextButton(
