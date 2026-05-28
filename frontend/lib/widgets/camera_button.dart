@@ -25,11 +25,64 @@ const String _baseUrl = 'http://10.0.2.2:8080';
 String? authToken;
 String? loggedInUserId;
 
-class CameraButtonBar extends StatelessWidget {
-  CameraButtonBar({super.key, required this.cameraFeed, required this.cameraKey});
+class CameraButtonBar extends StatefulWidget {
+  CameraButtonBar({super.key, required this.cameraFeed, required this.cameraKey, required this.isLoading});
 
   final CameraFeed cameraFeed;
   final GlobalKey<CameraFeedState> cameraKey;
+  final ValueNotifier<bool> isLoading;
+
+  @override
+  State<CameraButtonBar> createState() => _CameraButtonBarState();
+}
+
+class _CameraButtonBarState extends State<CameraButtonBar> with SingleTickerProviderStateMixin {
+  late AnimationController _spinController;
+  OverlayEntry? _overlayEntry;
+
+  @override
+  void initState() {
+    super.initState();
+    _spinController = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 1),
+    );
+  }
+
+  @override
+  void dispose() {
+    _spinController.dispose();
+    _overlayEntry?.remove();
+    super.dispose();
+  }
+
+  void _showSpinner(BuildContext context) {
+    _spinController.repeat();
+    _overlayEntry = OverlayEntry(
+      builder: (_) => AbsorbPointer(
+        absorbing: true,
+        child: SizedBox.expand(
+          child: Center(
+            child: RotationTransition(
+              turns: _spinController,
+              child: Image.asset(
+                'lib/resources/images/blue.webp',
+                width: 80,
+                height: 80,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+    Overlay.of(context).insert(_overlayEntry!);
+  }
+
+  void _hideSpinner() {
+    _spinController.stop();
+    _overlayEntry?.remove();
+    _overlayEntry = null;
+  }
 
   Color _parseColor(String? hex) {
     if (hex == null || hex.isEmpty) return Colors.pink;
@@ -165,53 +218,72 @@ class CameraButtonBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BottomAppBar(
-      color: mainColor,
-      child: Center(
-        child: ElevatedButton(
-          onPressed: () async {
-            //real camera
-            final XFile? image = await cameraKey.currentState?.takePicture();
-            if (image == null) return;
+    return ValueListenableBuilder<bool>(
+      valueListenable: widget.isLoading,
+      builder: (context, isLoading, child) {
+        return BottomAppBar(
+          color: mainColor,
+          child: Center(
+            child: ElevatedButton(
+              onPressed: isLoading
+                  ? null
+                  : () async {
+                      widget.isLoading.value = true;
+                      _showSpinner(context);
 
-            final String? location = await _getLocationString();
-            print('Location result: $location');
-            //final data = await identifyTestImage(location: location);
-            final data = await identifyFlower(image, location: location);
+                      try {
+                        //real camera
+                        final XFile? image = await widget.cameraKey.currentState?.takePicture();
+                        if (image == null) return;
 
-            if (!context.mounted) return;
+                        final String? location = await _getLocationString()
+                            .timeout(const Duration(seconds: 5), onTimeout: () => null);
+                        print('Location result: $location');
+                        //final data = await identifyTestImage(location: location);
+                        final data = await identifyFlower(image, location: location)
+                            .timeout(const Duration(seconds: 20), onTimeout: () => null);
 
-            final flower = data != null
-                ? _buildFlower(data)
-                : GenericFlower(color: Colors.pink, name: 'Unknown');
+                        if (!context.mounted) return;
 
-            try{
-              final response = await http.get(Uri.parse('$userServiceUrl/home/addcoins/$loggedInUserId/5'));
-              print(response.statusCode);
-              print(response.body);
-            }catch(e){
-              print('Add coins Error: e');
-            }
+                        final flower = data != null
+                            ? _buildFlower(data)
+                            : GenericFlower(color: Colors.pink, name: 'Unknown');
 
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => FlowerInfoScreen(
-                  flowerItem: flower,
-                  data: data,
-                ),
+                        try{
+                          final response = await http.get(Uri.parse('$userServiceUrl/home/addcoins/$loggedInUserId/5'));
+                          print(response.statusCode);
+                          print(response.body);
+                        }catch(e){
+                          print('Add coins Error: e');
+                        }
+
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => FlowerInfoScreen(
+                              flowerItem: flower,
+                              data: data,
+                            ),
+                          ),
+                        );
+                      } finally {
+                        if (mounted) {
+                          _hideSpinner();
+                          widget.isLoading.value = false;
+                        }
+                      }
+                    },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: blueColor,
+                side: BorderSide(color: Colors.black, width: 2),
+                shape: CircleBorder(),
+                padding: EdgeInsets.all(40),
               ),
-            );
-          },
-          style: ElevatedButton.styleFrom(
-            backgroundColor: blueColor,
-            side: BorderSide(color: Colors.black, width: 2),
-            shape: CircleBorder(),
-            padding: EdgeInsets.all(40),
+              child: SizedBox.shrink(),
+            ),
           ),
-          child: SizedBox.shrink(),
-        ),
-      ),
+        );
+      },
     );
   }
 }

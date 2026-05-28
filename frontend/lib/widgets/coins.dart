@@ -11,7 +11,7 @@ const String _baseUrl = 'https://group-1-75.pvt.dsv.su.se';
 
 const String coinsPath = "lib/resources/images/coin.webp";
 
-class Coins extends StatefulWidget{
+class Coins extends StatefulWidget {
   final CoinsState coinsState;
   const Coins({super.key, required this.coinsState});
 
@@ -23,26 +23,23 @@ class _Coins extends State<Coins> {
   final CoinsState coinsState;
   _Coins({required this.coinsState});
 
-
   @override
-  void initState(){
+  void initState() {
     super.initState();
     getCoins();
   }
 
   Future<void> getCoins() async {
-    try{
+    try {
       final response = await http.get(
         Uri.parse('$userServiceUrl/home/coins/$loggedInUserId'),
-        headers: {
-          if (authToken != null) 'Authorization': 'Bearer $authToken',
-        }
+        headers: {if (authToken != null) 'Authorization': 'Bearer $authToken'},
       );
-      if(response.statusCode == 200){
+      if (response.statusCode == 200) {
         final coinValue = jsonDecode(response.body);
         coinsState.setCoinValue(coinValue);
       }
-    } catch(e){
+    } catch (e) {
       print("Error");
     }
   }
@@ -57,16 +54,10 @@ class _Coins extends State<Coins> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                coinsState.getCoinValue().toString(),
+                coinsState.getCoinValue().toString() + " ",
                 style: TextStyles.coinsValue,
               ),
-              IconButton(
-                icon: Image.asset(coinsPath, width: 28, height: 28),
-                onPressed: () {
-                  //should be removed or changed to fit the database
-                  //coinsState.increaseCoinValue(1);
-                },
-              ),
+              Image.asset(coinsPath, width: 28, height: 28),
             ],
           ),
         );
