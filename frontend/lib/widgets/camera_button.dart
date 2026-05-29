@@ -14,6 +14,7 @@ import 'package:flutter_demo/widgets/flowers/woodanemone.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
+import 'package:image/image.dart' as img;
 import 'package:path_provider/path_provider.dart';
 
 import '../resources/constants.dart';
@@ -106,6 +107,34 @@ class _CameraButtonBarState extends State<CameraButtonBar> with SingleTickerProv
     }
   }
 
+  void _printResults(Map<String, dynamic> decoded) {
+    final List<dynamic>? results = decoded['results'] as List<dynamic>?;
+    if (results != null && results.isNotEmpty) {
+      for (int i = 0; i < results.length && i < 3; i++) {
+        final r = results[i] as Map<String, dynamic>;
+        final score = ((r['score'] as num?) ?? 0).toDouble();
+        final sci = (r['species']?['scientificNameWithoutAuthor'] as String?) ?? 'Unknown';
+        print('Match ${i + 1}: $sci | Probability: ${(score * 100).toStringAsFixed(1)}%');
+      }
+    }
+  }
+
+  Future<File> _cropToCenter(Uint8List bytes, String filename) async {
+    final original = img.decodeImage(bytes)!;
+
+    final cropW = (original.width * 0.5).toInt();
+    final cropH = (original.height * 0.5).toInt();
+    final startX = (original.width - cropW) ~/ 2;
+    final startY = (original.height - cropH) ~/ 2;
+
+    final cropped = img.copyCrop(original, x: startX, y: startY, width: cropW, height: cropH);
+
+    final tempDir = await getTemporaryDirectory();
+    final croppedFile = File('${tempDir.path}/$filename');
+    await croppedFile.writeAsBytes(img.encodeJpg(cropped));
+    return croppedFile;
+  }
+
   Future<String?> _getLocationString() async {
     try {
       bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
@@ -150,7 +179,10 @@ class _CameraButtonBarState extends State<CameraButtonBar> with SingleTickerProv
     try {
       final uri = Uri.parse('$flowerServiceUrl/home/identify');
       final request = http.MultipartRequest('POST', uri);
-      request.files.add(await http.MultipartFile.fromPath('image', image.path));
+
+      final bytes = await image.readAsBytes();
+      final croppedFile = await _cropToCenter(bytes, 'cropped_center.jpg');
+      request.files.add(await http.MultipartFile.fromPath('image', croppedFile.path));
 
       if (loggedInUserId != null) {
         request.fields['userId'] = loggedInUserId!;
@@ -169,7 +201,9 @@ class _CameraButtonBarState extends State<CameraButtonBar> with SingleTickerProv
       print(responseBody);
 
       if (response.statusCode == 200) {
-        return jsonDecode(responseBody) as Map<String, dynamic>;
+        final decoded = jsonDecode(responseBody) as Map<String, dynamic>;
+        _printResults(decoded);
+        return decoded;
       }
       return null;
     } catch (e) {
@@ -183,12 +217,11 @@ class _CameraButtonBarState extends State<CameraButtonBar> with SingleTickerProv
       final uri = Uri.parse('$flowerServiceUrl/home/identify');
 
       final byteData = await rootBundle.load('lib/resources/images/testblomma.jpg');
-      final tempDir = await getTemporaryDirectory();
-      final tempFile = File('${tempDir.path}/testblomma.jpg');
-      await tempFile.writeAsBytes(byteData.buffer.asUint8List());
+      final bytes = byteData.buffer.asUint8List();
+      final croppedFile = await _cropToCenter(bytes, 'cropped_test.jpg');
 
       final request = http.MultipartRequest('POST', uri);
-      request.files.add(await http.MultipartFile.fromPath('image', tempFile.path));
+      request.files.add(await http.MultipartFile.fromPath('image', croppedFile.path));
 
       if (loggedInUserId != null) {
         request.fields['userId'] = loggedInUserId!;
@@ -207,7 +240,9 @@ class _CameraButtonBarState extends State<CameraButtonBar> with SingleTickerProv
       print(responseBody);
 
       if (response.statusCode == 200) {
-        return jsonDecode(responseBody) as Map<String, dynamic>;
+        final decoded = jsonDecode(responseBody) as Map<String, dynamic>;
+        _printResults(decoded);
+        return decoded;
       }
       return null;
     } catch (e) {
