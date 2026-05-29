@@ -292,7 +292,6 @@ class MyAppState extends State<MyApp> {
       ),
     );
 
-    //test du kan ta bort denna komentar
   }
 
   void loadPotsOnAddButtonWithIndex(List<int> indexs) {
