@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_demo/widgets/add_button.dart';
-import 'package:flutter_demo/widgets/like_button.dart';
 import 'package:flutter_demo/widgets/new_add_button.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -11,9 +10,11 @@ class Greenhouse extends StatefulWidget {
     super.key, 
     required this.addButtons,
     required this.onBuildModeButtonPressed,
+    this.buildModeActiveNotifier,
     });
   final List<AddButton> addButtons;
   final Function() onBuildModeButtonPressed;
+  final ValueNotifier<bool>? buildModeActiveNotifier;
 
   @override
   State<Greenhouse> createState() => _Greenhouse();
@@ -86,6 +87,35 @@ class _Greenhouse extends State<Greenhouse> {
                   child: NewAddButton(
                     onBuildModeButtonPressed: widget.onBuildModeButtonPressed,
                   ),
+                ),
+                if (widget.buildModeActiveNotifier != null)
+                ValueListenableBuilder<bool>(
+                  valueListenable: widget.buildModeActiveNotifier!,
+                  builder: (context, isActive, _) {
+                    if (!isActive) return const SizedBox.shrink();
+                    return Positioned(
+                      top: 10,
+                      left: 0,
+                      right: 0,
+                      child: Center(
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                          decoration: BoxDecoration(
+                            color: Colors.black54,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: const Text(
+                            'Build mode',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 13,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                  },
                 ),
               ],
             ),

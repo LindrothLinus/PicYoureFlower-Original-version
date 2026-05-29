@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_demo/widgets/flowers/flower.dart';
 import 'package:flutter_demo/widgets/flowers/rose_flower.dart';
-import 'package:flutter_demo/widgets/flowers/sunflower.dart';
 
 class Pot extends StatefulWidget {
   Pot({
@@ -13,6 +12,9 @@ class Pot extends StatefulWidget {
     this.onFlowerPlanted,
     this.initialPlantedItem,
     this.potTemplate = 'BLUE',
+    this.buildModeActiveNotifier,
+    this.onFlowerInfoRequested,
+    this.onBuildModeTap,
   }) : super(key: key ?? UniqueKey());
 
   final int? id;
@@ -22,6 +24,9 @@ class Pot extends StatefulWidget {
   final ValueNotifier<PotState?> selectedPotNotifier;
   final Function(Flower flower)? onFlowerPlanted;
   final Flower? initialPlantedItem;
+  final ValueNotifier<bool>? buildModeActiveNotifier;
+  final Function(Flower flower)? onFlowerInfoRequested;
+  final VoidCallback? onBuildModeTap;
 
   Widget? plantedItem;
   @override
@@ -83,8 +88,16 @@ class PotState extends State<Pot> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        widget.selectedPotNotifier.value = this;
-        widget.buildBarActiveNotifer.value = true;
+        final bool buildModeActive = widget.buildModeActiveNotifier?.value ?? true;
+        if (buildModeActive) {
+          widget.onBuildModeTap?.call();
+          widget.selectedPotNotifier.value = this;
+          widget.buildBarActiveNotifer.value = true;
+        } else {
+          if (plantedItem is Flower) {
+            widget.onFlowerInfoRequested?.call(plantedItem as Flower);
+          }
+        }
       },
       child: Stack(
         clipBehavior: Clip.none,

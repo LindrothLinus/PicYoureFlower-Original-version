@@ -14,6 +14,8 @@ class AddButton extends StatefulWidget {
     required this.index,
     this.onPotPlaced,
     this.onFlowerPlanted,
+    this.buildModeActiveNotifier,
+    this.onFlowerInfoRequested,
   });
   final String imagePath = "lib/resources/images/add_smaller.PNG";
   final double x;
@@ -24,6 +26,8 @@ class AddButton extends StatefulWidget {
   final ValueNotifier<Widget?> item;
   final Function(int index, String template)? onPotPlaced;
   final Function(int index, Flower flower)? onFlowerPlanted;
+  final ValueNotifier<bool>? buildModeActiveNotifier;
+  final Function(Flower flower)? onFlowerInfoRequested;
   bool checking = false;
 
   @override
@@ -47,6 +51,11 @@ class AddButtonState extends State<AddButton> {
           buildBarActiveNotifer: originalPot.buildBarActiveNotifer,
           selectedPotNotifier: originalPot.selectedPotNotifier,
           potTemplate: originalPot.potTemplate,
+          buildModeActiveNotifier: widget.buildModeActiveNotifier,
+          onFlowerInfoRequested: widget.onFlowerInfoRequested,
+          onBuildModeTap: () {
+            widget.checking = true;
+          },
           onFlowerPlanted: widget.onFlowerPlanted != null
               ? (flower) => widget.onFlowerPlanted!(widget.index, flower)
               : null,
@@ -124,6 +133,8 @@ class AddButtonState extends State<AddButton> {
     required ValueNotifier<PotState?> selectedPotNotifier,
     Flower? initialFlower,
     String potTemplate = 'BLUE',
+    ValueNotifier<bool>? buildModeActiveNotifier,
+    Function(Flower)? onFlowerInfoRequested,
   }) {
     if (!isTaken) {
       final newPot = Pot(
@@ -131,6 +142,11 @@ class AddButtonState extends State<AddButton> {
         buildBarActiveNotifer: buildBarActiveNotifer,
         selectedPotNotifier: selectedPotNotifier,
         potTemplate: potTemplate,
+        buildModeActiveNotifier: buildModeActiveNotifier,
+        onFlowerInfoRequested: onFlowerInfoRequested,
+        onBuildModeTap: () {
+          widget.checking = true;
+        },
         onFlowerPlanted: widget.onFlowerPlanted != null
             ? (flower) => widget.onFlowerPlanted!(widget.index, flower)
             : null,

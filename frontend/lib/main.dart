@@ -3,15 +3,11 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_demo/screens/Greenhouse.dart';
+import 'package:flutter_demo/screens/flower_info.dart';
 import 'package:flutter_demo/widgets/add_button.dart';
 import 'package:flutter_demo/widgets/build_bar.dart';
 import 'package:flutter_demo/widgets/camera_button.dart';
 import 'package:flutter_demo/widgets/flowers/flower.dart';
-import 'package:flutter_demo/widgets/flowers/genericflower.dart';
-import 'package:flutter_demo/widgets/flowers/rose_flower.dart';
-import 'package:flutter_demo/widgets/flowers/sunflower.dart';
-import 'package:flutter_demo/widgets/flowers/tulip.dart';
-import 'package:flutter_demo/widgets/flowers/woodanemone.dart';
 import 'package:flutter_demo/widgets/friend_menu.dart';
 import 'package:flutter_demo/widgets/login_popup.dart';
 import 'package:flutter_demo/widgets/nav_bar.dart';
@@ -52,6 +48,7 @@ class MyAppState extends State<MyApp> {
   // Your branch: flowers now fetched from API instead of hardcoded
   @visibleForTesting
   List<Flower> flowerCollection = [];
+  List<Map<String, dynamic>> _flowerDataCollection = [];
 
   List<String> _ownedPotTemplates = ['BLUE'];
 
@@ -129,6 +126,22 @@ class MyAppState extends State<MyApp> {
     );
   }
 
+  void _navigateToFlowerInfo(Flower flower) {
+    final matches = _flowerDataCollection.where(
+      (d) => (d['id'] as num?)?.toInt() == flower.id,
+    );
+    final data = matches.isNotEmpty ? matches.first : null;
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => FlowerInfoScreen(
+          flowerItem: flower,
+          data: data,
+        ),
+      ),
+    );
+  }
+
   // Your branch: fetch the logged-in user's flowers from the backend
   @visibleForTesting
   Future<void> fetchFlowers() async {
@@ -142,8 +155,8 @@ class MyAppState extends State<MyApp> {
       if (response.statusCode == 200 && mounted) {
         final List<dynamic> data = jsonDecode(response.body);
         setState(() {
-          flowerCollection = data
-              .cast<Map<String, dynamic>>()
+          _flowerDataCollection = data.cast<Map<String, dynamic>>();
+          flowerCollection = _flowerDataCollection
               .map(Flower.buildFlower)
               .toList();
           _rebuildBuildBar();
@@ -204,6 +217,8 @@ class MyAppState extends State<MyApp> {
               selectedPotNotifier: _selectedPotNotifier,
               initialFlower: flower,
               potTemplate: (item['template'] as String?) ?? 'BLUE',
+              buildModeActiveNotifier: buildModeActiveNotifier,
+              onFlowerInfoRequested: _navigateToFlowerInfo,
             );
           });
         }
@@ -255,6 +270,7 @@ class MyAppState extends State<MyApp> {
           children: [
             Greenhouse(
               addButtons: _addButtons,
+              buildModeActiveNotifier: buildModeActiveNotifier,
               onBuildModeButtonPressed: () {
                 buildModeActiveNotifier.value = !buildModeActiveNotifier.value;
                 //buildBarActiveNotifer.value = !buildBarActiveNotifer.value;
@@ -285,6 +301,8 @@ class MyAppState extends State<MyApp> {
           item: itemSelected,
           buildBarActiveNotifer: buildBarActiveNotifer,
           selectedPotNotifier: _selectedPotNotifier,
+          buildModeActiveNotifier: buildModeActiveNotifier,
+          onFlowerInfoRequested: _navigateToFlowerInfo,
         ),
       );
     }
@@ -336,14 +354,23 @@ class MyAppState extends State<MyApp> {
         key: key,
         builModeActiveNotifier: buildModeActiveNotifier,
         buildBarActiveNotifer: buildBarActiveNotifer,
+        buildModeActiveNotifier: buildModeActiveNotifier,
+        onFlowerInfoRequested: _navigateToFlowerInfo,
         x: cordinates[i].x,
         y: cordinates[i].y,
         item: itemSelected,
         index: i,
         onPotPlaced: (idx, template) {
+          final int? oldFlowerId = _slotFlowerIds[idx];
+          if (oldFlowerId != null) {
+            _placedFlowerIds.remove(oldFlowerId);
+          }
           _slotPotTemplates[idx] = template;
           _slotFlowerIds[idx] = null;
           _saveGreenhouse();
+          setState(() {
+            _rebuildBuildBar();
+          });
         },
         onFlowerPlanted: (idx, flower) {
           if (!mounted) return;
