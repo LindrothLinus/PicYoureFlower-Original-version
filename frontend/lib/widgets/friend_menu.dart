@@ -168,7 +168,7 @@ class FriendMenuState extends State<FriendMenu> {
       final respose = await http.post(
         Uri.parse("$userServiceUrl/home/addfriend/${widget.userId}/$friendId"),
       );
-      return true;
+      return respose.statusCode == 200;
     } catch (e) {
       print(e);
       return false;
@@ -409,13 +409,13 @@ class FriendMenuState extends State<FriendMenu> {
             );
             if (!mounted) return;
             if(friendController.text==widget.userId){
-              friendController.text="can't be frien with yourself";
+              friendController.text="Can't friend yourself";
             }
             else if (sentFriendRequest && widget.userId != null) {
               friendController.text = "";
               showCheck();
             } else {
-              friendController.text = "Login to add friends";
+              friendController.text = "User not found";
             }
 
             //Send contents of textfield to backend to identity if the user exists and
@@ -734,7 +734,7 @@ void showDeleteUserDialog(BuildContext context) {
                       mainAxisSize: MainAxisSize.max,
                       children: [
                         
-                        Text("Youre ID: ${widget.userId??"loggin to get an ID"}"),
+                        Text("ID: ${widget.userId??"loggin to get an ID"}"),
                         SizedBox(width: 350, child: searchTextField()),
                       ],
                     ),
