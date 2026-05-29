@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_demo/screens/leaderboard.dart';
 import 'package:flutter_demo/screens/view_friend.dart';
 import 'package:flutter_demo/widgets/camera_button.dart';
 import 'package:flutter_demo/widgets/login_popup.dart';
@@ -283,6 +284,32 @@ class FriendMenuState extends State<FriendMenu> {
           'lib/resources/images/Social.png',
           width: 80,
           height: 90,
+        ),
+      ),
+    );
+  }
+
+  Widget trophyButton() {
+    return Padding(
+      padding: const EdgeInsets.only(right: 10),
+      child: GestureDetector(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const LeaderboardScreen(),
+            ),
+          );
+        },
+        child: Container(
+          width: 70,
+          height: 80,
+          decoration: BoxDecoration(
+            color: yellowColor,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: Colors.black, width: 1.5),
+          ),
+          child: const Icon(Icons.emoji_events_rounded, size: 48, color: Color(0xFFB8860B)),
         ),
       ),
     );
@@ -727,6 +754,12 @@ void showDeleteUserDialog(BuildContext context) {
           alignment: Alignment.centerLeft,
           children: [
             if (!showButtons) heartButton(),
+
+            if (!showButtons)
+              Align(
+                alignment: Alignment.centerRight,
+                child: trophyButton(),
+              ),
 
             //Buttons that show up when friend menu appears
             if (showButtons)
