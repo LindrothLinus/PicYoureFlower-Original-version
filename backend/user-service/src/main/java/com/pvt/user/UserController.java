@@ -243,4 +243,18 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
+    @GetMapping("/home/leaderboard")
+    public ResponseEntity<List<Map<String, Object>>> getLeaderboard() {
+        List<User> users = userRepository.findAll();
+        List<Map<String, Object>> result = users.stream()
+                .map(u -> Map.<String, Object>of(
+                        "id", u.getId(),
+                        "name", u.getName() != null ? u.getName() : "Unknown",
+                        "profilePicture", u.getProfilePicture() != null ? u.getProfilePicture() : "Avatar_Green",
+                        "likes", u.getLikes()
+                ))
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(result);
+    }
+
 }
