@@ -153,8 +153,8 @@ class ViewFriendScreenState extends State<ViewFriendScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("${widget.friend.name}'s greenhouse",style: TextStyles.header),backgroundColor:Theme.of(context).colorScheme.inversePrimary,leading: CustomBackButton(toHome: true),
-),
+      appBar: AppBar(title: Text("${widget.friend.name}'s greenhouse",style: TextStyles.header),backgroundColor:Theme.of(context).colorScheme.inversePrimary,leading: CustomBackButton(toHome: true),),
+      bottomNavigationBar: Container(height: 42, color: purpleColor,),
       body: Stack(
         children: [
           Greenhouse(

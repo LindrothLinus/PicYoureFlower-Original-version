@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../resources/constants.dart';
 const String buildmodeIconPath = "lib/resources/images/showel_icon.png";
 
 
@@ -20,12 +21,25 @@ class NewAddButtonState extends State<NewAddButton> {
       child: IconButton(
         padding: EdgeInsets.zero,
         onPressed: widget.onBuildModeButtonPressed,
-        icon: Image.asset(
-          buildmodeIconPath,
-          width: 50,
-          height: 50,
-          fit: BoxFit.contain,
+        icon: Container(
+          width: 70,
+          height: 70,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: mainColor,
+            border: Border.all(
+              color: Colors.black,
+              width: 2,
+            ),
+          ),
+          child: Image.asset(
+            buildmodeIconPath,
+            width: 30,
+            height: 30,
+            fit: BoxFit.contain,
+          ),
         ),
+        
       ),
     );
   }

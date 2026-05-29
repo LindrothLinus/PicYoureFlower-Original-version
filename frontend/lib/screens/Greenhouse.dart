@@ -85,8 +85,8 @@ class _Greenhouse extends State<Greenhouse> {
                 ),
                 if (widget.showBuildButton)
                 Positioned(
-                  bottom: 30,
-                  right: 30,
+                  bottom: 20,
+                  right: 20,
                   child: NewAddButton(
                     onBuildModeButtonPressed: widget.onBuildModeButtonPressed,
                   ),
