@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_demo/resources/constants.dart';
 import 'package:flutter_demo/states/like_sent_overlay.dart';
 import 'package:http/http.dart' as http;
-const String _baseUrl = 'http://10.0.2.2:8080';
 
 const String likePath = "lib/resources/images/Like.png";
 
@@ -27,7 +27,7 @@ class LikeButton extends StatelessWidget {
 
     Future<void> sendLike() async {
     try {
-      final response = await http.put(Uri.parse('$_baseUrl/home/addlikes/$friendId/1'));
+      final response = await http.put(Uri.parse('$userServiceUrl/home/addlikes/$friendId/1'));
       }
     catch (e) {
       print("server error: $e");
