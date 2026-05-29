@@ -55,7 +55,7 @@ class NavBarState extends State<NavBar> {
             IconButton(
               icon: Image.asset(homeScreenIconPath),
               onPressed: () {
-                widget.onBuildModeButtonPressed();
+                //widget.onBuildModeButtonPressed();
                 Navigator.popUntil(context,ModalRoute.withName('/'));
               } 
 

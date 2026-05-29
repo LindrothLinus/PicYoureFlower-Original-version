@@ -10,12 +10,14 @@ class Greenhouse extends StatefulWidget {
     super.key, 
     required this.addButtons,
     required this.onBuildModeButtonPressed,
+    this.buildBarActiveNotifer,
     this.buildModeActiveNotifier,
     this.showBuildButton = true,
     });
   final List<AddButton> addButtons;
   final Function() onBuildModeButtonPressed;
   final ValueNotifier<bool>? buildModeActiveNotifier;
+  final ValueNotifier<bool>? buildBarActiveNotifer;
   final bool showBuildButton;
 
   @override
@@ -48,6 +50,12 @@ class _Greenhouse extends State<Greenhouse> {
         child: SizedBox.expand(
           child: GestureDetector(
             behavior: HitTestBehavior.opaque,
+            onTap: (){
+              if(widget.buildModeActiveNotifier?.value == true){
+                widget.buildModeActiveNotifier?.value = false;
+                widget.buildBarActiveNotifer?.value = false;
+              }
+            },
             onPanUpdate: (details) {
               setState(() {
                 _offset = _clamp(_offset + details.delta, screenSize);

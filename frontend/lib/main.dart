@@ -271,6 +271,7 @@ class MyAppState extends State<MyApp> {
             Greenhouse(
               addButtons: _addButtons,
               buildModeActiveNotifier: buildModeActiveNotifier,
+              buildBarActiveNotifer: buildBarActiveNotifer,
               onBuildModeButtonPressed: () {
                 buildModeActiveNotifier.value = !buildModeActiveNotifier.value;
                 //buildBarActiveNotifer.value = !buildBarActiveNotifer.value;
