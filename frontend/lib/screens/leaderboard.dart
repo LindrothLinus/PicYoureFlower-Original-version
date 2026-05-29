@@ -135,7 +135,7 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Leaderboard', style: TextStyles.header),
+        title: Text('Collectors', style: TextStyles.header),
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         leading: CustomBackButton(toHome: false),
       ),

@@ -301,15 +301,11 @@ class FriendMenuState extends State<FriendMenu> {
             ),
           );
         },
-        child: Container(
+        child: Image.asset(
+          'lib/resources/images/FlowerCollector.png',
           width: 70,
           height: 80,
-          decoration: BoxDecoration(
-            color: yellowColor,
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: Colors.black, width: 1.5),
-          ),
-          child: const Icon(Icons.emoji_events_rounded, size: 48, color: Color(0xFFB8860B)),
+          fit: BoxFit.contain,
         ),
       ),
     );

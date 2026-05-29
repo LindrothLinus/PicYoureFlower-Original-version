@@ -83,6 +83,7 @@ flutter:
     - lib/resources/images/yellow_smaller.png
     - lib/resources/images/add_smaller.PNG
     - lib/resources/images/home.png
+    - lib/resources/images/FlowerCollector.png
 
 
 
