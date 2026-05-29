@@ -3,16 +3,12 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_demo/screens/view_friend.dart';
-import 'package:flutter_demo/widgets/add_button.dart';
 import 'package:flutter_demo/widgets/camera_button.dart';
 import 'package:flutter_demo/widgets/login_popup.dart';
 import 'package:google_fonts/google_fonts.dart';
-
 import 'package:http/http.dart' as http;
 
 import '../resources/constants.dart';
-
-import 'package:flutter_demo/widgets/camera_button.dart';
 
 final List<String> avatarImages = [
   "lib/resources/images/Avatar_Blue.png",
@@ -112,7 +108,7 @@ class FriendMenuState extends State<FriendMenu> {
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-
+        if (!mounted) return;
         setState(() {
           _amountOfLikes = data.toString();
         });
@@ -202,6 +198,8 @@ class FriendMenuState extends State<FriendMenu> {
   }
 
   Future<void> showCheck() async {
+    if (!mounted) return;
+    bool dialogClosed = false;
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -211,15 +209,15 @@ class FriendMenuState extends State<FriendMenu> {
             width: 100,
             height: 100,
             child: Image.asset(
-              'lib/resources/images/Check.webp',
+              'lib/resources/images/Confirmed.png',
               fit: BoxFit.contain,
             ),
           ),
         );
       },
-    );
+    ).then((_) => dialogClosed = true);
     await Future.delayed(const Duration(seconds: 1));
-    Navigator.of(context).pop();
+    if (!dialogClosed && mounted) Navigator.of(context).pop();
   }
 
   Padding heartButton() {
@@ -409,6 +407,7 @@ class FriendMenuState extends State<FriendMenu> {
             bool sentFriendRequest = await _sendFrienRequest(
               friendController.text,
             );
+            if (!mounted) return;
             if(friendController.text==widget.userId){
               friendController.text="can't be frien with yourself";
             }

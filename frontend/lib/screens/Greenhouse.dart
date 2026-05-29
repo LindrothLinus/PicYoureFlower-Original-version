@@ -11,10 +11,12 @@ class Greenhouse extends StatefulWidget {
     required this.addButtons,
     required this.onBuildModeButtonPressed,
     this.buildModeActiveNotifier,
+    this.showBuildButton = true,
     });
   final List<AddButton> addButtons;
   final Function() onBuildModeButtonPressed;
   final ValueNotifier<bool>? buildModeActiveNotifier;
+  final bool showBuildButton;
 
   @override
   State<Greenhouse> createState() => _Greenhouse();
@@ -81,6 +83,7 @@ class _Greenhouse extends State<Greenhouse> {
                     ),
                   ),
                 ),
+                if (widget.showBuildButton)
                 Positioned(
                   bottom: 30,
                   right: 30,

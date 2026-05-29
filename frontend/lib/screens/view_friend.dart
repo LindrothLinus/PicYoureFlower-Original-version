@@ -3,21 +3,13 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_demo/resources/constants.dart';
 import 'package:flutter_demo/screens/Greenhouse.dart';
-import 'package:flutter_demo/states/like_sent_overlay.dart';
+import 'package:flutter_demo/screens/flower_info.dart';
 import 'package:flutter_demo/widgets/add_button.dart';
 import 'package:flutter_demo/widgets/back_btn.dart';
 import 'package:flutter_demo/widgets/flowers/flower.dart';
-import 'package:flutter_demo/widgets/flowers/genericflower.dart';
-import 'package:flutter_demo/widgets/flowers/rose_flower.dart';
-import 'package:flutter_demo/widgets/flowers/sunflower.dart';
-import 'package:flutter_demo/widgets/flowers/tulip.dart';
-import 'package:flutter_demo/widgets/flowers/woodanemone.dart';
 import 'package:flutter_demo/widgets/friend_menu.dart';
 import 'package:flutter_demo/widgets/like_button.dart';
-import 'package:flutter_demo/widgets/like_sent.dart';
-import 'package:flutter_demo/widgets/nav_bar.dart';
 import 'package:flutter_demo/widgets/pots/blue_pot.dart';
-
 import 'package:http/http.dart' as http;
 
 class ViewFriendScreen extends StatefulWidget {
@@ -39,6 +31,7 @@ class ViewFriendScreen extends StatefulWidget {
 class ViewFriendScreenState extends State<ViewFriendScreen> {
   List<AddButton> _addButtons = [];
   List<dynamic> flowerCollection = [];
+  List<Map<String, dynamic>> _flowerDataCollection = [];
   Map<int, GlobalKey<AddButtonState>> addButtonKeys = {};
   final ValueNotifier<bool> dummyNotifierBool = ValueNotifier<bool>(false);
   final ValueNotifier<Widget?> dummyNotifierWidget = ValueNotifier<Widget?>(
@@ -61,6 +54,23 @@ class ViewFriendScreenState extends State<ViewFriendScreen> {
     });
   }
 
+  void _navigateToFlowerInfo(Flower flower) {
+    final matches = _flowerDataCollection.where(
+      (d) => (d['id'] as num?)?.toInt() == flower.id,
+    );
+    final data = matches.isNotEmpty ? matches.first : null;
+    if (!mounted) return;
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => FlowerInfoScreen(
+          flowerItem: flower,
+          data: data,
+        ),
+      ),
+    );
+  }
+
   Future<List<AddButton>> loadGreenhouseButtons(List<({double x, double y})> coordinates,) async {
     try {
       final flowerResponse = await http.get(
@@ -68,8 +78,8 @@ class ViewFriendScreenState extends State<ViewFriendScreen> {
       );
       if (flowerResponse.statusCode == 200) {
         final List<dynamic> flowerData = jsonDecode(flowerResponse.body);
-        flowerCollection = flowerData
-            .cast<Map<String, dynamic>>()
+        _flowerDataCollection = flowerData.cast<Map<String, dynamic>>();
+        flowerCollection = _flowerDataCollection
             .map(Flower.buildFlower)
             .toList();
       }
@@ -108,7 +118,9 @@ class ViewFriendScreenState extends State<ViewFriendScreen> {
             buildBarActiveNotifer: dummyNotifierBool,
             selectedPotNotifier: dummyPotNotifier,
             initialFlower: flower,
-            potTemplate: template
+            potTemplate: template,
+            buildModeActiveNotifier: dummyNotifierBool,
+            onFlowerInfoRequested: _navigateToFlowerInfo,
           );
         }
       });
@@ -147,6 +159,7 @@ class ViewFriendScreenState extends State<ViewFriendScreen> {
         children: [
           Greenhouse(
             addButtons: _addButtons,
+            showBuildButton: false,
             onBuildModeButtonPressed: (){}),
           FriendMenu(addButtonsCordinates: widget.addButtonsCordinats, userId: widget.userId),
           Positioned(
@@ -156,7 +169,6 @@ class ViewFriendScreenState extends State<ViewFriendScreen> {
           ),
         ],
       ),
-    bottomNavigationBar: NavBar(onBuildModeButtonPressed: (){}),
     );
   }
 }
