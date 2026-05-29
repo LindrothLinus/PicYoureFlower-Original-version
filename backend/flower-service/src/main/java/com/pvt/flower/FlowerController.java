@@ -36,6 +36,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import jakarta.transaction.Transactional;
+
 @RestController
 @RequestMapping("/home")
 @CrossOrigin(origins = "*")
@@ -67,6 +69,7 @@ public class FlowerController {
         entityRepository.delete(entity);
     }
 
+    @Transactional
     @DeleteMapping("/deleteflowersfromuser/{userId}")
     public Object deleteAllFlowersFromUser(@PathVariable Long userId) {
         entityRepository.deleteByUserId(userId);

@@ -729,16 +729,15 @@ void showDeleteUserDialog(BuildContext context) {
                 return;
               }
 
-              final String baseUrl = "https://group-1-75.pvt.dsv.su.se/api";
+              //final String baseUrl = "https://group-1-75.pvt.dsv.su.se/api";
               
               try {
                 final flowerResponse = await http.delete(
-                  Uri.parse('$baseUrl/deleteflowersfromuser/$loggedInUserId'),
+                  Uri.parse('$flowerServiceUrl/home/deleteflowersfromuser/$loggedInUserId'),
                 );
-
                 if (flowerResponse.statusCode == 200 || flowerResponse.statusCode == 204) {
                   final userResponse = await http.delete(
-                    Uri.parse('$baseUrl/removeuser/$loggedInUserId'),
+                    Uri.parse('$userServiceUrl/home/removeuser/$loggedInUserId'),
                   );
 
                   loggedInUserId = null; 
