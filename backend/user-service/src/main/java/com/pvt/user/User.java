@@ -33,6 +33,15 @@ public class User {
     private String name;
     private int coins;
     private int likes;
+    private String profilePicture;
+
+    public String getProfilePicture() {
+        return profilePicture;
+    }
+
+    public void setProfilePicture(String profilePicture) {
+        this.profilePicture = profilePicture;
+    }
 
     public int getLikes() {
         return this.likes;

@@ -32,11 +32,17 @@ class Friend {
   int id;
   String avatar;
 
-  Friend(this.name, this.id)
-    : avatar = avatarImages[random.nextInt(avatarImages.length)];
+  Friend(this.name, this.id, {String? profilePicture})
+    : avatar = profilePicture != null
+        ? "lib/resources/images/$profilePicture.png"
+        : avatarImages[random.nextInt(avatarImages.length)];
 
   factory Friend.fromJson(Map<String, dynamic> json) {
-    return Friend(json['name'], json['id']);
+    return Friend(
+      json['name'],
+      json['id'],
+      profilePicture: json['profilePicture'] as String?,
+    );
   }
 }
 
@@ -70,6 +76,15 @@ class FriendMenuState extends State<FriendMenu> {
   String _amountOfLikes = "";
   String _userName = "";
   String _amountOfFlowers = "";
+  static const List<String> _profilePictures = [
+    "lib/resources/images/Avatar_Green.png",
+    "lib/resources/images/Avatar_Blue.png",
+    "lib/resources/images/Avatar_Pink.png",
+    "lib/resources/images/Avatar_Purple.png",
+    "lib/resources/images/Avatar_Red.png",
+    "lib/resources/images/Avatar_Yellow.png",
+  ];
+  int _profilePictureIndex = 0;
   @override
   void initState() {
     super.initState();
@@ -89,8 +104,9 @@ class FriendMenuState extends State<FriendMenu> {
       if (response.statusCode == 200) {
         final List<dynamic> raw = jsonDecode(response.body);
         final maps = raw.cast<Map<String, dynamic>>();
-
-        friends = maps.map((e) => Friend.fromJson(e)).toList();
+        setState(() {
+          friends = maps.map((e) => Friend.fromJson(e)).toList();
+        });
       }
     } catch (e) {
       friends = [Friend("Somthing whernt wrong", 10000)];
@@ -131,6 +147,11 @@ class FriendMenuState extends State<FriendMenu> {
 
         setState(() {
           _userName = raw['name'];
+          final String? pic = raw['profilePicture'] as String?;
+          if (pic != null) {
+            final idx = _profilePictures.indexWhere((p) => p.contains(pic));
+            if (idx >= 0) _profilePictureIndex = idx;
+          }
         });
       } else {
         _userName = "Guest";
@@ -190,11 +211,36 @@ class FriendMenuState extends State<FriendMenu> {
     });
   }
 
-  void removeFriends(Friend? friend) {
+  Future<void> removeFriends(Friend? friend) async {
+    if (friend == null) return;
     setState(() {
       friends.remove(friend);
       selectedFriend = null;
     });
+    if (widget.userId != null) {
+      try {
+        await http.delete(
+          Uri.parse('$userServiceUrl/home/removefriend/${widget.userId}/${friend.id}'),
+        );
+      } catch (e) {
+        print('Error removing friend: $e');
+      }
+    }
+  }
+
+  Future<void> _saveProfilePicture() async {
+    if (widget.userId == null) return;
+    try {
+      final picName = _profilePictures[_profilePictureIndex]
+          .split('/')
+          .last
+          .replaceAll('.png', '');
+      await http.put(
+        Uri.parse('$userServiceUrl/home/setprofilepicture/${widget.userId}/$picName'),
+      );
+    } catch (e) {
+      print('Error saving profile picture: $e');
+    }
   }
 
   Future<void> showCheck() async {
@@ -251,14 +297,15 @@ class FriendMenuState extends State<FriendMenu> {
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.zero),
             backgroundColor: backgroundColor,
           ),
-          onPressed: () {
-            _getFriends();
+          onPressed: () async {
+            await _getFriends();
+            if (!mounted) return;
             setState(() {
               selectedFriend = null;
+              isExpanded = false;
+              panelHeigth = smallHeigth;
+              activePanelColor = backgroundColor;
             });
-            isExpanded = false;
-            panelHeigth = smallHeigth;
-            openPanel(backgroundColor);
           },
           child: Text('Friends', style: menuText),
         ),
@@ -501,11 +548,11 @@ class FriendMenuState extends State<FriendMenu> {
     );
   }
 
-  Widget createCard(Friend friend) {
+  Widget createCard(Friend friend, {VoidCallback? onTap}) {
     bool isSelected = selectedFriend == friend;
 
     return GestureDetector(
-      onTap: () {
+      onTap: onTap ?? () {
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -751,11 +798,19 @@ void showDeleteUserDialog(BuildContext context) {
                             children: [
                               Flexible(
                                 flex: 2,
-                                child: profileBoxPic(
-                                  Colors.white,
-                                  150,
-                                  150,
-                                  'lib/resources/images/Avatar_Pink.png',
+                                child: GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      _profilePictureIndex = (_profilePictureIndex + 1) % _profilePictures.length;
+                                    });
+                                    _saveProfilePicture();
+                                  },
+                                  child: profileBoxPic(
+                                    Colors.white,
+                                    150,
+                                    150,
+                                    _profilePictures[_profilePictureIndex],
+                                  ),
                                 ),
                               ),
 
@@ -925,13 +980,13 @@ Padding(
                           itemCount: friends.length,
                           itemBuilder: (BuildContext context, int index) {
                             final friend = friends[index];
-                            return InkWell(
+                            return createCard(
+                              friend,
                               onTap: () {
                                 setState(() {
-                                  selectedFriend = friend;
+                                  selectedFriend = selectedFriend == friend ? null : friend;
                                 });
                               },
-                              child: createCard(friend),
                             );
                           },
                         ),

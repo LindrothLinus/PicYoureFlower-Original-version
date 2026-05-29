@@ -43,6 +43,7 @@ public class UserController {
         u.setGoogleId(body.get("googleId"));
         u.setEmail(body.get("email"));
         u.setName(body.get("name"));
+        u.setProfilePicture("Avatar_Green");
         return ResponseEntity.ok(userRepository.save(u));
     }
 
@@ -92,7 +93,8 @@ public class UserController {
                 .orElseThrow(IllegalArgumentException::new);
         return entity.getFriends().stream().map(friend -> new FriendDTO(
                 friend.getId(),
-                friend.getName())).toList();
+                friend.getName(),
+                friend.getProfilePicture() != null ? friend.getProfilePicture() : "Avatar_Green")).toList();
     }
 
     @PostMapping("/home/addfriend/{userId}/{friendId}")
@@ -231,6 +233,14 @@ public class UserController {
         user.setLikes(user.getLikes() + amount);
         userRepository.save(user);
         return "added like";
+    }
+
+    @PutMapping("/home/setprofilepicture/{userId}/{picture}")
+    public ResponseEntity<?> setProfilePicture(@PathVariable Long userId, @PathVariable String picture) {
+        User entity = userRepository.findById(userId).orElseThrow(IllegalArgumentException::new);
+        entity.setProfilePicture(picture);
+        userRepository.save(entity);
+        return ResponseEntity.ok().build();
     }
 
 }
