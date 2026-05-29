@@ -2,14 +2,15 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_demo/screens/leaderboard.dart';
 import 'package:flutter_demo/screens/view_friend.dart';
+import 'package:flutter_demo/widgets/add_button.dart';
 import 'package:flutter_demo/widgets/camera_button.dart';
 import 'package:flutter_demo/widgets/login_popup.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:http/http.dart' as http;
 
 import '../resources/constants.dart';
+
+import 'package:http/http.dart' as http;
 
 final List<String> avatarImages = [
   "lib/resources/images/Avatar_Blue.png",
@@ -33,17 +34,11 @@ class Friend {
   int id;
   String avatar;
 
-  Friend(this.name, this.id, {String? profilePicture})
-    : avatar = profilePicture != null
-        ? "lib/resources/images/$profilePicture.png"
-        : avatarImages[random.nextInt(avatarImages.length)];
+  Friend(this.name, this.id)
+    : avatar = avatarImages[random.nextInt(avatarImages.length)];
 
   factory Friend.fromJson(Map<String, dynamic> json) {
-    return Friend(
-      json['name'],
-      json['id'],
-      profilePicture: json['profilePicture'] as String?,
-    );
+    return Friend(json['name'], json['id']);
   }
 }
 
@@ -65,7 +60,7 @@ class FriendMenuState extends State<FriendMenu> {
   bool isProfileExpanded = false;
   bool isExpanded = false;
   double smallHeigth = 150;
-  double mediumHeight = 360;
+  double mediumHeight = 300;
   double largeHeigth = 0;
   double panelHeigth = 0;
   Color? activePanelColor;
@@ -77,15 +72,6 @@ class FriendMenuState extends State<FriendMenu> {
   String _amountOfLikes = "";
   String _userName = "";
   String _amountOfFlowers = "";
-  static const List<String> _profilePictures = [
-    "lib/resources/images/Avatar_Green.png",
-    "lib/resources/images/Avatar_Blue.png",
-    "lib/resources/images/Avatar_Pink.png",
-    "lib/resources/images/Avatar_Purple.png",
-    "lib/resources/images/Avatar_Red.png",
-    "lib/resources/images/Avatar_Yellow.png",
-  ];
-  int _profilePictureIndex = 0;
   @override
   void initState() {
     super.initState();
@@ -105,9 +91,8 @@ class FriendMenuState extends State<FriendMenu> {
       if (response.statusCode == 200) {
         final List<dynamic> raw = jsonDecode(response.body);
         final maps = raw.cast<Map<String, dynamic>>();
-        setState(() {
-          friends = maps.map((e) => Friend.fromJson(e)).toList();
-        });
+
+        friends = maps.map((e) => Friend.fromJson(e)).toList();
       }
     } catch (e) {
       friends = [Friend("Somthing whernt wrong", 10000)];
@@ -125,7 +110,7 @@ class FriendMenuState extends State<FriendMenu> {
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-        if (!mounted) return;
+
         setState(() {
           _amountOfLikes = data.toString();
         });
@@ -148,11 +133,6 @@ class FriendMenuState extends State<FriendMenu> {
 
         setState(() {
           _userName = raw['name'];
-          final String? pic = raw['profilePicture'] as String?;
-          if (pic != null) {
-            final idx = _profilePictures.indexWhere((p) => p.contains(pic));
-            if (idx >= 0) _profilePictureIndex = idx;
-          }
         });
       } else {
         _userName = "Guest";
@@ -183,14 +163,14 @@ class FriendMenuState extends State<FriendMenu> {
   }
 
   Future<bool> _sendFrienRequest(String friendId) async {
-    if(friendId==widget.userId){
+    if (friendId == widget.userId) {
       return false;
     }
     try {
-      final respose = await http.post(
+      final response = await http.post(
         Uri.parse("$userServiceUrl/home/addfriend/${widget.userId}/$friendId"),
       );
-      return respose.statusCode == 200;
+      return true;
     } catch (e) {
       print(e);
       return false;
@@ -212,41 +192,14 @@ class FriendMenuState extends State<FriendMenu> {
     });
   }
 
-  Future<void> removeFriends(Friend? friend) async {
-    if (friend == null) return;
+  void removeFriends(Friend? friend) {
     setState(() {
       friends.remove(friend);
       selectedFriend = null;
     });
-    if (widget.userId != null) {
-      try {
-        await http.delete(
-          Uri.parse('$userServiceUrl/home/removefriend/${widget.userId}/${friend.id}'),
-        );
-      } catch (e) {
-        print('Error removing friend: $e');
-      }
-    }
-  }
-
-  Future<void> _saveProfilePicture() async {
-    if (widget.userId == null) return;
-    try {
-      final picName = _profilePictures[_profilePictureIndex]
-          .split('/')
-          .last
-          .replaceAll('.png', '');
-      await http.put(
-        Uri.parse('$userServiceUrl/home/setprofilepicture/${widget.userId}/$picName'),
-      );
-    } catch (e) {
-      print('Error saving profile picture: $e');
-    }
   }
 
   Future<void> showCheck() async {
-    if (!mounted) return;
-    bool dialogClosed = false;
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -256,15 +209,15 @@ class FriendMenuState extends State<FriendMenu> {
             width: 100,
             height: 100,
             child: Image.asset(
-              'lib/resources/images/Confirmed.png',
+              'lib/resources/images/Check.webp',
               fit: BoxFit.contain,
             ),
           ),
         );
       },
-    ).then((_) => dialogClosed = true);
+    );
     await Future.delayed(const Duration(seconds: 1));
-    if (!dialogClosed && mounted) Navigator.of(context).pop();
+    Navigator.of(context).pop();
   }
 
   Padding heartButton() {
@@ -289,32 +242,6 @@ class FriendMenuState extends State<FriendMenu> {
     );
   }
 
-  Widget trophyButton() {
-    return Padding(
-      padding: const EdgeInsets.only(right: 10),
-      child: GestureDetector(
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const LeaderboardScreen(),
-            ),
-          );
-        },
-        child: Container(
-          width: 70,
-          height: 80,
-          decoration: BoxDecoration(
-            color: yellowColor,
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: Colors.black, width: 1.5),
-          ),
-          child: const Icon(Icons.emoji_events_rounded, size: 48, color: Color(0xFFB8860B)),
-        ),
-      ),
-    );
-  }
-
   Expanded friendsButton() {
     return Expanded(
       child: SizedBox(
@@ -324,15 +251,14 @@ class FriendMenuState extends State<FriendMenu> {
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.zero),
             backgroundColor: backgroundColor,
           ),
-          onPressed: () async {
-            await _getFriends();
-            if (!mounted) return;
+          onPressed: () {
+            _getFriends();
             setState(() {
               selectedFriend = null;
-              isExpanded = false;
-              panelHeigth = smallHeigth;
-              activePanelColor = backgroundColor;
             });
+            isExpanded = false;
+            panelHeigth = smallHeigth;
+            openPanel(backgroundColor);
           },
           child: Text('Friends', style: menuText),
         ),
@@ -511,15 +437,13 @@ class FriendMenuState extends State<FriendMenu> {
             bool sentFriendRequest = await _sendFrienRequest(
               friendController.text,
             );
-            if (!mounted) return;
-            if(friendController.text==widget.userId){
-              friendController.text="Can't friend yourself";
-            }
-            else if (sentFriendRequest && widget.userId != null) {
+            if (friendController.text == widget.userId) {
+              friendController.text = "can't be frien with yourself";
+            } else if (sentFriendRequest && widget.userId != null) {
               friendController.text = "";
               showCheck();
             } else {
-              friendController.text = "User not found";
+              friendController.text = "Login to add friends";
             }
 
             //Send contents of textfield to backend to identity if the user exists and
@@ -605,11 +529,11 @@ class FriendMenuState extends State<FriendMenu> {
     );
   }
 
-  Widget createCard(Friend friend, {VoidCallback? onTap}) {
+  Widget createCard(Friend friend) {
     bool isSelected = selectedFriend == friend;
 
     return GestureDetector(
-      onTap: onTap ?? () {
+      onTap: () {
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -704,74 +628,6 @@ class FriendMenuState extends State<FriendMenu> {
     });
   }
 
-void showDeleteUserDialog(BuildContext context) {
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        backgroundColor: const Color(0xFFAEF7A1),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
-          side: const BorderSide(color: Colors.black, width: 2), 
-        ),
-        title: Text("Delete Account?", style: headerText),
-        content: const Text("Are you sure you want to permanently delete your account?"),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            child: const Text("Cancel", style: TextStyle(color: Colors.black)),
-          ),
-          TextButton(
-            onPressed: () async {
-              if (loggedInUserId == null || loggedInUserId!.isEmpty) {
-                return;
-              }
-
-              final String baseUrl = "https://group-1-75.pvt.dsv.su.se/api";
-              
-              try {
-                final flowerResponse = await http.delete(
-                  Uri.parse('$baseUrl/deleteflowersfromuser/$loggedInUserId'),
-                );
-
-                if (flowerResponse.statusCode == 200 || flowerResponse.statusCode == 204) {
-                  final userResponse = await http.delete(
-                    Uri.parse('$baseUrl/removeuser/$loggedInUserId'),
-                  );
-
-                  loggedInUserId = null; 
-                  authToken = null;
-
-                  if (context.mounted) {
-                    Navigator.of(context).pop();
-                    
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Account successfully deleted.')),
-                    );
-
-                    Navigator.pushNamedAndRemoveUntil(
-                      context,
-                      '/',
-                      (route) => false,
-                    );
-                  }
-                }
-              } catch (e) {
-                print("Error: $e");
-              }
-            },
-            child: const Text("Delete", style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold)),
-          ),
-        ],
-      );
-    },
-  );
-}
-
-
-
   @override
   Widget build(BuildContext context) {
     largeHeigth = (MediaQuery.of(context).size.height) * 0.4;
@@ -784,12 +640,6 @@ void showDeleteUserDialog(BuildContext context) {
           alignment: Alignment.centerLeft,
           children: [
             if (!showButtons) heartButton(),
-
-            if (!showButtons)
-              Align(
-                alignment: Alignment.centerRight,
-                child: trophyButton(),
-              ),
 
             //Buttons that show up when friend menu appears
             if (showButtons)
@@ -840,11 +690,13 @@ void showDeleteUserDialog(BuildContext context) {
                 if (activePanelColor == mainColor) ...[
                   Center(
                     child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center, // center children vertically
+                      mainAxisAlignment: MainAxisAlignment
+                          .center, // center children vertically
                       mainAxisSize: MainAxisSize.max,
                       children: [
-                        
-                        Text("ID: ${widget.userId??"loggin to get an ID"}"),
+                        Text(
+                          "Youre ID: ${widget.userId ?? "loggin to get an ID"}",
+                        ),
                         SizedBox(width: 350, child: searchTextField()),
                       ],
                     ),
@@ -861,19 +713,11 @@ void showDeleteUserDialog(BuildContext context) {
                             children: [
                               Flexible(
                                 flex: 2,
-                                child: GestureDetector(
-                                  onTap: () {
-                                    setState(() {
-                                      _profilePictureIndex = (_profilePictureIndex + 1) % _profilePictures.length;
-                                    });
-                                    _saveProfilePicture();
-                                  },
-                                  child: profileBoxPic(
-                                    Colors.white,
-                                    150,
-                                    150,
-                                    _profilePictures[_profilePictureIndex],
-                                  ),
+                                child: profileBoxPic(
+                                  Colors.white,
+                                  150,
+                                  150,
+                                  'lib/resources/images/Avatar_Pink.png',
                                 ),
                               ),
 
@@ -943,8 +787,6 @@ void showDeleteUserDialog(BuildContext context) {
                                         ),
                                       ],
                                     ),
-                                    
-
                                   ],
                                 ),
                               ),
@@ -987,41 +829,6 @@ void showDeleteUserDialog(BuildContext context) {
                             //profileBoxText(purpleColor, double.infinity, 50, 'Manage Friends'),
                           ),
                         ),
-
-Padding(
-                          padding: const EdgeInsets.fromLTRB(16, 4, 16, 16), 
-                          child: SizedBox(
-                            width: double.infinity, 
-                            child: GestureDetector(
-                              onTap: () {
-                                showDeleteUserDialog(context);
-                              },
-                              child: Container(
-                                width: double.infinity,
-                                height: 50,
-                                decoration: BoxDecoration(
-                                  color: const Color(0xFFFFA6A6), // Din röda färg
-                                  borderRadius: BorderRadius.circular(8),
-                                  border: Border.all(
-                                    color: Colors.black,
-                                    width: 1,
-                                  ),
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.only(left: 10),
-                                  child: Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: Text(
-                                      'Delete Account', 
-                                      style: menuText,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ), 
-                          ), 
-                        ),
-
                       ],
                     ),
                   ],
@@ -1043,13 +850,13 @@ Padding(
                           itemCount: friends.length,
                           itemBuilder: (BuildContext context, int index) {
                             final friend = friends[index];
-                            return createCard(
-                              friend,
+                            return InkWell(
                               onTap: () {
                                 setState(() {
-                                  selectedFriend = selectedFriend == friend ? null : friend;
+                                  selectedFriend = friend;
                                 });
                               },
+                              child: createCard(friend),
                             );
                           },
                         ),
