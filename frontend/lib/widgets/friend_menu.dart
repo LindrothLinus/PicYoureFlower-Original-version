@@ -441,7 +441,37 @@ class FriendMenuState extends State<FriendMenu> {
             ),
             onPressed: () {
               //Remove friends from list and database
-              removeFriends(selectedFriend);
+              showDialog(
+                context: context,
+                builder: (BuildContext context){
+                  return AlertDialog(
+                    backgroundColor: const Color(0xFFAEF7A1),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                      side: const BorderSide(color: Colors.black, width: 2), 
+                    ),
+                    title: Text("Delete Friend?", style: headerText),
+                    content: const Text("Are you sure you want to delete this friend?"),
+                    actions: [
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: const Text("Cancel", style: TextStyle(color: Colors.black)),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          removeFriends(selectedFriend);
+                          Navigator.of(context).pop();
+                        },
+                        child: const Text("Delete", style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold)),
+                      ),
+                    ],
+                  );
+                }
+              );
+
+              //removeFriends(selectedFriend);
             },
             child: Text('Unfriend', style: menuText),
           ),
