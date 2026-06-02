@@ -98,15 +98,20 @@ class _FlowerInfoScreenState extends State<FlowerInfoScreen> {
                 children: [
                   CustomBackButton(toHome: false),
                   const SizedBox(width: 12),
-                  Text(
+                  Expanded(
+                    child: Text(
                     widget.flowerItem.name,
                     style: const TextStyle(
                       fontSize: 36,
                       fontWeight: FontWeight.w300,
                       fontStyle: FontStyle.italic,
                       color: Colors.black87,
+                      overflow: TextOverflow.ellipsis,
+
                     ),
                   ),
+                  )
+                  
                 ],
               ),
             ),
