@@ -22,6 +22,8 @@ class ImagePathsConsts{
     static const String shopIcon = "lib/resources/images/cart_icon.png";
     static const String homeScreenIcon = "lib/resources/images/home.png";
     static const String cameraIcon = "lib/resources/images/camera_icon.png";
+    static const String buildmodeIcon = "lib/resources/images/showel_icon.png";
+
 }
 
 

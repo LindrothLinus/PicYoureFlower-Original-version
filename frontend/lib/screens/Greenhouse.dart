@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_demo/widgets/add_button.dart';
-import 'package:flutter_demo/widgets/new_add_button.dart';
+import 'package:flutter_demo/widgets/build_button.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 const String likedPath = "lib/resources/images/SentLike.png";
@@ -95,7 +95,7 @@ class _Greenhouse extends State<Greenhouse> {
                 Positioned(
                   bottom: 20,
                   right: 20,
-                  child: NewAddButton(
+                  child: BuildButton(
                     onBuildModeButtonPressed: widget.onBuildModeButtonPressed,
                   ),
                 ),
