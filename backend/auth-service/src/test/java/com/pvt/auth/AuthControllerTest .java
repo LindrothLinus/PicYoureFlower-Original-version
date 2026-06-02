@@ -13,11 +13,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@TestPropertySource(properties = {
-        "google.client-id=test-client-id",
-        "jwt.secret=testsecrettestsecrettestsecrettestsecret123",
-        "user-service.url=http://localhost:676767"
-})
+@TestPropertySource(properties = {"google.client-id=test-client-id", "jwt.secret=testsecrettestsecrettestsecrettestsecret123", "user-service.url=http://localhost:676767"})
 class AuthControllerTest {
 
     @Autowired

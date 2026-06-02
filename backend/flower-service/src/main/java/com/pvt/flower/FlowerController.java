@@ -1,12 +1,9 @@
 package com.pvt.flower;
 
 import java.awt.Color;
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
-
-import javax.imageio.ImageIO;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -64,8 +61,7 @@ public class FlowerController {
 
     @DeleteMapping("/deleteflower/{flowerId}")
     public void deleteFlower(@PathVariable Long flowerId) {
-        DatabaseEntity entity = entityRepository.findById(flowerId)
-                .orElseThrow(IllegalArgumentException::new);
+        DatabaseEntity entity = entityRepository.findById(flowerId).orElseThrow(IllegalArgumentException::new);
         entityRepository.delete(entity);
     }
 
@@ -74,7 +70,6 @@ public class FlowerController {
     public Object deleteAllFlowersFromUser(@PathVariable Long userId) {
         entityRepository.deleteByUserId(userId);
         return "deleted!";
-
     }
 
     @GetMapping("/user/{userId}/flowers")
@@ -85,8 +80,7 @@ public class FlowerController {
     @PutMapping("/addfloweruser/{flowerId}/{userId}")
     public Object addUserToFlower(@PathVariable Long flowerId, @PathVariable Long userId) {
         try {
-            DatabaseEntity entity = entityRepository.findById(flowerId)
-                    .orElseThrow(IllegalArgumentException::new);
+            DatabaseEntity entity = entityRepository.findById(flowerId).orElseThrow(IllegalArgumentException::new);
             entity.setUserId(userId);
             return entityRepository.save(entity);
         } catch (IllegalArgumentException e) {
@@ -104,9 +98,7 @@ public class FlowerController {
     }
 
     @PostMapping(value = "/identify", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> identifyAndSave(@RequestParam("image") MultipartFile image,
-            @RequestParam(value = "userId", required = false) Long userId,
-            @RequestParam(value = "location", required = false) String location) {
+    public ResponseEntity<?> identifyAndSave(@RequestParam("image") MultipartFile image, @RequestParam(value = "userId", required = false) Long userId, @RequestParam(value = "location", required = false) String location) {
         try {
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.MULTIPART_FORM_DATA);
@@ -114,8 +106,7 @@ public class FlowerController {
             body.add("images", image.getResource());
             body.add("organs", "flower");
 
-            String plantNetJson = restTemplate.postForObject(PLANTNET_URL + PLANTNET_API_KEY,
-                    new HttpEntity<>(body, headers), String.class);
+            String plantNetJson = restTemplate.postForObject(PLANTNET_URL + PLANTNET_API_KEY, new HttpEntity<>(body, headers), String.class);
 
             JsonNode rootNode = mapper.readTree(plantNetJson);
             JsonNode results = rootNode.path("results");
@@ -125,19 +116,17 @@ public class FlowerController {
             for (JsonNode r : results) {
                 JsonNode species = r.path("species");
                 String sci = species.path("scientificNameWithoutAuthor").asText(null);
-                if (sci != null)
-                    scientificNames.add(sci);
-                for (JsonNode cn : species.path("commonNames"))
+                if (sci != null) scientificNames.add(sci);
+                for (JsonNode cn : species.path("commonNames")) {
                     commonNames.add(cn.asText());
+                }
             }
             List<String> topSci = scientificNames.subList(0, Math.min(3, scientificNames.size()));
             List<String> topCom = commonNames.subList(0, Math.min(3, commonNames.size()));
 
             String color = findColor(topSci, topCom);
-            if (color == null)
-                color = getColorFromVision(image);
-            if (color == null)
-                color = "#cccccc";
+            if (color == null) color = getColorFromVision(image);
+            if (color == null) color = "#cccccc";
 
             ObjectNode response = (ObjectNode) rootNode;
             response.put("color", color);
@@ -170,23 +159,14 @@ public class FlowerController {
         try {
             String base64Image = Base64.getEncoder().encodeToString(image.getBytes());
 
-            String requestBody = "{\"requests\":[{\"image\":{\"content\":\"" + base64Image + "\"}," +
-                    "\"features\":[{\"type\":\"IMAGE_PROPERTIES\",\"maxResults\":10}]}]}";
+            String requestBody = "{\"requests\":[{\"image\":{\"content\":\"" + base64Image + "\"}," + "\"features\":[{\"type\":\"IMAGE_PROPERTIES\",\"maxResults\":10}]}]}";
 
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
 
-            ResponseEntity<String> response = restTemplate.exchange(
-                    VISION_URL + visionApiKey,
-                    HttpMethod.POST,
-                    new HttpEntity<>(requestBody, headers),
-                    String.class);
+            ResponseEntity<String> response = restTemplate.exchange(VISION_URL + visionApiKey, HttpMethod.POST, new HttpEntity<>(requestBody, headers), String.class);
 
-            JsonNode colors = mapper.readTree(response.getBody())
-                    .path("responses").path(0)
-                    .path("imagePropertiesAnnotation")
-                    .path("dominantColors")
-                    .path("colors");
+            JsonNode colors = mapper.readTree(response.getBody()).path("responses").path(0).path("imagePropertiesAnnotation").path("dominantColors").path("colors");
 
             for (JsonNode colorNode : colors) {
                 int r = colorNode.path("color").path("red").asInt(0);
@@ -198,17 +178,9 @@ public class FlowerController {
                 float brightness  = hsb[2];
                 float hueDegrees  = hsb[0] * 360f;
 
-                // Skip grey, white, black pixels
-                if (saturation < 0.25f || brightness < 0.15f)
-                    continue;
-
-                // Skip green hues (leaves and background)
-                if (hueDegrees >= 80f && hueDegrees <= 170f)
-                    continue;
-
-                // Skip muted browns (stems, soil, background)
-                if (hueDegrees >= 20f && hueDegrees <= 40f && saturation < 0.6f)
-                    continue;
+                if (saturation < 0.25f || brightness < 0.15f) continue;
+                if (hueDegrees >= 80f && hueDegrees <= 170f) continue;
+                if (hueDegrees >= 20f && hueDegrees <= 40f && saturation < 0.6f) continue;
 
                 return String.format("#%02x%02x%02x", r, g, b);
             }
@@ -220,49 +192,8 @@ public class FlowerController {
         }
     }
 
-    @PostMapping(path = "/color", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public @ResponseBody String getColor(@RequestParam("image") MultipartFile file) {
-        try {
-            BufferedImage img = ImageIO.read(file.getInputStream());
-            int r = 0, g = 0, b = 0;
-            int count = 0;
-            int startX = img.getWidth() / 4;
-            int endX = img.getWidth() * 3 / 4;
-            int startY = img.getHeight() / 4;
-            int endY = img.getHeight() * 3 / 4;
-            for (int x = startX; x < endX; x++) {
-                for (int y = startY; y < endY; y++) {
-                    int pixel = img.getRGB(x, y);
-                    int red = (pixel >> 16) & 0xff;
-                    int green = (pixel >> 8) & 0xff;
-                    int blue = pixel & 0xff;
-                    if (green > red && green > blue)
-                        continue;
-                    r += red;
-                    g += green;
-                    b += blue;
-                    count++;
-                }
-            }
-            if (count == 0)
-                return "#cccccc";
-            return boostColor(r / count, g / count, b / count);
-        } catch (Exception e) {
-            return "#cccccc";
-        }
-    }
-
-    private String boostColor(int r, int g, int b) {
-        float[] hsb = Color.RGBtoHSB(r, g, b, null);
-        float saturation = Math.min(1.0f, hsb[1] * 1.5f);
-        float brightness = Math.min(1.0f, hsb[2] * 1.3f);
-        int rgb = Color.HSBtoRGB(hsb[0], saturation, brightness);
-        return String.format("#%02x%02x%02x", (rgb >> 16) & 0xff, (rgb >> 8) & 0xff, rgb & 0xff);
-    }
-
     private String findColor(List<String> scientificNames, List<String> commonNames) {
-        if (scientificNames.isEmpty())
-            return null;
+        if (scientificNames.isEmpty()) return null;
 
         StringBuilder unions = new StringBuilder();
         for (String name : scientificNames) {
@@ -274,51 +205,37 @@ public class FlowerController {
         String genus = scientificNames.get(0).split(" ")[0];
         unions.append("{ ?plant wdt:P225 \"").append(escape(genus)).append("\" . }");
 
-        String sparql = "SELECT ?hex WHERE { " +
-                "{ " + unions + " } " +
-                "?plant wdt:P2827 ?color . " +
-                "?color wdt:P465 ?hex . " +
-                "} LIMIT 1";
+        String sparql = "SELECT ?hex WHERE { " + "{ " + unions + " } " + "?plant wdt:P2827 ?color . " + "?color wdt:P465 ?hex . " + "} LIMIT 1";
 
         return querySparql(sparql);
     }
 
     private String querySparql(String sparql) {
-        //for (int i = 0; i < 3; i++) {
-            try {
-                HttpHeaders h = new HttpHeaders();
-                h.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-                h.set("Accept", "application/sparql-results+json");
-                h.set("User-Agent", "PlantColorLookup/1.0");
+        try {
+            HttpHeaders h = new HttpHeaders();
+            h.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+            h.set("Accept", "application/sparql-results+json");
+            h.set("User-Agent", "PlantColorLookup/1.0");
 
-                MultiValueMap<String, String> formBody = new LinkedMultiValueMap<>();
-                formBody.add("query", sparql);
+            MultiValueMap<String, String> formBody = new LinkedMultiValueMap<>();
+            formBody.add("query", sparql);
 
-                ResponseEntity<String> resp = restTemplate.exchange(WIKIDATA_URL, HttpMethod.POST,
-                        new HttpEntity<>(formBody, h), String.class);
+            ResponseEntity<String> resp = restTemplate.exchange(WIKIDATA_URL, HttpMethod.POST, new HttpEntity<>(formBody, h), String.class);
 
-                JsonNode bindings = mapper.readTree(resp.getBody()).path("results").path("bindings");
-                if (bindings.isArray() && bindings.size() > 0) {
-                    String val = bindings.get(0).path("hex").path("value").asText(null);
-                    if (val != null && !val.isBlank())
-                        return val.startsWith("#") ? val : "#" + val;
-                }
-                return null;
-            } catch (Exception e) {
-                System.out.println("SPARQL attempt " + (1 + 1) + " failed: " + e.getMessage());
-                //if (i < 2)
-                    //try {
-                        //Thread.sleep(1000);
-                    //} catch (InterruptedException ignored) {
-                    //}
+            JsonNode bindings = mapper.readTree(resp.getBody()).path("results").path("bindings");
+            if (bindings.isArray() && bindings.size() > 0) {
+                String val = bindings.get(0).path("hex").path("value").asText(null);
+                if (val != null && !val.isBlank()) return val.startsWith("#") ? val : "#" + val;
             }
-        //}
+            return null;
+        } catch (Exception e) {
+            System.out.println("SPARQL failed: " + e.getMessage());
+        }
         return null;
     }
 
     @GetMapping(path = "wikiinfo/{commonName}")
-    public @ResponseBody Object getWikiInfo(@PathVariable String commonName,
-            @RequestParam(required = false) String latinName) {
+    public @ResponseBody Object getWikiInfo(@PathVariable String commonName, @RequestParam(required = false) String latinName) {
         if (latinName != null && !latinName.isBlank()) {
             String result = fetchWikiExtract(latinName);
             if (result != null) return result;
@@ -335,20 +252,13 @@ public class FlowerController {
             HttpHeaders h = new HttpHeaders();
             h.set("User-Agent", "PlantIdentifierApp/1.0");
             h.set("Accept", "application/json");
-            ResponseEntity<String> resp = restTemplate.exchange(
-                    "https://en.wikipedia.org/api/rest_v1/page/summary/" + name.replace(" ", "_"),
-                    HttpMethod.GET,
-                    new HttpEntity<>(h),
-                    String.class);
-            if (resp.getBody() == null)
-                return null;
+            ResponseEntity<String> resp = restTemplate.exchange("https://en.wikipedia.org/api/rest_v1/page/summary/" + name.replace(" ", "_"), HttpMethod.GET, new HttpEntity<>(h), String.class);
+            if (resp.getBody() == null) return null;
             JsonNode json = mapper.readTree(resp.getBody());
             String type = json.path("type").asText(null);
-            if ("disambiguation".equals(type))
-                return null;
+            if ("disambiguation".equals(type)) return null;
             String extract = json.path("extract").asText(null);
-            if (extract != null && !extract.isBlank())
-                return extract;
+            if (extract != null && !extract.isBlank()) return extract;
             return null;
         } catch (Exception e) {
             System.out.println("Wiki fetch failed for \"" + name + "\": " + e.getMessage());

@@ -44,13 +44,10 @@ public class AuthController {
         try {
             String idToken = body.get("idToken");
 
-            GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(
-                    new NetHttpTransport(), GsonFactory.getDefaultInstance())
-                    .setAudience(Collections.singletonList(googleClientId))
-                    .build();
+            GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(new NetHttpTransport(), GsonFactory.getDefaultInstance()).setAudience(Collections.singletonList(googleClientId)).build();
 
             GoogleIdToken googleIdToken = verifier.verify(idToken);
-            if (googleIdToken == null) return ResponseEntity.status(401).body("Ogiltigt token");
+            if (googleIdToken == null) return ResponseEntity.status(401).body("Invalid token");
 
             GoogleIdToken.Payload payload = googleIdToken.getPayload();
             String googleId = payload.getSubject();
@@ -63,31 +60,21 @@ public class AuthController {
             String userName = (String) user.get("name");
             String userEmail = (String) user.get("email");
 
-            String jwt = Jwts.builder()
-                    .setSubject(String.valueOf(userId))
-                    .claim("email", userEmail)
-                    .claim("name", userName)
-                    .setIssuedAt(new Date())
-                    .setExpiration(new Date(System.currentTimeMillis() + 86400000))
-                    .signWith(Keys.hmacShaKeyFor(jwtSecret.getBytes()), SignatureAlgorithm.HS256)
-                    .compact();
+            String jwt = Jwts.builder().setSubject(String.valueOf(userId)).claim("email", userEmail).claim("name", userName).setIssuedAt(new Date()).setExpiration(new Date(System.currentTimeMillis() + 86400000)).signWith(Keys.hmacShaKeyFor(jwtSecret.getBytes()), SignatureAlgorithm.HS256).compact();
 
             return ResponseEntity.ok(Map.of("token", jwt, "name", userName, "userId", userId));
         } catch (Exception e) {
-            return ResponseEntity.status(500).body("Fel: " + e.getMessage());
+            return ResponseEntity.status(500).body("Error: " + e.getMessage());
         }
     }
 
-    @SuppressWarnings("unchecked")
     private Map<String, Object> findOrCreateUser(String googleId, String email, String name) {
         try {
-            ResponseEntity<Map> response = restTemplate.getForEntity(
-                    userServiceUrl + "/users/by-google/" + googleId, Map.class);
+            ResponseEntity<Map> response = restTemplate.getForEntity(userServiceUrl + "/users/by-google/" + googleId, Map.class);
             return response.getBody();
         } catch (HttpClientErrorException.NotFound e) {
             Map<String, String> newUser = Map.of("googleId", googleId, "email", email, "name", name);
-            ResponseEntity<Map> response = restTemplate.postForEntity(
-                    userServiceUrl + "/users", newUser, Map.class);
+            ResponseEntity<Map> response = restTemplate.postForEntity(userServiceUrl + "/users", newUser, Map.class);
             return response.getBody();
         }
     }

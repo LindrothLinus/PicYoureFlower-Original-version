@@ -50,8 +50,8 @@ public class User {
     public void setLikes(int likes) {
         this.likes = likes;
     }
-
-   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PotEntity> pots = new ArrayList<>();
 
     @ManyToMany

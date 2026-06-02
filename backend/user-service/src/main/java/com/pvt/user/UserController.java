@@ -16,8 +16,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-//import jakarta.transaction.Transactional; ger error
-
 @RestController
 @CrossOrigin(origins = "*")
 public class UserController {
@@ -32,9 +30,7 @@ public class UserController {
 
     @GetMapping("/users/by-google/{googleId}")
     public ResponseEntity<User> findByGoogleId(@PathVariable String googleId) {
-        return userRepository.findByGoogleId(googleId)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        return userRepository.findByGoogleId(googleId).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping("/users")
@@ -49,14 +45,7 @@ public class UserController {
 
     @GetMapping("/users/{id}")
     public ResponseEntity<User> getUser(@PathVariable Long id) {
-        return userRepository.findById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
-    }
-
-    @GetMapping("/home/hello")
-    public String hello() {
-        return "hello";
+        return userRepository.findById(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
 
     @GetMapping("/home/allusers")
@@ -76,9 +65,7 @@ public class UserController {
         User entity = userRepository.findById(userId).orElseThrow(IllegalArgumentException::new);
         List<User> users = userRepository.findAll();
         for (User user : users) {
-            if (user.getFriends().contains(entity)) {
-                removeFriends(userId, user.getId());
-            }
+            if (user.getFriends().contains(entity)) removeFriends(userId, user.getId());
         }
 
         entity.getPots().clear();
@@ -89,12 +76,8 @@ public class UserController {
 
     @GetMapping("/home/friends/{userId}")
     public List<FriendDTO> getAllFriends(@PathVariable @NonNull Long userId) {
-        User entity = userRepository.findById(userId)
-                .orElseThrow(IllegalArgumentException::new);
-        return entity.getFriends().stream().map(friend -> new FriendDTO(
-                friend.getId(),
-                friend.getName(),
-                friend.getProfilePicture() != null ? friend.getProfilePicture() : "Avatar_Green")).toList();
+        User entity = userRepository.findById(userId).orElseThrow(IllegalArgumentException::new);
+        return entity.getFriends().stream().map(friend -> new FriendDTO(friend.getId(), friend.getName(), friend.getProfilePicture() != null ? friend.getProfilePicture() : "Avatar_Green")).toList();
     }
 
     @PostMapping("/home/addfriend/{userId}/{friendId}")
@@ -130,15 +113,13 @@ public class UserController {
 
     @GetMapping("/home/coins/{userId}")
     public Object getCoins(@PathVariable Long userId) {
-        User entity = userRepository.findById(userId)
-                .orElseThrow(IllegalArgumentException::new);
+        User entity = userRepository.findById(userId).orElseThrow(IllegalArgumentException::new);
         return entity.getCoins();
     }
 
     @GetMapping("/home/addcoins/{userId}/{amount}")
     public Object addCoins(@PathVariable Long userId, @PathVariable int amount) {
-        User entity = userRepository.findById(userId)
-                .orElseThrow(IllegalArgumentException::new);
+        User entity = userRepository.findById(userId).orElseThrow(IllegalArgumentException::new);
         entity.setCoins(entity.getCoins() + amount);
         userRepository.save(entity);
         return entity.getCoins();
@@ -146,36 +127,24 @@ public class UserController {
 
     @GetMapping("/home/userpots/{userId}")
     public Iterable<PotEntity> getUserPots(@PathVariable Long userId) {
-        User entity = userRepository.findById(userId)
-                .orElseThrow(IllegalArgumentException::new);
+        User entity = userRepository.findById(userId).orElseThrow(IllegalArgumentException::new);
         return entity.getPots();
     }
 
     @PutMapping("/home/addpot/{userId}/{template}")
     public ResponseEntity<?> addPots(@PathVariable Long userId, @PathVariable PotTemplate template) {
-        User entity = userRepository.findById(userId)
-                .orElseThrow(IllegalArgumentException::new);
-        if (entity.getOwnedPotTemplates().contains(template)) {
-            return ResponseEntity.status(409).body("Already owned");
-        }
+        User entity = userRepository.findById(userId).orElseThrow(IllegalArgumentException::new);
+        if (entity.getOwnedPotTemplates().contains(template)) return ResponseEntity.status(409).body("Already owned");
+        
         entity.getOwnedPotTemplates().add(template);
         userRepository.save(entity);
-        return ResponseEntity.ok(
-            entity.getOwnedPotTemplates().stream()
-                .map(PotTemplate::name)
-                .collect(Collectors.toList())
-        );
+        return ResponseEntity.ok(entity.getOwnedPotTemplates().stream().map(PotTemplate::name).collect(Collectors.toList()));
     }
 
     @GetMapping("/home/ownedpottemplates/{userId}")
     public ResponseEntity<List<String>> getOwnedPotTemplates(@PathVariable Long userId) {
-        User entity = userRepository.findById(userId)
-                .orElseThrow(IllegalArgumentException::new);
-        return ResponseEntity.ok(
-            entity.getOwnedPotTemplates().stream()
-                .map(PotTemplate::name)
-                .collect(Collectors.toList())
-        );
+        User entity = userRepository.findById(userId).orElseThrow(IllegalArgumentException::new);
+        return ResponseEntity.ok(entity.getOwnedPotTemplates().stream().map(PotTemplate::name).collect(Collectors.toList()));
     }
 
     @GetMapping("/home/allpots")
@@ -185,12 +154,9 @@ public class UserController {
 
     @PutMapping("/home/setpotplaced/{potId}/{trueorfalse}")
     public String setPotPlaced(@PathVariable long potId, @PathVariable int trueorfalse) {
-        PotEntity pot = potRepository.findById(potId)
-                .orElseThrow(IllegalArgumentException::new);
-        if (trueorfalse == 0)
-            pot.setPlaced(false);
-        if (trueorfalse == 1)
-            pot.setPlaced(true);
+        PotEntity pot = potRepository.findById(potId).orElseThrow(IllegalArgumentException::new);
+        if (trueorfalse == 0) pot.setPlaced(false);
+        if (trueorfalse == 1) pot.setPlaced(true);
         return "placed";
     }
 
@@ -202,8 +168,7 @@ public class UserController {
 
     @PostMapping("/home/greenhouse/{userId}")
     @Transactional
-    public ResponseEntity<?> saveGreenhouse(@PathVariable Long userId,
-            @RequestBody List<Map<String, Object>> placements) {
+    public ResponseEntity<?> saveGreenhouse(@PathVariable Long userId, @RequestBody List<Map<String, Object>> placements) {
         User user = userRepository.findById(userId).orElseThrow(IllegalArgumentException::new);
         potRepository.deleteByUser(user);
         for (Map<String, Object> p : placements) {
@@ -212,9 +177,7 @@ public class UserController {
             Object templateObj = p.getOrDefault("potTemplate", "BLUE");
             pot.setTemplate(PotTemplate.valueOf(templateObj.toString()));
             pot.setUser(user);
-            if (p.get("flowerId") != null) {
-                pot.setFlowerId(((Number) p.get("flowerId")).longValue());
-            }
+            if (p.get("flowerId") != null) pot.setFlowerId(((Number) p.get("flowerId")).longValue());
             potRepository.save(pot);
         }
         return ResponseEntity.ok().build();
@@ -223,7 +186,6 @@ public class UserController {
     @GetMapping("/home/likes/{userId}")
     public int getLikes(@PathVariable Long userId) {
         User user = userRepository.findById(userId).orElseThrow(IllegalArgumentException::new);
-
         return user.getLikes();
     }
 
@@ -246,14 +208,12 @@ public class UserController {
     @GetMapping("/home/leaderboard")
     public ResponseEntity<List<Map<String, Object>>> getLeaderboard() {
         List<User> users = userRepository.findAll();
-        List<Map<String, Object>> result = users.stream()
-                .map(u -> Map.<String, Object>of(
-                        "id", u.getId(),
-                        "name", u.getName() != null ? u.getName() : "Unknown",
-                        "profilePicture", u.getProfilePicture() != null ? u.getProfilePicture() : "Avatar_Green",
-                        "likes", u.getLikes()
-                ))
-                .collect(Collectors.toList());
+        List<Map<String, Object>> result = users.stream().map(u -> Map.<String, Object>of(
+            "id", u.getId(),
+            "name", u.getName() != null ? u.getName() : "Unknown",
+            "profilePicture", u.getProfilePicture() != null ? u.getProfilePicture() : "Avatar_Green",
+            "likes", u.getLikes()
+        )).collect(Collectors.toList());
         return ResponseEntity.ok(result);
     }
 

@@ -1,5 +1,3 @@
 package com.pvt.user;
 
-public record FriendDTO(Long id, String name, String profilePicture) {
-
-}
+public record FriendDTO(Long id, String name, String profilePicture) {}

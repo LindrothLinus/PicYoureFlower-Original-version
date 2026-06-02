@@ -20,9 +20,7 @@ public class PotEntity {
     private PotTemplate template;
 
     private int placementId;
-
     private Long flowerId;
-
     private boolean placed = false;
 
     public boolean isPlaced() {

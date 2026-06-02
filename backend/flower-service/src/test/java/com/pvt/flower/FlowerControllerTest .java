@@ -1,8 +1,15 @@
 package com.pvt.flower;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -59,8 +66,6 @@ class FlowerControllerTest {
         assertFalse(result.iterator().hasNext());
     }
 
-    // ── getFlowersByUser ──────────────────────────────────────────────────────
-
     @Test
     void getFlowersByUser_returnsFlowersForUser() {
         List<DatabaseEntity> flowers = List.of(sampleEntity, new DatabaseEntity());
@@ -86,10 +91,8 @@ class FlowerControllerTest {
         when(entityRepository.findByUserId(1L)).thenReturn(List.of(sampleEntity));
         when(entityRepository.findByUserId(2L)).thenReturn(List.of());
 
-        long user1Count = StreamSupport.stream(
-                flowerController.getFlowersByUser(1L).spliterator(), false).count();
-        long user2Count = StreamSupport.stream(
-                flowerController.getFlowersByUser(2L).spliterator(), false).count();
+        long user1Count = StreamSupport.stream(flowerController.getFlowersByUser(1L).spliterator(), false).count();
+        long user2Count = StreamSupport.stream(flowerController.getFlowersByUser(2L).spliterator(), false).count();
 
         assertEquals(1, user1Count);
         assertEquals(0, user2Count);
