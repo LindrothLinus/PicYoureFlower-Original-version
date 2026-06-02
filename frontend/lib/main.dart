@@ -16,8 +16,6 @@ import 'package:http/http.dart' as http;
 
 import '../resources/constants.dart';
 
-const String _baseUrl = 'http://10.0.2.2:8080';
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
