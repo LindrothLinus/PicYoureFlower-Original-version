@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_demo/resources/constants.dart';
-import 'package:flutter_demo/screens/Greenhouse.dart';
+import 'package:flutter_demo/widgets/greenhouse.dart';
 import 'package:flutter_demo/screens/flower_info.dart';
 import 'package:flutter_demo/widgets/add_button.dart';
 import 'package:flutter_demo/widgets/back_btn.dart';

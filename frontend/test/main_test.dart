@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_demo/main.dart';
+import 'package:flutter_demo/screens/home_screen.dart';
 import 'package:flutter_demo/widgets/add_button.dart';
 import 'package:flutter_demo/widgets/camera_button.dart';
 import 'package:flutter_demo/widgets/flowers/flower.dart';
@@ -17,13 +18,13 @@ import 'package:mocktail/mocktail.dart';
 
 import 'mock.dart';
 
-Future<MyAppState> loadMain(WidgetTester tester) async {
+Future<HomeScreenState> loadMain(WidgetTester tester) async {
   //Kör hela inintState och hoppar till nästa frame
-  await tester.pumpWidget(const MaterialApp(home: MyApp()));
+  await tester.pumpWidget(const MaterialApp(home: HomeScreen()));
   //ser även till så att alla saker efter att framen updaterats blir klara
   await tester.pumpAndSettle();
   //få staten
-  final MyAppState state = tester.state<MyAppState>(find.byType(MyApp));
+  final HomeScreenState state = tester.state<HomeScreenState>(find.byType(HomeScreen));
 
   return state;
 }
@@ -47,7 +48,7 @@ void main() {
       testWidgets("generateAddButtons generates button on correct cordinates", (
         WidgetTester tester,
       ) async {
-        MyAppState mas = await loadMain(tester);
+        HomeScreenState mas = await loadMain(tester);
         List<AddButton> addButtons = mas.generateAddButtons([
           (x: 1, y: 1),
           (x: 2, y: 2),
@@ -61,7 +62,7 @@ void main() {
       testWidgets("generateAddButtons right amount of buttons", (
         WidgetTester tester,
       ) async {
-        MyAppState mas = await loadMain(tester);
+        HomeScreenState mas = await loadMain(tester);
         List<AddButton> addButtons1 = mas.generateAddButtons([(x: 1, y: 1)]);
         List<AddButton> addButtons2 = mas.generateAddButtons([
           (x: 1, y: 1),
@@ -74,7 +75,7 @@ void main() {
       testWidgets("generateAddButtons generates button with uniq key", (
         WidgetTester tester,
       ) async {
-        MyAppState mas = await loadMain(tester);
+        HomeScreenState mas = await loadMain(tester);
         List<AddButton> addButtons = mas.generateAddButtons([
           (x: 1, y: 1),
           (x: 2, y: 2),
@@ -90,14 +91,14 @@ void main() {
       testWidgets("loadPotsOnAddButtonWithIndex: empty list do not chrash", (
         WidgetTester tester,
       ) async {
-        MyAppState mas = await loadMain(tester);
+        HomeScreenState mas = await loadMain(tester);
         mas.loadPotsOnAddButtonWithIndex([]);
       });
 
       testWidgets("loadPotsOnAddButtonWithIndex: Invalid index", (
         WidgetTester tester,
       ) async {
-        MyAppState mas = await loadMain(tester);
+        HomeScreenState mas = await loadMain(tester);
         mas.loadPotsOnAddButtonWithIndex([1000000000]);
       });
     });
@@ -106,14 +107,14 @@ void main() {
       testWidgets("extractPots rettruns empty list if no pots placed", (
         WidgetTester tester,
       ) async {
-        MyAppState mas = await loadMain(tester);
+        HomeScreenState mas = await loadMain(tester);
         expect(mas.extractPots().length, 0);
       });
 
       testWidgets(
         "loadPotsOnAddButtonWithIndex places pot on right index and extractPots extracts correct index",
         (WidgetTester tester) async {
-          final MyAppState mas = await loadMain(tester);
+          final HomeScreenState mas = await loadMain(tester);
           mas.loadPotsOnAddButtonWithIndex([1, 2, 3]);
           await tester.pump();
 
@@ -239,11 +240,11 @@ void main() {
         ]);
 
         await tester.pumpWidget(
-          MaterialApp(home: MyApp(httpClient: mockClient)),
+          MaterialApp(home: HomeScreen(httpClient: mockClient)),
         );
         await tester.pumpAndSettle();
 
-        MyAppState state = tester.state<MyAppState>(find.byType(MyApp));
+        HomeScreenState state = tester.state<HomeScreenState>(find.byType(HomeScreen));
         loggedInUserId = "1";
 
         await state.fetchFlowers();
@@ -263,10 +264,10 @@ void main() {
         {'template': 'TULIP', 'color': '#FFFF00', 'commonName': 'blomma2'},
       ]);
 
-      await tester.pumpWidget(MaterialApp(home: MyApp(httpClient: mockClient)));
+      await tester.pumpWidget(MaterialApp(home: HomeScreen(httpClient: mockClient)));
       await tester.pumpAndSettle();
 
-      MyAppState state = tester.state<MyAppState>(find.byType(MyApp));
+      HomeScreenState state = tester.state<HomeScreenState>(find.byType(HomeScreen));
       loggedInUserId = null;
 
       await state.fetchFlowers();
@@ -280,10 +281,10 @@ void main() {
     ) async {
       final MockHttpClient mockClient = createMockClientWithData([]);
 
-      await tester.pumpWidget(MaterialApp(home: MyApp(httpClient: mockClient)));
+      await tester.pumpWidget(MaterialApp(home: HomeScreen(httpClient: mockClient)));
       await tester.pumpAndSettle();
 
-      MyAppState state = tester.state<MyAppState>(find.byType(MyApp));
+      HomeScreenState state = tester.state<HomeScreenState>(find.byType(HomeScreen));
       loggedInUserId = "1";
 
       await state.fetchFlowers();
@@ -304,11 +305,11 @@ void main() {
         ).thenThrow(Exception("No Internet"));
 
         await tester.pumpWidget(
-          MaterialApp(home: MyApp(httpClient: mockClient)),
+          MaterialApp(home: HomeScreen(httpClient: mockClient)),
         );
         await tester.pumpAndSettle();
 
-        MyAppState state = tester.state<MyAppState>(find.byType(MyApp));
+        HomeScreenState state = tester.state<HomeScreenState>(find.byType(HomeScreen));
         loggedInUserId = "1";
 
         await state.fetchFlowers();
