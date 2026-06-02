@@ -13,6 +13,12 @@ class ImagePaths{
     static const String addbutton = "lib/resources/images/add_smaller.PNG";
     static const String confirmed = "lib/resources/images/Confirmed.png";
     static const String coins = "lib/resources/images/coin.webp";
+    static const String social ='lib/resources/images/Social.png';
+    static const String collecotor = 'lib/resources/images/FlowerCollector.png';
+    static const String expandbutton = 'lib/resources/images/Expand.png';
+    static const String nameBage = 'lib/resources/images/Identity.png';
+    static const String flowerIcon = 'lib/resources/images/flower_icon.png';
+    static const String likeIcon = 'lib/resources/images/Like.png';
 
 }
 
@@ -38,6 +44,15 @@ class PotImagePathConsts{
   static const String purple = "lib/resources/images/purple.webp";
   static const String yellow = "lib/resources/images/yellow.webp";
   static const String blue = "lib/resources/images/blue.webp";
+}
+
+class AvatarImagePathConsts{
+  static const String blue = "lib/resources/images/Avatar_Blue.png";
+  static const String pink = "lib/resources/images/Avatar_Pink.png";
+  static const String purple = "lib/resources/images/Avatar_Purple.png";
+  static const String green = "lib/resources/images/Avatar_Green.png";
+  static const String red = "lib/resources/images/Avatar_Red.png";
+  static const String yellow = "lib/resources/images/Avatar_Yellow.png";
 }
 
 
