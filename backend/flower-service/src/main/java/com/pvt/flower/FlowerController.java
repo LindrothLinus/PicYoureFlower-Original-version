@@ -43,13 +43,15 @@ public class FlowerController {
     @Autowired
     private EntityRepository entityRepository;
 
-    private final String PLANTNET_API_KEY = "2b106hcgFkGyy2wiJf9y0Huhwu";
     private final String PLANTNET_URL = "https://my-api.plantnet.org/v2/identify/all?api-key=";
     private final String WIKIDATA_URL = "https://query.wikidata.org/sparql";
     private final String VISION_URL = "https://vision.googleapis.com/v1/images:annotate?key=";
 
     @Value("${google.vision.api-key}")
-    private String visionApiKey;
+    private String VISION_API_KEY;
+
+    @Value("${plantnet.api-key}")
+    private String PLANTNET_API_KEY;
 
     private final ObjectMapper mapper = new ObjectMapper();
     private final RestTemplate restTemplate = new RestTemplate();
@@ -164,7 +166,7 @@ public class FlowerController {
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
 
-            ResponseEntity<String> response = restTemplate.exchange(VISION_URL + visionApiKey, HttpMethod.POST, new HttpEntity<>(requestBody, headers), String.class);
+            ResponseEntity<String> response = restTemplate.exchange(VISION_URL + VISION_API_KEY, HttpMethod.POST, new HttpEntity<>(requestBody, headers), String.class);
 
             JsonNode colors = mapper.readTree(response.getBody()).path("responses").path(0).path("imagePropertiesAnnotation").path("dominantColors").path("colors");
 

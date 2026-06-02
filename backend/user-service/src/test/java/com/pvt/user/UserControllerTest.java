@@ -229,18 +229,18 @@ class UserControllerTest {
         sampleUser.setFriends(Set.of(friend1, friend2));
         when(userRepository.findById(1L)).thenReturn(Optional.of(sampleUser));
 
-        Object result = userController.getAllFriends(1L);
+        List<FriendDTO> result = userController.getAllFriends(1L);
 
-        assertEquals(2, ((Set<?>) result).size());
+        assertEquals(2, result.size());
     }
 
     @Test
     void getAllFriends_noFriends_returnsEmptySet() {
         when(userRepository.findById(1L)).thenReturn(Optional.of(sampleUser));
 
-        Object result = userController.getAllFriends(1L);
+        List<FriendDTO> result = userController.getAllFriends(1L);
 
-        assertTrue(((Set<?>) result).isEmpty());
+        assertTrue(result.isEmpty());
     }
 
     @Test
@@ -248,13 +248,6 @@ class UserControllerTest {
         when(userRepository.findById(99L)).thenReturn(Optional.empty());
 
         assertThrows(IllegalArgumentException.class, () -> userController.getAllFriends(99L));
-    }
-
-    @Test
-    void hello_returnsHelloString() {
-        String result = userController.hello();
-
-        assertEquals("hello", result);
     }
 
     @Test
