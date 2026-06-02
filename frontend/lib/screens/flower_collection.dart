@@ -83,7 +83,7 @@ class _FlowerCollectionState extends State<FlowerCollection> {
 
     try {
       final response = await http.get(
-        Uri.parse('${UrlConst.flowerService}/home/user/$loggedInUserId/flowers'),
+        Uri.parse('${UrlConsts.flowerService}/home/user/$loggedInUserId/flowers'),
         headers: {if (authToken != null) 'Authorization': 'Bearer $authToken'},
       );
       if (!mounted) return;

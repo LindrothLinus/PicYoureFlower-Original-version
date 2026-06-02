@@ -10,7 +10,7 @@ import 'package:flutter_demo/widgets/flowers/rose_flower.dart';
 import 'package:flutter_demo/widgets/flowers/sunflower.dart';
 import 'package:flutter_demo/widgets/flowers/tulip.dart';
 import 'package:flutter_demo/widgets/flowers/woodanemone.dart';
-import 'package:flutter_demo/widgets/pots/blue_pot.dart';
+import 'package:flutter_demo/widgets/pot.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:mocktail/mocktail.dart';

@@ -9,7 +9,7 @@ import 'package:flutter_demo/widgets/back_btn.dart';
 import 'package:flutter_demo/widgets/flowers/flower.dart';
 import 'package:flutter_demo/widgets/friend_menu.dart';
 import 'package:flutter_demo/widgets/like_button.dart';
-import 'package:flutter_demo/widgets/pots/blue_pot.dart';
+import 'package:flutter_demo/widgets/pot.dart';
 import 'package:http/http.dart' as http;
 
 class ViewFriendScreen extends StatefulWidget {
@@ -74,7 +74,7 @@ class ViewFriendScreenState extends State<ViewFriendScreen> {
   Future<List<AddButton>> loadGreenhouseButtons(List<({double x, double y})> coordinates,) async {
     try {
       final flowerResponse = await http.get(
-        Uri.parse('${UrlConst.flowerService}/home/user/${widget.friend.id}/flowers'),
+        Uri.parse('${UrlConsts.flowerService}/home/user/${widget.friend.id}/flowers'),
       );
       if (flowerResponse.statusCode == 200) {
         final List<dynamic> flowerData = jsonDecode(flowerResponse.body);
@@ -85,7 +85,7 @@ class ViewFriendScreenState extends State<ViewFriendScreen> {
       }
 
       final response = await http.get(
-        Uri.parse('${UrlConst.userService}/home/greenhouse/${widget.friend.id}'),
+        Uri.parse('${UrlConsts.userService}/home/greenhouse/${widget.friend.id}'),
       );
 
       if (response.statusCode != 200) return [];

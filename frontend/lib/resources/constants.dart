@@ -2,20 +2,36 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 
-class UrlConst{
+class UrlConsts{
   static const String flowerService = 'https://group-1-75.pvt.dsv.su.se/flower';
   static const String userService = 'https://group-1-75.pvt.dsv.su.se/user';
 }
 
 
 //===============Paths===============
-const String likedPath = "lib/resources/images/SentLike.png";
+class FlowerImagePathConsts{
+  static const String genericFlowerForegroundPath="lib/resources/images/Vitblommamedgulmitten.png";
+  static const String genericFlowerBackgroundPath="lib/resources/images/VBVitblommamedgulmitten.png";
+  static const String roseFlowerForegroundPath = "lib/resources/images/ros_sticker_kontur.png";
+  static const String roseFlowerBackgroundPath = "lib/resources/images/ros_sticker.png";
+  static const String sunFlowerForeground = "lib/resources/images/Solros.png";
+  static const String sunFlowerBackground = "lib/resources/images/VBSolros.png";
+  static const String tulipFlowerForeground = "lib/resources/images/Tulpan.png";
+  static const String tulipFlowerBackground = "lib/resources/images/VBTulpan.png";
+  static const String woodanemoneFlowerForeground = "lib/resources/images/Vitsippa.png";
+  static const String woodanemoneFlowerBackground = "lib/resources/images/VBVitsippa.png";
+}
 
+class PotImagePathConsts{
+  static const String brown = "lib/resources/images/brown.webp";
+  static const String green = "lib/resources/images/green.webp";
+  static const String mint = "lib/resources/images/mint.webp";
+  static const String pink = "lib/resources/images/pink.webp";
+  static const String purple = "lib/resources/images/purple.webp";
+  static const String yellow = "lib/resources/images/yellow.webp";
+  static const String blue = "lib/resources/images/blue.webp";
+}
 
-const String genericFlowerForegroundPath="lib/resources/images/Vitblommamedgulmitten.png";
-const String genericFlowerBackgroundPath="lib/resources/images/VBVitblommamedgulmitten.png";
-const String roseFlowerForegroundPath = "lib/resources/images/ros_sticker_kontur.png";
-const String roseFlowerBackgroundPath = "lib/resources/images/ros_sticker.png";
 
 
 

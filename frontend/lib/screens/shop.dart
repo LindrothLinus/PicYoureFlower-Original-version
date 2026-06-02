@@ -64,7 +64,7 @@ class _Shop extends State<Shop> {
     if (loggedInUserId == null) return;
     try {
       final response = await http.get(
-        Uri.parse('${UrlConst.userService}/home/ownedpottemplates/$loggedInUserId'),
+        Uri.parse('${UrlConsts.userService}/home/ownedpottemplates/$loggedInUserId'),
       );
       if (response.statusCode == 200 && mounted) {
         final List<dynamic> owned = jsonDecode(response.body);
@@ -92,7 +92,7 @@ class _Shop extends State<Shop> {
   Future<void> sendPot(String potColor) async {
     try {
       final response = await http.put(
-        Uri.parse('${UrlConst.userService}/home/addpot/$loggedInUserId/$potColor'),
+        Uri.parse('${UrlConsts.userService}/home/addpot/$loggedInUserId/$potColor'),
       );
       if (response.statusCode == 200 && mounted) {
         await _fetchPots();

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_demo/resources/constants.dart';
 import 'package:flutter_demo/widgets/flowers/flower.dart';
 import 'package:flutter_demo/widgets/flowers/rose_flower.dart';
 
@@ -44,13 +45,13 @@ class PotState extends State<Pot> {
 
   String get _potImagePath {
     switch (widget.potTemplate) {
-      case 'BROWN':     return "lib/resources/images/brown.webp";
-      case 'GREEN':     return "lib/resources/images/green.webp";
-      case 'TURQUOISE': return "lib/resources/images/mint.webp";
-      case 'PINK':      return "lib/resources/images/pink.webp";
-      case 'PURPLE':    return "lib/resources/images/purple.webp";
-      case 'YELLOW':    return "lib/resources/images/yellow.webp";
-      default:          return "lib/resources/images/blue.webp";
+      case 'BROWN':     return PotImagePathConsts.brown;
+      case 'GREEN':     return PotImagePathConsts.green;
+      case 'TURQUOISE': return PotImagePathConsts.mint;
+      case 'PINK':      return PotImagePathConsts.pink;
+      case 'PURPLE':    return PotImagePathConsts.purple;
+      case 'YELLOW':    return PotImagePathConsts.yellow;
+      default:          return PotImagePathConsts.blue;
     }
   }
 

@@ -11,7 +11,7 @@ import 'package:flutter_demo/widgets/flowers/flower.dart';
 import 'package:flutter_demo/widgets/friend_menu.dart';
 import 'package:flutter_demo/widgets/login_popup.dart';
 import 'package:flutter_demo/widgets/nav_bar.dart';
-import 'package:flutter_demo/widgets/pots/blue_pot.dart';
+import 'package:flutter_demo/widgets/pot.dart';
 import 'package:http/http.dart' as http;
 
 import '../resources/constants.dart';
@@ -149,7 +149,7 @@ class MyAppState extends State<MyApp> {
     await fetchOwnedPots();
     try {
       final response = await _httpClient.get(
-        Uri.parse('${UrlConst.flowerService}/home/user/$loggedInUserId/flowers'),
+        Uri.parse('${UrlConsts.flowerService}/home/user/$loggedInUserId/flowers'),
         headers: {if (authToken != null) 'Authorization': 'Bearer $authToken'},
       );
       if (response.statusCode == 200 && mounted) {
@@ -173,7 +173,7 @@ class MyAppState extends State<MyApp> {
     if (loggedInUserId == null) return;
     try {
       final response = await _httpClient.get(
-        Uri.parse('${UrlConst.userService}/home/ownedpottemplates/$loggedInUserId'),
+        Uri.parse('${UrlConsts.userService}/home/ownedpottemplates/$loggedInUserId'),
         headers: {if (authToken != null) 'Authorization': 'Bearer $authToken'},
       );
       if (response.statusCode == 200 && mounted) {
@@ -192,7 +192,7 @@ class MyAppState extends State<MyApp> {
     if (_greenhouseLoaded || loggedInUserId == null || !mounted) return;
     try {
       final response = await _httpClient.get(
-        Uri.parse('${UrlConst.userService}/home/greenhouse/$loggedInUserId'),
+        Uri.parse('${UrlConsts.userService}/home/greenhouse/$loggedInUserId'),
         headers: {if (authToken != null) 'Authorization': 'Bearer $authToken'},
       );
       if (response.statusCode == 200 && mounted) {
@@ -244,7 +244,7 @@ class MyAppState extends State<MyApp> {
     }
     try {
       await _httpClient.post(
-        Uri.parse('${UrlConst.userService}/home/greenhouse/$loggedInUserId'),
+        Uri.parse('${UrlConsts.userService}/home/greenhouse/$loggedInUserId'),
         headers: {
           'Content-Type': 'application/json',
           if (authToken != null) 'Authorization': 'Bearer $authToken',

@@ -177,7 +177,7 @@ class _CameraButtonBarState extends State<CameraButtonBar> with SingleTickerProv
 
   Future<Map<String, dynamic>?> identifyFlower(XFile image, {String? location}) async {
     try {
-      final uri = Uri.parse('${UrlConst.flowerService}/home/identify');
+      final uri = Uri.parse('${UrlConsts.flowerService}/home/identify');
       final request = http.MultipartRequest('POST', uri);
 
       final bytes = await image.readAsBytes();
@@ -214,7 +214,7 @@ class _CameraButtonBarState extends State<CameraButtonBar> with SingleTickerProv
 
   Future<Map<String, dynamic>?> identifyTestImage({String? location}) async {
     try {
-      final uri = Uri.parse('${UrlConst.flowerService}/home/identify');
+      final uri = Uri.parse('${UrlConsts.flowerService}/home/identify');
 
       final byteData = await rootBundle.load('lib/resources/images/testblomma.jpg');
       final bytes = byteData.buffer.asUint8List();
@@ -285,7 +285,7 @@ class _CameraButtonBarState extends State<CameraButtonBar> with SingleTickerProv
                             : GenericFlower(color: Colors.pink, name: 'Unknown');
 
                         try{
-                          final response = await http.get(Uri.parse('${UrlConst.userService}/home/addcoins/$loggedInUserId/5'));
+                          final response = await http.get(Uri.parse('${UrlConsts.userService}/home/addcoins/$loggedInUserId/5'));
                           print(response.statusCode);
                           print(response.body);
                         }catch(e){

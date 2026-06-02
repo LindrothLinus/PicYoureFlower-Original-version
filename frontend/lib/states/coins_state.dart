@@ -9,7 +9,7 @@ class CoinsState {
 
   Future<void> updateCoinValue(int coins) async {
     try{
-      final uri = Uri.parse('${UrlConst.userService}/home/setcoins/$loggedInUserId/$coins');
+      final uri = Uri.parse('${UrlConsts.userService}/home/setcoins/$loggedInUserId/$coins');
       final response = await http.put(uri);
 
       print(response.statusCode);

@@ -32,7 +32,7 @@ class _Coins extends State<Coins> {
   Future<void> getCoins() async {
     try {
       final response = await http.get(
-        Uri.parse('${UrlConst.userService}/home/coins/$loggedInUserId'),
+        Uri.parse('${UrlConsts.userService}/home/coins/$loggedInUserId'),
         headers: {if (authToken != null) 'Authorization': 'Bearer $authToken'},
       );
       if (response.statusCode == 200) {

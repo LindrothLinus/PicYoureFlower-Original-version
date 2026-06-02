@@ -99,7 +99,7 @@ class FriendMenuState extends State<FriendMenu> {
     try {
       String? id = widget.userId;
       final response = await http.get(
-        Uri.parse('${UrlConst.userService}/home/friends/$id'),
+        Uri.parse('${UrlConsts.userService}/home/friends/$id'),
       );
       if (!mounted) return;
       if (response.statusCode == 200) {
@@ -120,7 +120,7 @@ class FriendMenuState extends State<FriendMenu> {
       String? id = widget.userId;
 
       final response = await http.get(
-        Uri.parse('${UrlConst.userService}/home/likes/$id'),
+        Uri.parse('${UrlConsts.userService}/home/likes/$id'),
       );
 
       if (response.statusCode == 200) {
@@ -140,7 +140,7 @@ class FriendMenuState extends State<FriendMenu> {
   Future<void> _getUserName() async {
     try {
       String? id = widget.userId;
-      final response = await http.get(Uri.parse("${UrlConst.userService}/users/$id"));
+      final response = await http.get(Uri.parse("${UrlConsts.userService}/users/$id"));
 
       if (!mounted) return;
       if (response.statusCode == 200) {
@@ -166,7 +166,7 @@ class FriendMenuState extends State<FriendMenu> {
     String? id = widget.userId;
     try {
       final response = await http.get(
-        Uri.parse('${UrlConst.flowerService}/home/user/$id/flowers'),
+        Uri.parse('${UrlConsts.flowerService}/home/user/$id/flowers'),
         headers: {if (authToken != null) 'Authorization': 'Bearer $authToken'},
       );
       if (response.statusCode == 200 && mounted) {
@@ -188,7 +188,7 @@ class FriendMenuState extends State<FriendMenu> {
     }
     try {
       final respose = await http.post(
-        Uri.parse("${UrlConst.userService}/home/addfriend/${widget.userId}/$friendId"),
+        Uri.parse("${UrlConsts.userService}/home/addfriend/${widget.userId}/$friendId"),
       );
       return respose.statusCode == 200;
     } catch (e) {
@@ -221,7 +221,7 @@ class FriendMenuState extends State<FriendMenu> {
     if (widget.userId != null) {
       try {
         await http.delete(
-          Uri.parse('${UrlConst.userService}/home/removefriend/${widget.userId}/${friend.id}'),
+          Uri.parse('${UrlConsts.userService}/home/removefriend/${widget.userId}/${friend.id}'),
         );
       } catch (e) {
         print('Error removing friend: $e');
@@ -237,7 +237,7 @@ class FriendMenuState extends State<FriendMenu> {
           .last
           .replaceAll('.png', '');
       await http.put(
-        Uri.parse('${UrlConst.userService}/home/setprofilepicture/${widget.userId}/$picName'),
+        Uri.parse('${UrlConsts.userService}/home/setprofilepicture/${widget.userId}/$picName'),
       );
     } catch (e) {
       print('Error saving profile picture: $e');
@@ -729,11 +729,11 @@ void showDeleteUserDialog(BuildContext context) {
               
               try {
                 final flowerResponse = await http.delete(
-                  Uri.parse('${UrlConst.flowerService}/home/deleteflowersfromuser/$loggedInUserId'),
+                  Uri.parse('${UrlConsts.flowerService}/home/deleteflowersfromuser/$loggedInUserId'),
                 );
                 if (flowerResponse.statusCode == 200 || flowerResponse.statusCode == 204) {
                   final userResponse = await http.delete(
-                    Uri.parse('${UrlConst.userService}/home/removeuser/$loggedInUserId'),
+                    Uri.parse('${UrlConsts.userService}/home/removeuser/$loggedInUserId'),
                   );
 
                   loggedInUserId = null; 
