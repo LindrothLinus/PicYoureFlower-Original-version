@@ -17,7 +17,6 @@ class AddButton extends StatefulWidget {
     this.buildModeActiveNotifier,
     this.onFlowerInfoRequested,
   });
-  final String imagePath = "lib/resources/images/add_smaller.PNG";
   final double x;
   final double y;
   final int index;
@@ -103,7 +102,7 @@ class AddButtonState extends State<AddButton> {
                       : Visibility(
                           visible: buildModeIsActviated,
                           child: Image.asset(
-                            widget.imagePath,
+                            ImagePaths.addbutton,
                             width: addButtonSize,
                             height: addButtonSize,
                             fit: BoxFit.contain,

@@ -9,6 +9,11 @@ class UrlConsts{
 
 
 //===============Paths===============
+class ImagePaths{
+    static const String addbutton = "lib/resources/images/add_smaller.PNG";
+}
+
+
 class FlowerImagePathConsts{
   static const String genericFlowerForegroundPath="lib/resources/images/Vitblommamedgulmitten.png";
   static const String genericFlowerBackgroundPath="lib/resources/images/VBVitblommamedgulmitten.png";
