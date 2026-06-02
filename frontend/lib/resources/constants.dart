@@ -1,6 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+
+class UrlConst{
+  static const String flowerService = 'https://group-1-75.pvt.dsv.su.se/flower';
+  static const String userService = 'https://group-1-75.pvt.dsv.su.se/user';
+}
+
+
+//===============Paths===============
+const String likedPath = "lib/resources/images/SentLike.png";
+
+
+const String genericFlowerForegroundPath="lib/resources/images/Vitblommamedgulmitten.png";
+const String genericFlowerBackgroundPath="lib/resources/images/VBVitblommamedgulmitten.png";
+const String roseFlowerForegroundPath = "lib/resources/images/ros_sticker_kontur.png";
+const String roseFlowerBackgroundPath = "lib/resources/images/ros_sticker.png";
+
+
+
+//=============colors==============
 const Color mainColor = Color(0xFFFFCAE8);
 const Color blockColor = Color(0xFFFFE6F6);
 const Color backgroundColor = Color(0xFFB8E9FF); //Enligt Figma
@@ -39,5 +58,4 @@ const Color buildBarColor = Color(0xFFFFF4F4);
 
 const double addButtonSize = 300;
 
-const String flowerServiceUrl = 'https://group-1-75.pvt.dsv.su.se/flower';
-const String userServiceUrl = 'https://group-1-75.pvt.dsv.su.se/user';
+

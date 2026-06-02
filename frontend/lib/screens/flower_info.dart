@@ -37,7 +37,7 @@ class _FlowerInfoScreenState extends State<FlowerInfoScreen> {
     final latinName = (widget.data?['latinName'] as String?) ?? '';
     try {
       final uri = Uri.parse(
-        '$flowerServiceUrl/home/wikiinfo/${Uri.encodeComponent(commonName)}',
+        '${UrlConst.flowerService}/home/wikiinfo/${Uri.encodeComponent(commonName)}',
       ).replace(
         queryParameters:
             latinName.isNotEmpty

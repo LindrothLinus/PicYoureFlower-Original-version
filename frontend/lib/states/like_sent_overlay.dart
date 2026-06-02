@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_demo/widgets/like_sent.dart';
 
-const String likedPath = "lib/resources/images/SentLike.png";
 
 class LikedPopUp {
   static void showLikeSent(BuildContext context) {

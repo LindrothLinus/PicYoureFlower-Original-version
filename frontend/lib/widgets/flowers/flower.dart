@@ -55,7 +55,7 @@ abstract class Flower extends StatelessWidget {
   }
 
   
-  static parseColor(String? hex) {
+  static Color parseColor(String? hex) {
     if (hex == null || hex.isEmpty) return Colors.pink;
     try {
       return Color(int.parse('FF${hex.replaceAll('#', '')}', radix: 16));

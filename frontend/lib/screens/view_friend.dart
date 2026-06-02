@@ -74,7 +74,7 @@ class ViewFriendScreenState extends State<ViewFriendScreen> {
   Future<List<AddButton>> loadGreenhouseButtons(List<({double x, double y})> coordinates,) async {
     try {
       final flowerResponse = await http.get(
-        Uri.parse('$flowerServiceUrl/home/user/${widget.friend.id}/flowers'),
+        Uri.parse('${UrlConst.flowerService}/home/user/${widget.friend.id}/flowers'),
       );
       if (flowerResponse.statusCode == 200) {
         final List<dynamic> flowerData = jsonDecode(flowerResponse.body);
@@ -85,7 +85,7 @@ class ViewFriendScreenState extends State<ViewFriendScreen> {
       }
 
       final response = await http.get(
-        Uri.parse('$userServiceUrl/home/greenhouse/${widget.friend.id}'),
+        Uri.parse('${UrlConst.userService}/home/greenhouse/${widget.friend.id}'),
       );
 
       if (response.statusCode != 200) return [];

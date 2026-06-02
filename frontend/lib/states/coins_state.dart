@@ -4,15 +4,12 @@ import 'package:flutter_demo/resources/constants.dart';
 import 'package:flutter_demo/widgets/camera_button.dart';
 import 'package:http/http.dart' as http;
 
-//const String _baseUrl = 'https://group-1-75.pvt.dsv.su.se';
-const String _baseUrl = 'http://10.0.2.2:8080';
-
 class CoinsState {
   final ValueNotifier<int> coinValue = ValueNotifier<int>(0);
 
   Future<void> updateCoinValue(int coins) async {
     try{
-      final uri = Uri.parse('$userServiceUrl/home/setcoins/$loggedInUserId/$coins');
+      final uri = Uri.parse('${UrlConst.userService}/home/setcoins/$loggedInUserId/$coins');
       final response = await http.put(uri);
 
       print(response.statusCode);
