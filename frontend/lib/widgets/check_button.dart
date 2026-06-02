@@ -7,7 +7,7 @@ class CheckButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Image.asset(
-      ImagePaths.confirmed,
+      ImagePathsConsts.confirmed,
       width: 100,
       height: 100,
     );

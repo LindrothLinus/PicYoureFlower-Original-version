@@ -54,7 +54,7 @@ class _Coins extends State<Coins> {
                 coinsState.getCoinValue().toString() + " ",
                 style: TextStyles.coinsValue,
               ),
-              Image.asset(ImagePaths.coins, width: 28, height: 28),
+              Image.asset(ImagePathsConsts.coins, width: 28, height: 28),
             ],
           ),
         );

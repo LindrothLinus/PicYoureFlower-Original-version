@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_demo/resources/constants.dart';
 import 'package:flutter_demo/widgets/camera_button.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -22,14 +23,6 @@ final TextStyle loginText = GoogleFonts.nunito(
   fontWeight: FontWeight.w500,
   color: Colors.black,
 );
-
-/*
-final GoogleSignIn _googleSignIn = GoogleSignIn(
-  serverClientId: '167485843554-b82rj6jet7kr9rt81r0qm20jv40okesd.apps.googleusercontent.com',
-  clientId: '167485843554-7drapkqia61ksol45iu6cl9oobj3s0t6.apps.googleusercontent.com',
-  scopes: ['email', 'profile'],
-);
-*/
 
 final GoogleSignIn _googleSignIn = GoogleSignIn(
   serverClientId: '167485843554-b82rj6jet7kr9rt81r0qm20jv40okesd.apps.googleusercontent.com',
@@ -71,7 +64,7 @@ Future<void> signInWithGoogle(BuildContext context, {VoidCallback? onSuccess}) a
                 width: 100,
                 height: 100,
                 child: Image.asset(
-                  'lib/resources/images/Confirmed.png',
+                  ImagePathsConsts.confirmed,
                   fit: BoxFit.contain,
                 ),
               ),

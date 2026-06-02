@@ -102,7 +102,7 @@ class AddButtonState extends State<AddButton> {
                       : Visibility(
                           visible: buildModeIsActviated,
                           child: Image.asset(
-                            ImagePaths.addbutton,
+                            ImagePathsConsts.addbutton,
                             width: addButtonSize,
                             height: addButtonSize,
                             fit: BoxFit.contain,

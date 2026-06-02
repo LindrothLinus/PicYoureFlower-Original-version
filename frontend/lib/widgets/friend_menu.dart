@@ -273,7 +273,7 @@ class FriendMenuState extends State<FriendMenu> {
           });
         },
         child: Image.asset(
-          ImagePaths.social,
+          ImagePathsConsts.social,
           width: 80,
           height: 90,
         ),
@@ -294,7 +294,7 @@ class FriendMenuState extends State<FriendMenu> {
           );
         },
         child: Image.asset(
-          ImagePaths.collecotor,
+          ImagePathsConsts.collecotor,
           width: 70,
           height: 80,
           fit: BoxFit.contain,
@@ -393,7 +393,7 @@ class FriendMenuState extends State<FriendMenu> {
         onTap: () {
           toggleExpand();
         },
-        child: Image.asset(ImagePaths.expandbutton, width: 50),
+        child: Image.asset(ImagePathsConsts.expandbutton, width: 50),
       ),
     );
   }
@@ -406,7 +406,7 @@ class FriendMenuState extends State<FriendMenu> {
         onTap: () {
           toggleProfileExpand();
         },
-        child: Image.asset(ImagePaths.expandbutton, width: 50),
+        child: Image.asset(ImagePathsConsts.expandbutton, width: 50),
       ),
     );
   }
@@ -874,7 +874,7 @@ void showDeleteUserDialog(BuildContext context) {
                                           purpleColor,
                                           40,
                                           40,
-                                          ImagePaths.nameBage,
+                                          ImagePathsConsts.nameBage,
                                         ),
                                         const SizedBox(width: 8),
                                         Expanded(
@@ -895,7 +895,7 @@ void showDeleteUserDialog(BuildContext context) {
                                           purpleColor,
                                           40,
                                           40,
-                                          ImagePaths.flowerIcon,
+                                          ImagePathsConsts.flowerIcon,
                                         ),
                                         const SizedBox(width: 8),
                                         Expanded(
@@ -915,7 +915,7 @@ void showDeleteUserDialog(BuildContext context) {
                                           purpleColor,
                                           40,
                                           40,
-                                          ImagePaths.likeIcon,
+                                          ImagePathsConsts.likeIcon,
                                         ),
                                         const SizedBox(width: 8),
                                         Expanded(

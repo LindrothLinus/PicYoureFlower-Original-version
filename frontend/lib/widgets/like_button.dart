@@ -3,7 +3,6 @@ import 'package:flutter_demo/resources/constants.dart';
 import 'package:flutter_demo/states/like_sent_overlay.dart';
 import 'package:http/http.dart' as http;
 
-const String likePath = "lib/resources/images/Like.png";
 
 class LikeButton extends StatelessWidget {
   final int friendId; //Den ska bara visas om man är på någon annans växthus
@@ -19,7 +18,7 @@ class LikeButton extends StatelessWidget {
         LikedPopUp.showLikeSent(context);
       }
       ,
-      child: Image.asset(likePath, height: 60, width: 60),
+      child: Image.asset(ImagePathsConsts.likeIcon, height: 60, width: 60),
     );
   }
 

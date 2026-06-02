@@ -9,7 +9,7 @@ class UrlConsts{
 
 
 //===============Paths===============
-class ImagePaths{
+class ImagePathsConsts{
     static const String addbutton = "lib/resources/images/add_smaller.PNG";
     static const String confirmed = "lib/resources/images/Confirmed.png";
     static const String coins = "lib/resources/images/coin.webp";
@@ -19,7 +19,9 @@ class ImagePaths{
     static const String nameBage = 'lib/resources/images/Identity.png';
     static const String flowerIcon = 'lib/resources/images/flower_icon.png';
     static const String likeIcon = 'lib/resources/images/Like.png';
-
+    static const String shopIcon = "lib/resources/images/cart_icon.png";
+    static const String homeScreenIcon = "lib/resources/images/home.png";
+    static const String cameraIcon = "lib/resources/images/camera_icon.png";
 }
 
 
