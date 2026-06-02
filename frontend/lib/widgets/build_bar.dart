@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_demo/resources/constants.dart';
 import 'package:flutter_demo/widgets/carousel.dart';
 import 'package:flutter_demo/widgets/flowers/flower.dart';
-import 'package:flutter_demo/widgets/pots/blue_pot.dart';
+import 'package:flutter_demo/widgets/pot.dart';
 
 class BuildBar extends StatefulWidget {
   const BuildBar({

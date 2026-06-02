@@ -34,18 +34,14 @@ flutter:
     - lib/resources/images/showel_icon.png
     - lib/resources/images/camera_icon.png
     - lib/resources/images/cart_icon.png
-    - lib/resources/images/flower_icon.png
     - lib/resources/images/coin.webp
     - lib/resources/images/brown.webp
     - lib/resources/images/blue.webp
-    - lib/resources/images/blue.png
     - lib/resources/images/green.webp
     - lib/resources/images/mint.webp
     - lib/resources/images/pink.webp
     - lib/resources/images/purple.webp
     - lib/resources/images/yellow.webp
-    - lib/resources/images/Add.webp
-    - lib/resources/images/Add.png
     - lib/resources/images/ros_sticker.png
     - lib/resources/images/ros_sticker_kontur.png
     - lib/resources/images/Greenhouse.svg
@@ -62,28 +58,20 @@ flutter:
     - lib/resources/images/Expand.png
     - lib/resources/images/Identity.png
     - lib/resources/images/Social.png
-    - lib/resources/images/Search.png
     - lib/resources/images/Like.png
     - lib/resources/images/SentLike.png
-    - lib/resources/images/testblomma.jpg
     - lib/resources/images/Location_v2.png
-    - lib/resources/images/BluePot_smaller.png
-    - lib/resources/images/Avatar_Blue.png
     - lib/resources/images/Avatar_Green.png
+    - lib/resources/images/Avatar_Blue.png
     - lib/resources/images/Avatar_Pink.png
     - lib/resources/images/Avatar_Purple.png
     - lib/resources/images/Avatar_Red.png
     - lib/resources/images/Avatar_Yellow.png
-    - lib/resources/images/blue_smaller.png
-    - lib/resources/images/brown_smaller.png
-    - lib/resources/images/green_smaller.png
-    - lib/resources/images/mint_smaller.png
-    - lib/resources/images/pink_smaller.png
-    - lib/resources/images/purple_smaller.png
-    - lib/resources/images/yellow_smaller.png
     - lib/resources/images/add_smaller.PNG
     - lib/resources/images/home.png
     - lib/resources/images/FlowerCollector.png
+    - lib/resources/images/flower_icon.png
+
 
 
 

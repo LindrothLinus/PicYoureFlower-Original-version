@@ -7,9 +7,6 @@ import 'package:http/http.dart' as http;
 
 import '../resources/constants.dart';
 
-const String _baseUrl = 'https://group-1-75.pvt.dsv.su.se';
-
-const String coinsPath = "lib/resources/images/coin.webp";
 
 class Coins extends StatefulWidget {
   final CoinsState coinsState;
@@ -32,7 +29,7 @@ class _Coins extends State<Coins> {
   Future<void> getCoins() async {
     try {
       final response = await http.get(
-        Uri.parse('$userServiceUrl/home/coins/$loggedInUserId'),
+        Uri.parse('${UrlConsts.userService}/home/coins/$loggedInUserId'),
         headers: {if (authToken != null) 'Authorization': 'Bearer $authToken'},
       );
       if (response.statusCode == 200) {
@@ -57,7 +54,7 @@ class _Coins extends State<Coins> {
                 coinsState.getCoinValue().toString() + " ",
                 style: TextStyles.coinsValue,
               ),
-              Image.asset(coinsPath, width: 28, height: 28),
+              Image.asset(ImagePathsConsts.coins, width: 28, height: 28),
             ],
           ),
         );

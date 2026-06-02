@@ -16,10 +16,7 @@ class FlowerInfoScreen extends StatefulWidget {
 }
 
 class _FlowerInfoScreenState extends State<FlowerInfoScreen> {
-  static const String calendarIcon = "lib/resources/images/Calendar_v2.png";
-  static const String identityIcon = "lib/resources/images/Identity.png";
-  static const String locationIcon = "lib/resources/images/Location_v2.png";
-  static const String _baseUrl = 'http://10.0.2.2:8080';
+
 
   String _wikiText = '';
   bool _loadingWiki = true;
@@ -37,7 +34,7 @@ class _FlowerInfoScreenState extends State<FlowerInfoScreen> {
     final latinName = (widget.data?['latinName'] as String?) ?? '';
     try {
       final uri = Uri.parse(
-        '$flowerServiceUrl/home/wikiinfo/${Uri.encodeComponent(commonName)}',
+        '${UrlConsts.flowerService}/home/wikiinfo/${Uri.encodeComponent(commonName)}',
       ).replace(
         queryParameters:
             latinName.isNotEmpty
@@ -155,9 +152,9 @@ class _FlowerInfoScreenState extends State<FlowerInfoScreen> {
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                _buildInfoRow(dateStr, calendarIcon, infoPurple, blackBorder, standardRadius),
-                                _buildInfoRow(latinName, identityIcon, infoPurple, blackBorder, standardRadius),
-                                _buildInfoRow(locationStr, locationIcon, infoPurple, blackBorder, standardRadius),
+                                _buildInfoRow(dateStr, ImagePathsConsts.calendarIcon, infoPurple, blackBorder, standardRadius),
+                                _buildInfoRow(latinName, ImagePathsConsts.nameBage, infoPurple, blackBorder, standardRadius),
+                                _buildInfoRow(locationStr, ImagePathsConsts.locationIcon, infoPurple, blackBorder, standardRadius),
                               ],
                             ),
                           ),

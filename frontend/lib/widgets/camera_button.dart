@@ -7,10 +7,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_demo/widgets/camera_feed.dart';
 import 'package:flutter_demo/widgets/flowers/flower.dart';
 import 'package:flutter_demo/widgets/flowers/genericflower.dart';
-import 'package:flutter_demo/widgets/flowers/rose_flower.dart';
-import 'package:flutter_demo/widgets/flowers/sunflower.dart';
-import 'package:flutter_demo/widgets/flowers/tulip.dart';
-import 'package:flutter_demo/widgets/flowers/woodanemone.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
@@ -19,9 +15,6 @@ import 'package:path_provider/path_provider.dart';
 
 import '../resources/constants.dart';
 import '../screens/flower_info.dart';
-
-//const String _baseUrl = 'https://group-1-75.pvt.dsv.su.se';
-const String _baseUrl = 'http://10.0.2.2:8080';
 
 String? authToken;
 String? loggedInUserId;
@@ -67,7 +60,7 @@ class _CameraButtonBarState extends State<CameraButtonBar> with SingleTickerProv
             child: RotationTransition(
               turns: _spinController,
               child: Image.asset(
-                'lib/resources/images/blue.webp',
+                PotImagePathConsts.blue,
                 width: 80,
                 height: 80,
               ),
@@ -83,28 +76,6 @@ class _CameraButtonBarState extends State<CameraButtonBar> with SingleTickerProv
     _spinController.stop();
     _overlayEntry?.remove();
     _overlayEntry = null;
-  }
-
-  Color _parseColor(String? hex) {
-    if (hex == null || hex.isEmpty) return Colors.pink;
-    try {
-      return Color(int.parse('FF${hex.replaceAll('#', '')}', radix: 16));
-    } catch (_) {
-      return Colors.pink;
-    }
-  }
-
-  Flower _buildFlower(Map<String, dynamic> data) {
-    final String template = (data['template'] as String?) ?? 'GENERIC';
-    final Color color = _parseColor(data['color'] as String?);
-    final String name = (data['commonName'] as String?) ?? 'Unknown';
-    switch (template) {
-      case 'ROSE':        return RoseFlower(color: color, name: name);
-      case 'SUNFLOWER':   return SunFlower(color: color, name: name);
-      case 'TULIP':       return TulipFlower(color: color, name: name);
-      case 'WOODANEMONE': return WoodanemoneFlower(color: color, name: name);
-      default:            return GenericFlower(color: color, name: name);
-    }
   }
 
   void _printResults(Map<String, dynamic> decoded) {
@@ -177,7 +148,7 @@ class _CameraButtonBarState extends State<CameraButtonBar> with SingleTickerProv
 
   Future<Map<String, dynamic>?> identifyFlower(XFile image, {String? location}) async {
     try {
-      final uri = Uri.parse('$flowerServiceUrl/home/identify');
+      final uri = Uri.parse('${UrlConsts.flowerService}/home/identify');
       final request = http.MultipartRequest('POST', uri);
 
       final bytes = await image.readAsBytes();
@@ -212,44 +183,6 @@ class _CameraButtonBarState extends State<CameraButtonBar> with SingleTickerProv
     }
   }
 
-  Future<Map<String, dynamic>?> identifyTestImage({String? location}) async {
-    try {
-      final uri = Uri.parse('$flowerServiceUrl/home/identify');
-
-      final byteData = await rootBundle.load('lib/resources/images/testblomma.jpg');
-      final bytes = byteData.buffer.asUint8List();
-      final croppedFile = await _cropToCenter(bytes, 'cropped_test.jpg');
-
-      final request = http.MultipartRequest('POST', uri);
-      request.files.add(await http.MultipartFile.fromPath('image', croppedFile.path));
-
-      if (loggedInUserId != null) {
-        request.fields['userId'] = loggedInUserId!;
-      }
-      if (location != null) {
-        request.fields['location'] = location;
-      }
-      if (authToken != null) {
-        request.headers['Authorization'] = 'Bearer $authToken';
-      }
-
-      print('Sending test image...');
-      final response = await request.send();
-      final responseBody = await response.stream.bytesToString();
-      print(response.statusCode);
-      print(responseBody);
-
-      if (response.statusCode == 200) {
-        final decoded = jsonDecode(responseBody) as Map<String, dynamic>;
-        _printResults(decoded);
-        return decoded;
-      }
-      return null;
-    } catch (e) {
-      print('Error: $e');
-      return null;
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -281,11 +214,11 @@ class _CameraButtonBarState extends State<CameraButtonBar> with SingleTickerProv
                         if (!context.mounted) return;
 
                         final flower = data != null
-                            ? _buildFlower(data)
+                            ? Flower.buildFlower(data)
                             : GenericFlower(color: Colors.pink, name: 'Unknown');
 
                         try{
-                          final response = await http.get(Uri.parse('$userServiceUrl/home/addcoins/$loggedInUserId/5'));
+                          final response = await http.get(Uri.parse('${UrlConsts.userService}/home/addcoins/$loggedInUserId/5'));
                           print(response.statusCode);
                           print(response.body);
                         }catch(e){

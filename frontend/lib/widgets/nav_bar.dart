@@ -5,10 +5,7 @@ import 'package:flutter_demo/screens/flower_collection.dart';
 import '../resources/constants.dart';
 import '../screens/shop.dart';
 
-const String shopIconPath = "lib/resources/images/cart_icon.png";
-const String homeScreenIconPath = "lib/resources/images/home.png";
-const String cameraIconPath = "lib/resources/images/camera_icon.png";
-const String flowerCollectionIconPath = "lib/resources/images/flower_icon.png";
+
 
 class NavBar extends StatefulWidget {
   const NavBar({super.key, required this.onBuildModeButtonPressed});
@@ -39,7 +36,7 @@ class NavBarState extends State<NavBar> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             IconButton(
-              icon: Image.asset(shopIconPath),
+              icon: Image.asset(ImagePathsConsts.shopIcon),
               onPressed: isShop
                   ? null
                   : () {
@@ -53,7 +50,7 @@ class NavBarState extends State<NavBar> {
                     },
             ),
             IconButton(
-              icon: Image.asset(homeScreenIconPath),
+              icon: Image.asset(ImagePathsConsts.homeScreenIcon),
               onPressed: () {
                 //widget.onBuildModeButtonPressed();
                 Navigator.popUntil(context,ModalRoute.withName('/'));
@@ -61,7 +58,7 @@ class NavBarState extends State<NavBar> {
 
             ),
             IconButton(
-              icon: Image.asset(cameraIconPath),
+              icon: Image.asset(ImagePathsConsts.cameraIcon),
               onPressed: isCamera
                   ? null
                   : () {
@@ -75,7 +72,7 @@ class NavBarState extends State<NavBar> {
                     },
             ),
             IconButton(
-              icon: Image.asset(flowerCollectionIconPath),
+              icon: Image.asset(ImagePathsConsts.flowerIcon),
               onPressed: isFlowerCollection
                   ? null
                   : () {

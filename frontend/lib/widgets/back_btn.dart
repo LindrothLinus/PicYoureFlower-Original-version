@@ -15,7 +15,6 @@ class CustomBackButton extends StatelessWidget {
         } else {
           Navigator.of(context, rootNavigator: true).pop();
         }
-        // för att komma tillbaka till huvudappens tidigare sida, kanske vill ändra detta sen
       },
     );
   }

@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_demo/items/buyable_item_creator.dart';
-import 'package:flutter_demo/states/check_button_overlay.dart';
 import 'package:flutter_demo/states/coins_state.dart';
 import 'package:flutter_demo/widgets/back_btn.dart';
 import 'package:flutter_demo/widgets/camera_button.dart';
@@ -12,29 +11,17 @@ import 'package:http/http.dart' as http;
 
 import '../resources/constants.dart';
 
-//const String _baseUrl = 'https://group-1-75.pvt.dsv.su.se';
-const String _baseUrl = 'http://10.0.2.2:8080';
 
-const String brownPotPath = "lib/resources/images/brown_smaller.png";
-const String bluePotPath = "lib/resources/images/BluePot_smaller.png";
-const String greenPotPath = "lib/resources/images/green_smaller.png";
-const String mintPotPath = "lib/resources/images/mint_smaller.png";
-const String pinkPotPath = "lib/resources/images/pink_smaller.png";
-const String purplePotPath = "lib/resources/images/purple_smaller.png";
-const String yellowPotPath = "lib/resources/images/yellow_smaller.png";
-const String addPath = "lib/resources/images/add_smaller.PNG";
-
-const String coinsPath = "lib/resources/images/coin.webp";
 
 //Alla items
 const List<Map<String, dynamic>> _allPotConfigs = [
-  {'color': 'BLUE', 'image': bluePotPath, 'cost': 5},
-  {'color': 'BROWN', 'image': brownPotPath, 'cost': 5},
-  {'color': 'GREEN', 'image': greenPotPath, 'cost': 5},
-  {'color': 'TURQUOISE', 'image': mintPotPath, 'cost': 5},
-  {'color': 'PINK', 'image': pinkPotPath, 'cost': 5},
-  {'color': 'PURPLE', 'image': purplePotPath, 'cost': 5},
-  {'color': 'YELLOW', 'image': yellowPotPath, 'cost': 5},
+  {'color': 'BLUE', 'image': PotImagePathConsts.blue, 'cost': 5},
+  {'color': 'BROWN', 'image': PotImagePathConsts.brown, 'cost': 5},
+  {'color': 'GREEN', 'image': PotImagePathConsts.green, 'cost': 5},
+  {'color': 'TURQUOISE', 'image': PotImagePathConsts.mint, 'cost': 5},
+  {'color': 'PINK', 'image': PotImagePathConsts.pink, 'cost': 5},
+  {'color': 'PURPLE', 'image': PotImagePathConsts.purple, 'cost': 5},
+  {'color': 'YELLOW', 'image': PotImagePathConsts.yellow, 'cost': 5},
 ];
 
 class Shop extends StatefulWidget {
@@ -64,7 +51,7 @@ class _Shop extends State<Shop> {
     if (loggedInUserId == null) return;
     try {
       final response = await http.get(
-        Uri.parse('$userServiceUrl/home/ownedpottemplates/$loggedInUserId'),
+        Uri.parse('${UrlConsts.userService}/home/ownedpottemplates/$loggedInUserId'),
       );
       if (response.statusCode == 200 && mounted) {
         final List<dynamic> owned = jsonDecode(response.body);
@@ -92,7 +79,7 @@ class _Shop extends State<Shop> {
   Future<void> sendPot(String potColor) async {
     try {
       final response = await http.put(
-        Uri.parse('$userServiceUrl/home/addpot/$loggedInUserId/$potColor'),
+        Uri.parse('${UrlConsts.userService}/home/addpot/$loggedInUserId/$potColor'),
       );
       if (response.statusCode == 200 && mounted) {
         await _fetchPots();
@@ -175,7 +162,7 @@ class _Shop extends State<Shop> {
 
                                     const SizedBox(width: 4),
                                     Image.asset(
-                                      coinsPath,
+                                      ImagePathsConsts.coins,
                                       height: 30,
                                       width: 30,
                                     ),
@@ -189,8 +176,7 @@ class _Shop extends State<Shop> {
                                     if (coinsState.getCoinValue() >=
                                         item.cost) {
                                       int newValue =
-                                          coinsState.getCoinValue() - item.cost
-                                              as int;
+                                          coinsState.getCoinValue() - item.cost;
                                       coinsState.setCoinValue(newValue);
                                       coinsState.updateCoinValue(newValue);
                                       sendPot(item.color);
@@ -204,7 +190,7 @@ class _Shop extends State<Shop> {
                                               width: 100,
                                               height: 100,
                                               child: Image.asset(
-                                                'lib/resources/images/Confirmed.png',
+                                                ImagePathsConsts.confirmed,
                                                 fit: BoxFit.contain,
                                               ),
                                             ),
@@ -218,7 +204,7 @@ class _Shop extends State<Shop> {
                                     }
                                   },
                                   icon: Image.asset(
-                                    addPath,
+                                    ImagePathsConsts.addbutton,
                                     height: 30,
                                     width: 30,
                                     //fit: BoxFit.contain,

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_demo/resources/constants.dart';
 import 'package:flutter_demo/widgets/flowers/flower.dart';
-import 'package:flutter_demo/widgets/pots/blue_pot.dart';
+import 'package:flutter_demo/widgets/pot.dart';
 
 class AddButton extends StatefulWidget {
   AddButton({
@@ -17,7 +17,6 @@ class AddButton extends StatefulWidget {
     this.buildModeActiveNotifier,
     this.onFlowerInfoRequested,
   });
-  final String imagePath = "lib/resources/images/add_smaller.PNG";
   final double x;
   final double y;
   final int index;
@@ -103,7 +102,7 @@ class AddButtonState extends State<AddButton> {
                       : Visibility(
                           visible: buildModeIsActviated,
                           child: Image.asset(
-                            widget.imagePath,
+                            ImagePathsConsts.addbutton,
                             width: addButtonSize,
                             height: addButtonSize,
                             fit: BoxFit.contain,

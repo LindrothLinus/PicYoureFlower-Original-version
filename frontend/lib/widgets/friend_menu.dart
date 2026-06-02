@@ -11,13 +11,13 @@ import 'package:http/http.dart' as http;
 
 import '../resources/constants.dart';
 
-final List<String> avatarImages = [
-  "lib/resources/images/Avatar_Blue.png",
-  "lib/resources/images/Avatar_Pink.png",
-  "lib/resources/images/Avatar_Purple.png",
-  "lib/resources/images/Avatar_Green.png",
-  "lib/resources/images/Avatar_Red.png",
-  "lib/resources/images/Avatar_Yellow.png",
+ const List<String> avatarImages = [
+  AvatarImagePathConsts.blue,
+  AvatarImagePathConsts.pink,
+  AvatarImagePathConsts.purple,
+  AvatarImagePathConsts.green,
+  AvatarImagePathConsts.red,
+  AvatarImagePathConsts.yellow
 ];
 
 final random = Random();
@@ -77,14 +77,6 @@ class FriendMenuState extends State<FriendMenu> {
   String _amountOfLikes = "";
   String _userName = "";
   String _amountOfFlowers = "";
-  static const List<String> _profilePictures = [
-    "lib/resources/images/Avatar_Green.png",
-    "lib/resources/images/Avatar_Blue.png",
-    "lib/resources/images/Avatar_Pink.png",
-    "lib/resources/images/Avatar_Purple.png",
-    "lib/resources/images/Avatar_Red.png",
-    "lib/resources/images/Avatar_Yellow.png",
-  ];
   int _profilePictureIndex = 0;
   @override
   void initState() {
@@ -99,7 +91,7 @@ class FriendMenuState extends State<FriendMenu> {
     try {
       String? id = widget.userId;
       final response = await http.get(
-        Uri.parse('$userServiceUrl/home/friends/$id'),
+        Uri.parse('${UrlConsts.userService}/home/friends/$id'),
       );
       if (!mounted) return;
       if (response.statusCode == 200) {
@@ -120,7 +112,7 @@ class FriendMenuState extends State<FriendMenu> {
       String? id = widget.userId;
 
       final response = await http.get(
-        Uri.parse('$userServiceUrl/home/likes/$id'),
+        Uri.parse('${UrlConsts.userService}/home/likes/$id'),
       );
 
       if (response.statusCode == 200) {
@@ -140,7 +132,7 @@ class FriendMenuState extends State<FriendMenu> {
   Future<void> _getUserName() async {
     try {
       String? id = widget.userId;
-      final response = await http.get(Uri.parse("$userServiceUrl/users/$id"));
+      final response = await http.get(Uri.parse("${UrlConsts.userService}/users/$id"));
 
       if (!mounted) return;
       if (response.statusCode == 200) {
@@ -150,7 +142,7 @@ class FriendMenuState extends State<FriendMenu> {
           _userName = raw['name'];
           final String? pic = raw['profilePicture'] as String?;
           if (pic != null) {
-            final idx = _profilePictures.indexWhere((p) => p.contains(pic));
+            final idx = avatarImages.indexWhere((p) => p.contains(pic));
             if (idx >= 0) _profilePictureIndex = idx;
           }
         });
@@ -166,7 +158,7 @@ class FriendMenuState extends State<FriendMenu> {
     String? id = widget.userId;
     try {
       final response = await http.get(
-        Uri.parse('$flowerServiceUrl/home/user/$id/flowers'),
+        Uri.parse('${UrlConsts.flowerService}/home/user/$id/flowers'),
         headers: {if (authToken != null) 'Authorization': 'Bearer $authToken'},
       );
       if (response.statusCode == 200 && mounted) {
@@ -188,7 +180,7 @@ class FriendMenuState extends State<FriendMenu> {
     }
     try {
       final respose = await http.post(
-        Uri.parse("$userServiceUrl/home/addfriend/${widget.userId}/$friendId"),
+        Uri.parse("${UrlConsts.userService}/home/addfriend/${widget.userId}/$friendId"),
       );
       return respose.statusCode == 200;
     } catch (e) {
@@ -221,7 +213,7 @@ class FriendMenuState extends State<FriendMenu> {
     if (widget.userId != null) {
       try {
         await http.delete(
-          Uri.parse('$userServiceUrl/home/removefriend/${widget.userId}/${friend.id}'),
+          Uri.parse('${UrlConsts.userService}/home/removefriend/${widget.userId}/${friend.id}'),
         );
       } catch (e) {
         print('Error removing friend: $e');
@@ -232,12 +224,12 @@ class FriendMenuState extends State<FriendMenu> {
   Future<void> _saveProfilePicture() async {
     if (widget.userId == null) return;
     try {
-      final picName = _profilePictures[_profilePictureIndex]
+      final picName = avatarImages[_profilePictureIndex]
           .split('/')
           .last
           .replaceAll('.png', '');
       await http.put(
-        Uri.parse('$userServiceUrl/home/setprofilepicture/${widget.userId}/$picName'),
+        Uri.parse('${UrlConsts.userService}/home/setprofilepicture/${widget.userId}/$picName'),
       );
     } catch (e) {
       print('Error saving profile picture: $e');
@@ -281,7 +273,7 @@ class FriendMenuState extends State<FriendMenu> {
           });
         },
         child: Image.asset(
-          'lib/resources/images/Social.png',
+          ImagePathsConsts.social,
           width: 80,
           height: 90,
         ),
@@ -289,7 +281,7 @@ class FriendMenuState extends State<FriendMenu> {
     );
   }
 
-  Widget trophyButton() {
+  Widget collectorButton() {
     return Padding(
       padding: const EdgeInsets.only(right: 10),
       child: GestureDetector(
@@ -297,12 +289,12 @@ class FriendMenuState extends State<FriendMenu> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => const LeaderboardScreen(),
+              builder: (context) => LeaderboardScreen(addButtonCordinates:widget.addButtonsCordinates,),
             ),
           );
         },
         child: Image.asset(
-          'lib/resources/images/FlowerCollector.png',
+          ImagePathsConsts.collecotor,
           width: 70,
           height: 80,
           fit: BoxFit.contain,
@@ -401,7 +393,7 @@ class FriendMenuState extends State<FriendMenu> {
         onTap: () {
           toggleExpand();
         },
-        child: Image.asset('lib/resources/images/Expand.png', width: 50),
+        child: Image.asset(ImagePathsConsts.expandbutton, width: 50),
       ),
     );
   }
@@ -414,7 +406,7 @@ class FriendMenuState extends State<FriendMenu> {
         onTap: () {
           toggleProfileExpand();
         },
-        child: Image.asset('lib/resources/images/Expand.png', width: 50),
+        child: Image.asset(ImagePathsConsts.expandbutton, width: 50),
       ),
     );
   }
@@ -485,7 +477,7 @@ class FriendMenuState extends State<FriendMenu> {
         border: Border.all(color: Colors.black, width: 1),
         borderRadius: BorderRadius.circular(6),
       ),
-      child: Image.asset('lib/resources/images/Search.png'),
+      child: Icon(Icons.search),
     );
   }
 
@@ -724,16 +716,14 @@ void showDeleteUserDialog(BuildContext context) {
               if (loggedInUserId == null || loggedInUserId!.isEmpty) {
                 return;
               }
-
-              //final String baseUrl = "https://group-1-75.pvt.dsv.su.se/api";
               
               try {
                 final flowerResponse = await http.delete(
-                  Uri.parse('$flowerServiceUrl/home/deleteflowersfromuser/$loggedInUserId'),
+                  Uri.parse('${UrlConsts.flowerService}/home/deleteflowersfromuser/$loggedInUserId'),
                 );
                 if (flowerResponse.statusCode == 200 || flowerResponse.statusCode == 204) {
-                  final userResponse = await http.delete(
-                    Uri.parse('$userServiceUrl/home/removeuser/$loggedInUserId'),
+                  await http.delete(
+                    Uri.parse('${UrlConsts.userService}/home/removeuser/$loggedInUserId'),
                   );
 
                   loggedInUserId = null; 
@@ -783,7 +773,7 @@ void showDeleteUserDialog(BuildContext context) {
             if (!showButtons)
               Align(
                 alignment: Alignment.centerRight,
-                child: trophyButton(),
+                child: collectorButton(),
               ),
 
             //Buttons that show up when friend menu appears
@@ -839,7 +829,7 @@ void showDeleteUserDialog(BuildContext context) {
                       mainAxisSize: MainAxisSize.max,
                       children: [
                         
-                        Text("ID: ${widget.userId??"loggin to get an ID"}"),
+                        Text("Youre ID: ${widget.userId??"loggin to get an ID"}"),
                         SizedBox(width: 350, child: searchTextField()),
                       ],
                     ),
@@ -859,7 +849,7 @@ void showDeleteUserDialog(BuildContext context) {
                                 child: GestureDetector(
                                   onTap: () {
                                     setState(() {
-                                      _profilePictureIndex = (_profilePictureIndex + 1) % _profilePictures.length;
+                                      _profilePictureIndex = (_profilePictureIndex + 1) % avatarImages.length;
                                     });
                                     _saveProfilePicture();
                                   },
@@ -867,7 +857,7 @@ void showDeleteUserDialog(BuildContext context) {
                                     Colors.white,
                                     150,
                                     150,
-                                    _profilePictures[_profilePictureIndex],
+                                    avatarImages[_profilePictureIndex],
                                   ),
                                 ),
                               ),
@@ -884,7 +874,7 @@ void showDeleteUserDialog(BuildContext context) {
                                           purpleColor,
                                           40,
                                           40,
-                                          'lib/resources/images/Identity.png',
+                                          ImagePathsConsts.nameBage,
                                         ),
                                         const SizedBox(width: 8),
                                         Expanded(
@@ -905,7 +895,7 @@ void showDeleteUserDialog(BuildContext context) {
                                           purpleColor,
                                           40,
                                           40,
-                                          'lib/resources/images/flower_icon.png',
+                                          ImagePathsConsts.flowerIcon,
                                         ),
                                         const SizedBox(width: 8),
                                         Expanded(
@@ -925,7 +915,7 @@ void showDeleteUserDialog(BuildContext context) {
                                           purpleColor,
                                           40,
                                           40,
-                                          'lib/resources/images/Like.png',
+                                          ImagePathsConsts.likeIcon,
                                         ),
                                         const SizedBox(width: 8),
                                         Expanded(
