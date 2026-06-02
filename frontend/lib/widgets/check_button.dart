@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-
-const String checkButtonPath =
-    "lib/resources/images/Confirmed.png"; //Behöver göras ungefär dubbelt så stor
+import 'package:flutter_demo/resources/constants.dart';
 
 class CheckButton extends StatelessWidget {
   const CheckButton({super.key});
@@ -9,7 +7,7 @@ class CheckButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Image.asset(
-      checkButtonPath,
+      ImagePaths.confirmed,
       width: 100,
       height: 100,
     );

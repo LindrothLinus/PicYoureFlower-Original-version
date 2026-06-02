@@ -11,6 +11,9 @@ class UrlConsts{
 //===============Paths===============
 class ImagePaths{
     static const String addbutton = "lib/resources/images/add_smaller.PNG";
+    static const String confirmed = "lib/resources/images/Confirmed.png";
+    static const String coins = "lib/resources/images/coin.webp";
+
 }
 
 

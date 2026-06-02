@@ -7,9 +7,6 @@ import 'package:http/http.dart' as http;
 
 import '../resources/constants.dart';
 
-const String _baseUrl = 'https://group-1-75.pvt.dsv.su.se';
-
-const String coinsPath = "lib/resources/images/coin.webp";
 
 class Coins extends StatefulWidget {
   final CoinsState coinsState;
@@ -57,7 +54,7 @@ class _Coins extends State<Coins> {
                 coinsState.getCoinValue().toString() + " ",
                 style: TextStyles.coinsValue,
               ),
-              Image.asset(coinsPath, width: 28, height: 28),
+              Image.asset(ImagePaths.coins, width: 28, height: 28),
             ],
           ),
         );
