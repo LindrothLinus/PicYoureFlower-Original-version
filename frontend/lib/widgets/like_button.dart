@@ -26,7 +26,7 @@ class LikeButton extends StatelessWidget {
 
     Future<void> sendLike() async {
     try {
-      final response = await http.put(Uri.parse('${UrlConsts.userService}/home/addlikes/$friendId/1'));
+      await http.put(Uri.parse('${UrlConsts.userService}/home/addlikes/$friendId/1'));
       }
     catch (e) {
       print("server error: $e");

@@ -23,6 +23,8 @@ class ImagePathsConsts{
     static const String homeScreenIcon = "lib/resources/images/home.png";
     static const String cameraIcon = "lib/resources/images/camera_icon.png";
     static const String buildmodeIcon = "lib/resources/images/showel_icon.png";
+    static const String calendarIcon = "lib/resources/images/Calendar_v2.png";
+    static const String locationIcon = "lib/resources/images/Location_v2.png";
 
 }
 

@@ -5,17 +5,10 @@ import 'package:flutter_demo/screens/flower_info.dart';
 import 'package:flutter_demo/widgets/back_btn.dart';
 import 'package:flutter_demo/widgets/camera_button.dart';
 import 'package:flutter_demo/widgets/flowers/flower.dart';
-import 'package:flutter_demo/widgets/flowers/genericflower.dart';
-import 'package:flutter_demo/widgets/flowers/rose_flower.dart';
-import 'package:flutter_demo/widgets/flowers/sunflower.dart';
-import 'package:flutter_demo/widgets/flowers/tulip.dart';
-import 'package:flutter_demo/widgets/flowers/woodanemone.dart';
 import 'package:flutter_demo/widgets/nav_bar.dart';
 import 'package:http/http.dart' as http;
 
 import '../resources/constants.dart';
-
-const String _baseUrl = 'http://10.0.2.2:8080';
 
 class FlowerCollection extends StatefulWidget {
   const FlowerCollection({super.key});
@@ -36,33 +29,6 @@ class _FlowerCollectionState extends State<FlowerCollection> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _fetchFlowers();
     });
-  }
-
-  Color _parseColor(String? hex) {
-    if (hex == null || hex.isEmpty) return Colors.pink;
-    try {
-      return Color(int.parse('FF${hex.replaceAll('#', '')}', radix: 16));
-    } catch (_) {
-      return Colors.pink;
-    }
-  }
-
-  Flower _buildFlower(Map<String, dynamic> data) {
-    final String template = (data['template'] as String?) ?? 'GENERIC';
-    final Color color = _parseColor(data['color'] as String?);
-    final String name = (data['commonName'] as String?) ?? 'Unknown';
-    switch (template) {
-      case 'ROSE':
-        return RoseFlower(color: color, name: name);
-      case 'SUNFLOWER':
-        return SunFlower(color: color, name: name);
-      case 'TULIP':
-        return TulipFlower(color: color, name: name);
-      case 'WOODANEMONE':
-        return WoodanemoneFlower(color: color, name: name);
-      default:
-        return GenericFlower(color: color, name: name);
-    }
   }
 
   Future<void> _fetchFlowers() async {
@@ -92,7 +58,7 @@ class _FlowerCollectionState extends State<FlowerCollection> {
         final maps = raw.cast<Map<String, dynamic>>();
         setState(() {
           _flowerData = maps;
-          _flowers = maps.map(_buildFlower).toList();
+          _flowers = maps.map(Flower.buildFlower).toList();
           _isLoading = false;
         });
       } else {

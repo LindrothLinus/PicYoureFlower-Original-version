@@ -289,7 +289,7 @@ class FriendMenuState extends State<FriendMenu> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => const LeaderboardScreen(),
+              builder: (context) => LeaderboardScreen(addButtonCordinates:widget.addButtonsCordinates,),
             ),
           );
         },
@@ -722,7 +722,7 @@ void showDeleteUserDialog(BuildContext context) {
                   Uri.parse('${UrlConsts.flowerService}/home/deleteflowersfromuser/$loggedInUserId'),
                 );
                 if (flowerResponse.statusCode == 200 || flowerResponse.statusCode == 204) {
-                  final userResponse = await http.delete(
+                  await http.delete(
                     Uri.parse('${UrlConsts.userService}/home/removeuser/$loggedInUserId'),
                   );
 

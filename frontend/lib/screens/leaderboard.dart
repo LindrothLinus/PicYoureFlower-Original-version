@@ -9,22 +9,10 @@ import 'package:flutter_demo/widgets/friend_menu.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 
-const List<({double x, double y})> _addButtonCoordinates = [
-  (x: 3000, y: 1400),
-  (x: 2500, y: 1400),
-  (x: 3000, y: 2150),
-  (x: 2500, y: 2150),
-  (x: 3000, y: 2850),
-  (x: 2500, y: 2850),
-  (x: 2000, y: 2850),
-  (x: 3500, y: 2850),
-  (x: 4000, y: 2850),
-  (x: 1500, y: 2850),
-];
-
 class LeaderboardScreen extends StatefulWidget {
-  const LeaderboardScreen({super.key});
+  const LeaderboardScreen({super.key, required this.addButtonCordinates});
 
+  final List<({double x, double y})> addButtonCordinates;
   @override
   State<LeaderboardScreen> createState() => _LeaderboardScreenState();
 }
@@ -125,7 +113,7 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
         builder: (context) => ViewFriendScreen(
           userId: loggedInUserId,
           friend: friend,
-          addButtonsCordinats: _addButtonCoordinates,
+          addButtonsCordinats: widget.addButtonCordinates,
         ),
       ),
     );

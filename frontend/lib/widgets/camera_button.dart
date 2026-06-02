@@ -7,10 +7,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_demo/widgets/camera_feed.dart';
 import 'package:flutter_demo/widgets/flowers/flower.dart';
 import 'package:flutter_demo/widgets/flowers/genericflower.dart';
-import 'package:flutter_demo/widgets/flowers/rose_flower.dart';
-import 'package:flutter_demo/widgets/flowers/sunflower.dart';
-import 'package:flutter_demo/widgets/flowers/tulip.dart';
-import 'package:flutter_demo/widgets/flowers/woodanemone.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
@@ -81,16 +77,6 @@ class _CameraButtonBarState extends State<CameraButtonBar> with SingleTickerProv
     _overlayEntry?.remove();
     _overlayEntry = null;
   }
-
-  Color _parseColor(String? hex) {
-    if (hex == null || hex.isEmpty) return Colors.pink;
-    try {
-      return Color(int.parse('FF${hex.replaceAll('#', '')}', radix: 16));
-    } catch (_) {
-      return Colors.pink;
-    }
-  }
-
 
   void _printResults(Map<String, dynamic> decoded) {
     final List<dynamic>? results = decoded['results'] as List<dynamic>?;
