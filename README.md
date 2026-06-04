@@ -1,17 +1,45 @@
-# flutter_demo
+# 📦 PicYourFlowers
+<img src="{https://img.shields.io/badge/Academia-41454A?style=for-the-badge&logo=academia&logoColor=white}" />
+<img src="{https://img.shields.io/badge/Flutter-02569B?style=for-the-badge&logo=flutter&logoColor=white}" />
+<img src=”{https://img.shields.io/badge/java-%23ED8B00.svg?style=for-the-badge&logo=openjdk&logoColor=white}”/>
+<img src=”{https://img.shields.io/badge/Android-3DDC84?style=for-the-badge&logo=android&logoColor=white}”/>
+<img src=”{https://img.shields.io/badge/iOS-000000?style=for-the-badge&logo=ios&logoColor=white}”/> 
 
-A new Flutter project.
+## 🌟 Highlights
+- Fun app to motivate players to go outside.
+- Tested on both iOS and Android. 
+- Made for the PVT course at Stockholm University.
 
-## Getting Started
+## ℹ️ Overview
+This is PicYourFlowers. It is an app inspired by games like Pokémon GO, Unpacking and Focus Friend. In this app you collect flowers by taking photos of real flowers in the real world which then are used to decorate your very own greenhouse in game. 
+This game was created by 8 students at Stockholm University for the course “Project in Software Engineering” (PVT for short).
 
-This project is a starting point for a Flutter application.
+### ✍️ Authors
+Alva Backhans: https://github.com/Alynxen 
+Artin Heidari: https://github.com/ArtinTheWise 
+Iris Wirström: https://github.com/fu-fei 
+Linus Lindroth: https://github.com/LindrothLinus 
+Sofia Hameed: https://github.com/SofiaHameeds
+Ida Gustafsson
+Isak Flores
+Kaj Börjeson
 
-A few resources to get you started if this is your first Flutter project:
+## 🚀 Usage
+<img src="ReadMeFiles/demo.gif" alt="Demo av programmet" width="200">
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
+## ⬇️ Installation
+Frontend:
+The application is developed and tested on Flutter 3.41.7
+Before compiling the app make sure to be in the “..\PicYourFlowers\frontend directory”.  Also make sure you have all necessary dependencies downloaded by running the:
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+```bash flutter pub get``` 
+
+Also make sure you have debug mode enabled on your devices. 
+
+When compiling use:
+
+```bash flutter run ``` 
+
+
+
+
