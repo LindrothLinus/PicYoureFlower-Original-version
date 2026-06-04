@@ -24,7 +24,7 @@ Isak Flores<br>
 Kaj Börjeson<br>
 
 ## 🚀 Usage
-<img src="ReadMeFiles/demo.gif" alt="Demo av programmet" width="200">
+<img src="ReadMeFiles/Demo.gif" alt="Demo av programmet" width="200">
 
 ## ⬇️ Installation
 Frontend:
