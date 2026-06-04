@@ -29,15 +29,15 @@ Kaj Börjeson<br>
 ## ⬇️ Installation
 Frontend:
 The application is developed and tested on Flutter 3.41.7
-Before compiling the app make sure to be in the “..\PicYourFlowers\frontend directory”.  Also make sure you have all necessary dependencies downloaded by running the:
+Before compiling the app make sure to be in the “..\PicYourFlowers\frontend" directory.  Also make sure you have all necessary dependencies downloaded by running the:
 
-```bash flutter pub get``` 
+```bash: flutter pub get``` 
 
 Also make sure you have debug mode enabled on your devices. 
 
 When compiling use:
 
-```bash flutter run ``` 
+```bash: flutter run ``` 
 
 
 
