@@ -1,9 +1,8 @@
 # 📦 PicYourFlowers
-<img src="{https://img.shields.io/badge/Academia-41454A?style=for-the-badge&logo=academia&logoColor=white}" />
-<img src="{https://img.shields.io/badge/Flutter-02569B?style=for-the-badge&logo=flutter&logoColor=white}" />
-<img src=”{https://img.shields.io/badge/java-%23ED8B00.svg?style=for-the-badge&logo=openjdk&logoColor=white}”/>
-<img src=”{https://img.shields.io/badge/Android-3DDC84?style=for-the-badge&logo=android&logoColor=white}”/>
-<img src=”{https://img.shields.io/badge/iOS-000000?style=for-the-badge&logo=ios&logoColor=white}”/> 
+<img src="https://img.shields.io/badge/Flutter-02569B?style=for-the-badge&logo=flutter&logoColor=white" />
+<img src="https://img.shields.io/badge/java-%23ED8B00.svg?style=for-the-badge&logo=openjdk&logoColor=white" />
+<img src="https://img.shields.io/badge/Android-3DDC84?style=for-the-badge&logo=android&logoColor=white" />
+<img src="https://img.shields.io/badge/iOS-000000?style=for-the-badge&logo=ios&logoColor=white" />
 
 ## 🌟 Highlights
 - Fun app to motivate players to go outside.
