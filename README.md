@@ -14,14 +14,14 @@ This is PicYourFlowers. It is an app inspired by games like Pokémon GO, Unpacki
 This game was created by 8 students at Stockholm University for the course “Project in Software Engineering” (PVT for short).
 
 ### ✍️ Authors
-Alva Backhans: https://github.com/Alynxen 
-Artin Heidari: https://github.com/ArtinTheWise 
-Iris Wirström: https://github.com/fu-fei 
-Linus Lindroth: https://github.com/LindrothLinus 
-Sofia Hameed: https://github.com/SofiaHameeds
-Ida Gustafsson
-Isak Flores
-Kaj Börjeson
+Alva Backhans: https://github.com/Alynxen<br>
+Artin Heidari: https://github.com/ArtinTheWise<br> 
+Iris Wirström: https://github.com/fu-fei <br>
+Linus Lindroth: https://github.com/LindrothLinus<br> 
+Sofia Hameed: https://github.com/SofiaHameeds<br>
+Ida Gustafsson<br>
+Isak Flores<br>
+Kaj Börjeson<br>
 
 ## 🚀 Usage
 <img src="ReadMeFiles/demo.gif" alt="Demo av programmet" width="200">
